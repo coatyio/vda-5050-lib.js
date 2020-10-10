@@ -1,0 +1,48 @@
+{
+    "name": "vda-5050",
+    "version": "0.0.1-schema",
+    "description": "VDA 5050 communication interface for Node.js and browsers",
+    "homepage": "https://github.com/coatyio/vda-5050.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/coatyio/vda-5050.js"
+    },
+    "readme": "README.md",
+    "keywords": [
+        "VDMA",
+        "VDA",
+        "5050",
+        "definition",
+        "specification",
+        "communication",
+        "interface",
+        "client",
+        "agv",
+        "vehicle",
+        "master",
+        "control",
+        "DTS",
+        "driverless",
+        "transport",
+        "MQTT",
+        "Node.js",
+        "browser",
+        "javascript",
+        "typescript"
+    ],
+    "author": "Siemens AG",
+    "license": "MIT",
+    "maintainers": [
+        {
+            "name": "Hubertus Hohl",
+            "email": "hubertus.hohl@siemens.com"
+        },
+        {
+            "name": "Markus Sauer",
+            "email": "markussauer@siemens.com"
+        }
+    ],
+    "engines": {
+        "node": ">=10.0.0"
+    }
+}

@@ -1,0 +1,264 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "order",
+    "description": "An order to be communicated from master control to the AGV.",
+    "documentVersion": "2.0, June 2020",
+    "subtopic": "/order",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "common.schema.json#/definitions/header"
+        },
+        {
+            "properties": {
+                "orderId": {
+                    "title": "orderId",
+                    "description": "Unique order Identification.",
+                    "type": "string"
+                },
+                "orderUpdateId": {
+                    "title": "orderUpdateId",
+                    "description": "orderUpdate identification. Is unique per orderId. If an order update is rejected, this field is to be passed in the rejection message.",
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 4294967296
+                },
+                "zoneSetId": {
+                    "title": "zoneSetId",
+                    "description": "Unique identifier of the zone set that the AGV has to use for navigation or that was used by MC for planning.\nOptional: Some MC systems do not use zones. Some AGVs do not understand zones. Do not add to message if no zones are used.",
+                    "type": "string"
+                },
+                "nodes": {
+                    "title": "List of Nodes",
+                    "description": "This list holds the base and the horizon nodes of the order graph.",
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "title": "node",
+                        "required": [
+                            "nodeId",
+                            "sequenceId",
+                            "released",
+                            "actions"
+                        ],
+                        "properties": {
+                            "nodeId": {
+                                "title": "nodeId",
+                                "type": "string",
+                                "description": "Unique node identification. For example: pumpenhaus_1, MONTAGE",
+                                "examples": [
+                                    "pumpenhaus_1",
+                                    "MONTAGE"
+                                ]
+                            },
+                            "sequenceId": {
+                                "title": "sequenceId",
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967296,
+                                "description": "Id to track the sequence of nodes and edges in an order and to simplify order updates.\nThe main purpose is to distinguish between a node which is passed more than once within one orderId. The variable sequenceId can run across all nodes and edges of the same order and is reset when a new orderId is issued."
+                            },
+                            "nodeDescription": {
+                                "title": "nodeDescription",
+                                "type": "string",
+                                "description": "Verbose Node Description."
+                            },
+                            "released": {
+                                "type": "boolean",
+                                "title": "released",
+                                "description": "If true, the edge is part of the base plan. If false, the edge is part of the horizon plan."
+                            },
+                            "nodePosition": {
+                                "$ref": "common.schema.json#/definitions/nodePosition",
+                                "description": "Defines the position on a map in world coordinates. Each floor has its own map. Precision is up to the specific implementation."
+                            },
+                            "actions": {
+                                "title": "actions",
+                                "description": "Array of actions that are to be executed on the node. Their sequence in the list governs their sequence of execution.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "title": "nodeAction",
+                                    "description": "Node Action",
+                                    "required": [
+                                        "actionId",
+                                        "actionType"
+                                    ],
+                                    "properties": {
+                                        "actionType": {
+                                            "type": "string",
+                                            "title": "actionType",
+                                            "description": "Enum of actions as described in the first column of \"Actions and Parameters\"\nIdentifies the function of the action."
+                                        },
+                                        "actionId": {
+                                            "type": "string",
+                                            "title": "actionId",
+                                            "description": "ID to distinguish between multiple actions with the same type on the same node."
+                                        },
+                                        "actionDescription": {
+                                            "type": "string",
+                                            "title": "actionDescription",
+                                            "description": "Additional information on the action."
+                                        },
+                                        "blockingType": {
+                                            "$ref": "common.schema.json#/definitions/blockingType",
+                                            "description": "Regulates if the action is allowed to be executed during movement and/or parallel to other actions.\nnone: action can happen in parallel with others, including movement.\nsoft: action can happen simultaneously with others, but not while moving.\nhard: no other actions can be performed while this action is running."
+                                        },
+                                        "actionParameters": {
+                                            "$ref": "common.schema.json#/definitions/actionParameters",
+                                            "description": "Array of actionParameter-objects for the indicated action e. g. deviceId, loadId, external Triggers."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "edges": {
+                    "type": "array",
+                    "title": "edges",
+                    "description": "Base and Horizon Edges of the Order Graph.",
+                    "items": {
+                        "type": "object",
+                        "title": "edge",
+                        "required": [
+                            "edgeId",
+                            "sequenceId",
+                            "released",
+                            "startNodeId",
+                            "endNodeId",
+                            "actions"
+                        ],
+                        "properties": {
+                            "edgeId": {
+                                "type": "string",
+                                "title": "edgeId",
+                                "description": "Unique edge identification"
+                            },
+                            "sequenceId": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967296,
+                                "title": "sequenceId",
+                                "description": "Id to track the sequence of nodes and edges in an order and to simplify order updates. The variable sequenceId runs across all nodes and edges of the same order and is reset when a new orderId is issued."
+                            },
+                            "edgeDescription": {
+                                "type": "string",
+                                "title": "edgeDescription",
+                                "description": "Verbose description of the edge."
+                            },
+                            "released": {
+                                "type": "boolean",
+                                "title": "released",
+                                "description": "If true, the edge is part of the base plan. If false, the edge is part of the horizon plan."
+                            },
+                            "startNodeId": {
+                                "type": "string",
+                                "title": "startNodeId",
+                                "description": "The nodeId of the start node."
+                            },
+                            "endNodeId": {
+                                "type": "string",
+                                "title": "endNodeId",
+                                "description": "The nodeId of the end node."
+                            },
+                            "maxSpeed": {
+                                "type": "number",
+                                "title": "maxSpeed",
+                                "description": "permitted maximum speed of the agv on the edge in m/s. Speed is defined by the fastest point of the vehicle."
+                            },
+                            "maxHeight": {
+                                "type": "number",
+                                "title": "maxHeight",
+                                "description": "Permitted maximum height of the vehicle, including the load, on edge. In meters."
+                            },
+                            "minHeight": {
+                                "type": "number",
+                                "title": "minHeight",
+                                "description": "Permitted minimal height of the edge measured at the bottom of the load. In meters."
+                            },
+                            "orientation": {
+                                "type": "number",
+                                "title": "orientation",
+                                "description": "Orientation of the AGV on the edge relative to the map coordinate origin (for holonomic vehicles with more than one driving direction).\nExample: orientation Pi/2 rad will lead to a rotation of 90 degrees.\nIf AGV starts in different orientation, rotate the vehicle on the edge to the desired orientation if rotationAllowed is set to \"true\".\nIf rotationAllowed is \"false\", rotate before entering the edge.\nIf that is not possible, reject the order.\nIf a trajectory with orientation is defined, follow the trajectories orientation. If a trajectory without orientation and the orientation field here is defined, apply the orientation to the tangent of the trajectory.",
+                                "minimum": -3.14159265359,
+                                "maximum": 3.14159265359
+                            },
+                            "direction": {
+                                "type": "string",
+                                "title": "direction",
+                                "description": "Sets direction at junctions for line-guided vehicles, to be defined initially (vehicle-individual). Can be descriptive (left, right, middle, straight) or a frequency (\"433MHz\").",
+                                "examples": [
+                                    "left",
+                                    "right",
+                                    "straight",
+                                    "433MHz"
+                                ]
+                            },
+                            "rotationAllowed": {
+                                "type": "boolean",
+                                "title": "rotationAllowed",
+                                "description": "If true, rotation is allowed on the edge."
+                            },
+                            "maxRotationSpeed": {
+                                "type": "number",
+                                "title": "maxRotationSpeed",
+                                "description": "Maximum rotation speed in rad/s"
+                            },
+                            "distance": {
+                                "type": "number",
+                                "title": "distance",
+                                "description": "Distance of the path from startNode to endNode in meters. This value is used by line-guided AGVs to decrease their speed before reaching a stop position."
+                            },
+                            "trajectory": {
+                                "$ref": "common.schema.json#/definitions/trajectory",
+                                "description": "Trajectory JSON-object for this edge as a NURBS. Defines the curve on which the AGV should move between startNode and endNode.\nOptional: Can be omitted if AGV cannot process trajectories or if AGV plans its own trajectory."
+                            },
+                            "actions": {
+                                "title": "Actions",
+                                "description": "Array of action objects with detailed information.",
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "title": "edgeAction",
+                                    "description": "Edge Action",
+                                    "required": [
+                                        "actionId",
+                                        "actionType"
+                                    ],
+                                    "properties": {
+                                        "actionType": {
+                                            "type": "string",
+                                            "title": "actionType",
+                                            "description": "Enum of actions as described in the first column of \"Actions and Parameters\"\nIdentifies the function of the action."
+                                        },
+                                        "actionId": {
+                                            "type": "string",
+                                            "title": "actionId",
+                                            "description": "ID to distinguish between multiple actions with the same name on the same node."
+                                        },
+                                        "actionDescription": {
+                                            "type": "string",
+                                            "title": "actionDescription",
+                                            "description": "Additional information on the action."
+                                        },
+                                        "actionParameters": {
+                                            "$ref": "common.schema.json#/definitions/actionParameters",
+                                            "description": "Array of actionParameter-objects for the indicated action e. g. deviceId, loadId, external Triggers."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "required": [
+                "orderId",
+                "orderUpdateId",
+                "nodes",
+                "edges"
+            ]
+        }
+    ]
+}

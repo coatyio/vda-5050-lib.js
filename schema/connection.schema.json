@@ -1,0 +1,29 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "connection",
+    "description": "AGV connection state reported as a last will message. Has to be sent with retain flag.\nOnce the AGV comes online, it has to send this message on its connect topic, with the connectionState enum set to \"ONLINE\".\n The last will message is to be configured with the connection state set to \"CONNECTIONBROKEN\".\nThus, if the AGV disconnects from the broker, master control gets notified via the topic \"connection\".\nIf the AGV is disconnecting in an orderly fashion (e.g. shutting down, sleeping), the AGV is to publish a message on this topic with the connectionState set to \"OFFLINE\".",
+    "documentVersion": "2.0, June 2020",
+    "subtopic": "/connection",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "common.schema.json#/definitions/header"
+        },
+        {
+            "properties": {
+                "connectionState": {
+                    "type": "string",
+                    "description": "online: connection between AGV and broker is active.\noffline: connection between AGV and broker has gone offline in a coordinated way.\nconnectionBroken: The connection between AGV and broker has unexpectedly ended.",
+                    "enum": [
+                        "ONLINE",
+                        "OFFLINE",
+                        "CONNECTIONBROKEN"
+                    ]
+                }
+            },
+            "required": [
+                "connectionState"
+            ]
+        }
+    ]
+}

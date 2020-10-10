@@ -1,0 +1,25 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "visualization",
+    "description": "AGV position and/or velocity for visualization purposes. Can be published at a higher rate if wanted. Since bandwidth may be expensive depening on the update rate for this topic, all fields are optional.",
+    "documentVersion": "2.0, June 2020",
+    "subtopic": "/visualization",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "common.schema.json#/definitions/header"
+        },
+        {
+            "properties": {
+                "agvPosition": {
+                    "$ref": "common.schema.json#/definitions/agvPosition",
+                    "description": "Current position of the AGV on the map.\nOptional: Can only be omitted for AGVs without the capability to localize themselves, e.g. line guided AGVs."
+                },
+                "velocity": {
+                    "$ref": "common.schema.json#/definitions/velocity",
+                    "description": "The AGVs velocity in vehicle coordinates."
+                }
+            }
+        }
+    ]
+}
