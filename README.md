@@ -17,14 +17,17 @@
 
 > Under construction!
 
-This package implements the [VDA 5050](https://www.vda.de/) "Interface for the
-communication between automated guided vehicles (AGV) and a master control" for
-JavaScript and TypeScript running in Node.js and modern browsers.
+This package provides a library for developing VDA 5050 clients in
+TypeScript/JavaScript running in Node.js and modern browsers. It implements the
+[VDA 5050](https://www.vda.de/) specification "Interface for the communication
+between automated guided vehicles (AGV) and a master control".
 
-This package also includes professionally designed JSON schemas of the VDA 5050
-topic payload definitions. You can convert these schemas to type defintions in
-various programming languages using the
-[vda-5050-cli](https://www.npmjs.com/package/vda-5050-cli) tool.
+This package is accompanied by a [command line
+interface](https://www.npmjs.com/package/vda-5050-cli) with tools useful for
+developing VDA 5050 client applications. It features an MQTT broker for
+development testing, professionally designed JSON schemas of the VDA 5050
+topics, and a code generator to create type definitions from these schemas in
+various programming languages.
 
 ## Installation
 
