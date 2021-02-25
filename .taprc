@@ -1,0 +1,17 @@
+timeout: 10
+browser: false
+coverage: false
+coverage-report:
+  - text
+  - html
+check-coverage: false
+coverage-map: dist/test/test-coverage-map.js
+jobs: 1
+jsx: false
+ts: false
+esm: false
+before: dist/test/test-before.js
+after: dist/test/test-after.js
+files: [ dist/test/**/*.test.js ]
+# for individual testing
+#files: [ dist/test/controller/*.test.js ]

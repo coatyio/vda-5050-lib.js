@@ -1,0 +1,4 @@
+# Ignore the following files when publishing package to npm
+
+# test files relative to npm publish folder (dist)
+/test/

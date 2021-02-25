@@ -1,0 +1,748 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>vda-5050-lib for VDA 5050 version 1.1 - v1.0.0</title>
+	<meta name="description" content="Documentation for vda-5050-lib for VDA 5050 version 1.1 - v1.0.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">vda-5050-lib for VDA 5050 version 1.1 - v1.0.0</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<h1>vda-5050-lib for VDA 5050 version 1.1 - v1.0.0</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#universal-vda-5050-typescriptjavascript-library" id="universal-vda-5050-typescriptjavascript-library" style="color: inherit; text-decoration: none;">
+					<h1>Universal VDA 5050 TypeScript/JavaScript library</h1>
+				</a>
+				<p><a href="http://www.typescriptlang.org/"><img src="https://img.shields.io/badge/Source%20code-TypeScript-007ACC.svg" alt="TypeScript"></a>
+					<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+					<a href="https://conventionalcommits.org/"><img src="https://img.shields.io/badge/release-Conventional%20Commits-yellow.svg" alt="release"></a>
+					<a href="https://www.npmjs.com/package/vda-5050-lib"><img src="https://badge.fury.io/js/vda-5050-lib.svg" alt="npm version"></a>
+				<a href="https://github.com/coatyio/vda-5050-lib.js/blob/master/coverage/lcov-report/index.html"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fgithub.com%2Fcoatyio%2Fvda-5050-lib.js%2Fblob%2Fmaster%2F.coverage.shieldsio.json" alt="coverage"></a></p>
+				<a href="#table-of-contents" id="table-of-contents" style="color: inherit; text-decoration: none;">
+					<h2>Table of Contents</h2>
+				</a>
+				<ul>
+					<li><a href="#introduction">Introduction</a></li>
+					<li><a href="#overview">Overview</a></li>
+					<li><a href="#installation">Installation</a></li>
+					<li><a href="#getting-started">Getting started</a><ul>
+							<li><a href="#control-logic-abstraction-layer">Control logic abstraction layer</a></li>
+							<li><a href="#pub-sub-communication-abstraction-layer">Pub-Sub communication abstraction layer</a></li>
+							<li><a href="#vda-5050-protocol-extensions">VDA 5050 protocol extensions</a></li>
+							<li><a href="#programming-guidelines">Programming guidelines</a></li>
+						</ul>
+					</li>
+					<li><a href="#contributing">Contributing</a></li>
+					<li><a href="#license">License</a></li>
+				</ul>
+				<a href="#introduction" id="introduction" style="color: inherit; text-decoration: none;">
+					<h2>Introduction</h2>
+				</a>
+				<p>This package provides a universal library for implementing systems based on VDA
+					5050 in TypeScript/JavaScript running in Node.js and modern browsers. The
+					library implements the <a href="https://www.vda.de/dam/VDA5050_EN_V1.1.pdf">VDA 5050</a>
+					specification version 1.1 <em>&quot;Interface for the communication between automated
+				guided vehicles (AGV) and a master control&quot;</em>.</p>
+				<p>This package comes with complete <a href="https://coatyio.github.io/vda-5050-lib.js/api/index.html">API
+					documentation</a> and an
+					<a href="https://coatyio.github.io/vda-5050-lib.js/slides/vda-5050-typescript-javascript-library.pdf">overview slide
+					deck</a>
+				of the library in the context of the VDA 5050 specification.</p>
+				<blockquote>
+					<p>This library is accompanied by a <a href="https://www.npmjs.com/package/vda-5050-cli">command line
+						interface</a> with tools useful for
+						developing VDA 5050 applications. It features an MQTT broker for development
+						testing, professionally designed JSON schemas of the VDA 5050 topics, and a
+						code generator to create type definitions from these schemas in various
+					programming languages.</p>
+				</blockquote>
+				<a href="#overview" id="overview" style="color: inherit; text-decoration: none;">
+					<h2>Overview</h2>
+				</a>
+				<p>The key objectives of this library are:</p>
+				<ul>
+					<li>Encapsulate complex control logic &amp; flows of order, action, and state
+					management/handling into reusable components.</li>
+					<li>Provide abstraction layers for coordination/vehicle plane and communication.</li>
+					<li>Adapt to vehicle-specific navigation &amp; control interfaces through uniform
+					protocol adapters realized by integrators or AGV manufacturers</li>
+					<li>Use library components on coordination/vehicle plane in combination or
+					separartely.</li>
+					<li>Support custom VDA 5050 actions and extension topics/object models.</li>
+				</ul>
+				<p>This library supports cross platform deployments (Linux, Win, macOS, Android,
+					iOS) and runtime environments (Edge, Cloud, Docker, Browser). Ease of
+					programming and reuse is ensured by an object-oriented software design of
+					configurable, extensible, and pluggable components. The library encourages a
+					modern and clean programming style of asynchronous operations by means of the
+				async-await pattern.</p>
+				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+					<h2>Installation</h2>
+				</a>
+				<p>Install the latest stable version of this library:</p>
+				<pre><code class="language-sh"><span style="color: #000000">npm install vda-5050-lib</span>
+</code></pre>
+				<p>This package targets JavaScript/TypeScript projects using ECMAScript version
+					<code>ES2019</code> and module format <code>ES2019</code>.  It runs in <a href="https://nodejs.org">Node.js</a>
+				v10 or newer and in modern browsers.</p>
+				<a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
+					<h2>Getting started</h2>
+				</a>
+				<p>This library supports two abstraction layers:</p>
+				<ul>
+					<li>A high-level abstraction of the VDA 5050 control logic &amp; flows on the
+					coordination plane (master control) and on the vehicle plane (AGV).</li>
+					<li>A Pub-Sub communication abstraction over MQTT messaging.</li>
+				</ul>
+				<p>Both layers can be used in combination or separately as the classes implementing
+					the control logic abstraction layer extend from classes that implement the
+				communication abstraction layer.</p>
+				<blockquote>
+					<p><strong>Tip</strong>: UML class diagrams of all library components can be found in this
+						<a href="https://coatyio.github.io/vda-5050-lib.js/slides">project documentation
+					folder</a>.</p>
+					<p><strong>Tip</strong>: The integration test suite accompanying the library provides a
+						valuable source of examples demonstrating how to use the library on both
+					layers.</p>
+				</blockquote>
+				<a href="#control-logic-abstraction-layer" id="control-logic-abstraction-layer" style="color: inherit; text-decoration: none;">
+					<h3>Control logic abstraction layer</h3>
+				</a>
+				<p>This layer is realized by a <em>Master Controller</em> on the coordination plane and by
+					an <em>AGV Controller</em> on the vehicle plane. The AGV Controller connects to
+					vehicle-specific navigation and control systems by so-called <em>plug-in AGV
+					adapters</em> that expose a uniform AGV interface to the AGV Controller and adapt to
+				vehicle-specific operations.</p>
+				<p>The following example shows how to set up and operate a Master Controller to
+					assign orders and to initiate instant actions as well as to handle order/instant
+					action related events in the application. For details please consult the <a href="https://coatyio.github.io/vda-5050-lib.js/api/index.html">API
+				documentation</a>.</p>
+				<pre><code class="language-ts"><span style="color: #008000">// Create instance of Master Controller with minimal client options: communication namespace and broker endpoint address.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">masterController</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">MasterController</span><span style="color: #000000">({ </span><span style="color: #001080">interfaceName:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;logctx42&quot;</span><span style="color: #000000">, </span><span style="color: #001080">transport:</span><span style="color: #000000"> { </span><span style="color: #001080">brokerUrl:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;mqtt://mybroker.com:1883&quot;</span><span style="color: #000000"> } });</span>
+
+<span style="color: #008000">// The target AGV.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">agvId001</span><span style="color: #000000">: </span><span style="color: #267F99">AgvId</span><span style="color: #000000"> = { </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;RobotCompany&quot;</span><span style="color: #000000">, </span><span style="color: #001080">serialNumber:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;001&quot;</span><span style="color: #000000"> };</span>
+
+<span style="color: #008000">// Define a pick &amp; drop order with two base nodes and one base edge.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">order</span><span style="color: #000000">: </span><span style="color: #267F99">Headerless</span><span style="color: #000000">&lt;</span><span style="color: #267F99">Order</span><span style="color: #000000">&gt; = {</span>
+<span style="color: #000000">    </span><span style="color: #001080">orderId:</span><span style="color: #000000"> </span><span style="color: #001080">masterController</span><span style="color: #000000">.</span><span style="color: #795E26">createUuid</span><span style="color: #000000">(),</span>
+<span style="color: #000000">    </span><span style="color: #001080">orderUpdateId:</span><span style="color: #000000"> </span><span style="color: #098658">0</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">nodes:</span><span style="color: #000000"> [</span>
+<span style="color: #000000">        {</span>
+<span style="color: #000000">            </span><span style="color: #001080">nodeId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;productionunit_1&quot;</span><span style="color: #000000">, </span><span style="color: #001080">sequenceId:</span><span style="color: #000000"> </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">released:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000">, </span><span style="color: #001080">nodePosition:</span><span style="color: #000000"> { </span><span style="color: #001080">x:</span><span style="color: #000000"> </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">y:</span><span style="color: #000000"> </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">mapId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;local&quot;</span><span style="color: #000000"> },</span>
+<span style="color: #000000">            </span><span style="color: #001080">actions:</span><span style="color: #000000"> [{ </span><span style="color: #001080">actionId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;a001&quot;</span><span style="color: #000000">, </span><span style="color: #001080">actionType:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;pick&quot;</span><span style="color: #000000">, </span><span style="color: #001080">blockingType:</span><span style="color: #000000"> </span><span style="color: #001080">BlockingType</span><span style="color: #000000">.</span><span style="color: #001080">Hard</span><span style="color: #000000">, </span><span style="color: #001080">actionParameters:</span><span style="color: #000000"> [{ </span><span style="color: #001080">key:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;stationType&quot;</span><span style="color: #000000">, </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;floor&quot;</span><span style="color: #000000"> }, { </span><span style="color: #001080">key:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;loadType&quot;</span><span style="color: #000000">, </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;EPAL&quot;</span><span style="color: #000000"> }] }],</span>
+<span style="color: #000000">        },</span>
+<span style="color: #000000">        {</span>
+<span style="color: #000000">            </span><span style="color: #001080">nodeId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;productionunit_2&quot;</span><span style="color: #000000">, </span><span style="color: #001080">sequenceId:</span><span style="color: #000000"> </span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #001080">released:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000">, </span><span style="color: #001080">nodePosition:</span><span style="color: #000000"> { </span><span style="color: #001080">x:</span><span style="color: #000000"> </span><span style="color: #098658">100</span><span style="color: #000000">, </span><span style="color: #001080">y:</span><span style="color: #000000"> </span><span style="color: #098658">200</span><span style="color: #000000">, </span><span style="color: #001080">mapId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;local&quot;</span><span style="color: #000000"> },</span>
+<span style="color: #000000">            </span><span style="color: #001080">actions:</span><span style="color: #000000"> [{ </span><span style="color: #001080">actionId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;a002&quot;</span><span style="color: #000000">, </span><span style="color: #001080">actionType:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;drop&quot;</span><span style="color: #000000">, </span><span style="color: #001080">blockingType:</span><span style="color: #000000"> </span><span style="color: #001080">BlockingType</span><span style="color: #000000">.</span><span style="color: #001080">Hard</span><span style="color: #000000">, </span><span style="color: #001080">actionParameters:</span><span style="color: #000000"> [{ </span><span style="color: #001080">key:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;stationType&quot;</span><span style="color: #000000">, </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;floor&quot;</span><span style="color: #000000"> }, { </span><span style="color: #001080">key:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;loadType&quot;</span><span style="color: #000000">, </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;EPAL&quot;</span><span style="color: #000000"> }] }],</span>
+<span style="color: #000000">        },</span>
+<span style="color: #000000">    ],</span>
+<span style="color: #000000">    </span><span style="color: #001080">edges:</span><span style="color: #000000"> [</span>
+<span style="color: #000000">        { </span><span style="color: #001080">edgeId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;productionunit_1_2&quot;</span><span style="color: #000000">, </span><span style="color: #001080">sequenceId:</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #001080">startNodeId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;productionunit_1&quot;</span><span style="color: #000000">, </span><span style="color: #001080">endNodeId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;productionunit_2&quot;</span><span style="color: #000000">, </span><span style="color: #001080">released:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000">, </span><span style="color: #001080">actions:</span><span style="color: #000000"> [] },</span>
+<span style="color: #000000">    ],</span>
+<span style="color: #000000">};</span>
+
+<span style="color: #008000">// Start client interaction, connect to MQTT broker.</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">masterController</span><span style="color: #000000">.</span><span style="color: #795E26">start</span><span style="color: #000000">();</span>
+
+<span style="color: #008000">// Assign order to target AGV and handle incoming order change events.</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">masterController</span><span style="color: #000000">.</span><span style="color: #795E26">assignOrder</span><span style="color: #000000">(</span><span style="color: #001080">agvId001</span><span style="color: #000000">, </span><span style="color: #001080">order</span><span style="color: #000000">, {</span>
+<span style="color: #000000">    </span><span style="color: #795E26">onOrderProcessed</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">withError</span><span style="color: #000000">, </span><span style="color: #001080">byCancelation</span><span style="color: #000000">, </span><span style="color: #001080">active</span><span style="color: #000000">, </span><span style="color: #001080">ctx</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Order processed&quot;</span><span style="color: #000000">),</span>
+
+<span style="color: #000000">    </span><span style="color: #008000">// Optional callbacks, use if required.</span>
+<span style="color: #000000">    </span><span style="color: #795E26">onNodeTraversed</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">node</span><span style="color: #000000">, </span><span style="color: #001080">nextEdge</span><span style="color: #000000">, </span><span style="color: #001080">nextNode</span><span style="color: #000000">, </span><span style="color: #001080">ctx</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Order node traversed: %o&quot;</span><span style="color: #000000">, </span><span style="color: #001080">node</span><span style="color: #000000">),</span>
+<span style="color: #000000">    </span><span style="color: #795E26">onEdgeTraversing</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">edge</span><span style="color: #000000">, </span><span style="color: #001080">startNode</span><span style="color: #000000">, </span><span style="color: #001080">endNode</span><span style="color: #000000">, </span><span style="color: #001080">stateChanges</span><span style="color: #000000">, </span><span style="color: #001080">invocationCount</span><span style="color: #000000">, </span><span style="color: #001080">ctx</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Order edge traversing: %o %o&quot;</span><span style="color: #000000">, </span><span style="color: #001080">edge</span><span style="color: #000000">, </span><span style="color: #001080">stateChanges</span><span style="color: #000000">),</span>
+<span style="color: #000000">    </span><span style="color: #795E26">onEdgeTraversed</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">edge</span><span style="color: #000000">, </span><span style="color: #001080">startNode</span><span style="color: #000000">, </span><span style="color: #001080">endNode</span><span style="color: #000000">, </span><span style="color: #001080">ctx</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Order edge traversed: %o&quot;</span><span style="color: #000000">, </span><span style="color: #001080">edge</span><span style="color: #000000">),</span>
+<span style="color: #000000">    </span><span style="color: #795E26">onActionStateChanged</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">actionState</span><span style="color: #000000">, </span><span style="color: #001080">withError</span><span style="color: #000000">, </span><span style="color: #001080">action</span><span style="color: #000000">, </span><span style="color: #001080">target</span><span style="color: #000000">, </span><span style="color: #001080">ctx</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Order action state changed: %o %o %o&quot;</span><span style="color: #000000">, </span><span style="color: #001080">actionState</span><span style="color: #000000">, </span><span style="color: #001080">action</span><span style="color: #000000">, </span><span style="color: #001080">target</span><span style="color: #000000">),</span>
+<span style="color: #000000">});</span>
+
+<span style="color: #008000">// Initiate an instant action and handle incoming action change events.</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">masterController</span><span style="color: #000000">.</span><span style="color: #795E26">initiateInstantActions</span><span style="color: #000000">(</span><span style="color: #001080">agvId001</span><span style="color: #000000">, {</span>
+<span style="color: #000000">    </span><span style="color: #001080">instantActions:</span><span style="color: #000000"> [{</span>
+<span style="color: #000000">        </span><span style="color: #001080">actionId:</span><span style="color: #000000"> </span><span style="color: #001080">masterController</span><span style="color: #000000">.</span><span style="color: #795E26">createUuid</span><span style="color: #000000">(),</span>
+<span style="color: #000000">        </span><span style="color: #001080">actionDescription:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;initialize position to x:10 y:10 on map floor2&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">actionType:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;initPosition&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">blockingType:</span><span style="color: #000000"> </span><span style="color: #001080">BlockingType</span><span style="color: #000000">.</span><span style="color: #001080">Hard</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">actionParameters:</span><span style="color: #000000"> [</span>
+<span style="color: #000000">            { </span><span style="color: #001080">key:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;x&quot;</span><span style="color: #000000">, </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000"> },</span>
+<span style="color: #000000">            { </span><span style="color: #001080">key:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;y&quot;</span><span style="color: #000000">, </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #098658">10</span><span style="color: #000000"> },</span>
+<span style="color: #000000">            { </span><span style="color: #001080">key:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;theta&quot;</span><span style="color: #000000">, </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #098658">0</span><span style="color: #000000"> },</span>
+<span style="color: #000000">            { </span><span style="color: #001080">key:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;mapId&quot;</span><span style="color: #000000">, </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;floor2&quot;</span><span style="color: #000000"> },</span>
+<span style="color: #000000">            { </span><span style="color: #001080">key:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;lastNodeId&quot;</span><span style="color: #000000">, </span><span style="color: #001080">value:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;n1&quot;</span><span style="color: #000000"> },</span>
+<span style="color: #000000">        ],</span>
+<span style="color: #000000">    }],</span>
+<span style="color: #000000">}, {</span>
+<span style="color: #000000">    </span><span style="color: #795E26">onActionStateChanged</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">actionState</span><span style="color: #000000">, </span><span style="color: #001080">withError</span><span style="color: #000000">, </span><span style="color: #001080">action</span><span style="color: #000000">, </span><span style="color: #001080">agvId</span><span style="color: #000000">, </span><span style="color: #001080">state</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Instant action state changed: %o %o %o&quot;</span><span style="color: #000000">, </span><span style="color: #001080">actionState</span><span style="color: #000000">, </span><span style="color: #001080">withError</span><span style="color: #000000">, </span><span style="color: #001080">action</span><span style="color: #000000">),</span>
+<span style="color: #000000">    </span><span style="color: #795E26">onActionError</span><span style="color: #001080">:</span><span style="color: #000000"> (</span><span style="color: #001080">error</span><span style="color: #000000">, </span><span style="color: #001080">action</span><span style="color: #000000">, </span><span style="color: #001080">agvId</span><span style="color: #000000">, </span><span style="color: #001080">state</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Instant action error: %o %o %o&quot;</span><span style="color: #000000">, </span><span style="color: #001080">error</span><span style="color: #000000">, </span><span style="color: #001080">action</span><span style="color: #000000">, </span><span style="color: #001080">state</span><span style="color: #000000">),</span>
+<span style="color: #000000">});</span>
+</code></pre>
+				<p>The following example shows how to set up an AGV Controller with a specific
+					plug-in AGV adapter. An AGV Controller processes orders and instant actions
+					according to VDA 5050 control logic &amp; flows, delegates vehicle-specific
+					operations to the associated adapter, manages state and visualization changes,
+				and reports them back to master control.</p>
+				<pre><code class="language-ts"><span style="color: #008000">// Use minimal client options: communication namespace and broker endpoint address.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">agvClientOptions</span><span style="color: #000000">: </span><span style="color: #267F99">ClientOptions</span><span style="color: #000000"> = { </span><span style="color: #001080">interfaceName:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;logctx42&quot;</span><span style="color: #000000">, </span><span style="color: #001080">transport:</span><span style="color: #000000"> { </span><span style="color: #001080">brokerUrl:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;mqtt://mybroker.com:1883&quot;</span><span style="color: #000000"> } };</span>
+
+<span style="color: #008000">// The target AGV.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">agvId001</span><span style="color: #000000">: </span><span style="color: #267F99">AgvId</span><span style="color: #000000"> = { </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;RobotCompany&quot;</span><span style="color: #000000">, </span><span style="color: #001080">serialNumber:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;001&quot;</span><span style="color: #000000"> };</span>
+
+<span style="color: #008000">// Specify associated adapter type; use defaults for all other AGV controller options. </span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">agvControllerOptions</span><span style="color: #000000"> = {</span>
+<span style="color: #000000">    </span><span style="color: #001080">agvAdapterType:</span><span style="color: #000000"> </span><span style="color: #001080">VirtualAgvAdapter</span><span style="color: #000000">,</span>
+<span style="color: #000000">};</span>
+
+<span style="color: #008000">// Use defaults for all adapter options of Virtual AGV adapter.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">agvAdapterOptions</span><span style="color: #000000">: </span><span style="color: #267F99">VirtualAgvAdapterOptions</span><span style="color: #000000"> = {};</span>
+
+<span style="color: #008000">// Create instance of AGV Controller with client, controller, and adapter options.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">agvController</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">AgvController</span><span style="color: #000000">(</span><span style="color: #001080">agvId001</span><span style="color: #000000">, </span><span style="color: #001080">agvClientOptions</span><span style="color: #000000">, </span><span style="color: #001080">agvControllerOptions</span><span style="color: #000000">, </span><span style="color: #001080">agvAdapterOptions</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Start client interaction, connect to MQTT broker.</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">agvController</span><span style="color: #000000">.</span><span style="color: #795E26">start</span><span style="color: #000000">();</span>
+</code></pre>
+				<p>The <em>Virtual AGV Adapter</em> used in the above example is part of the library. It
+					supports free autonomous navigation along edges, and a basic, yet extensible set
+					of actions. It is meant to be used as a template for realizing your own adapter,
+					for simulation purposes, integration testing, and in other kind of environments
+				where real AGVs are not available or must be mocked.</p>
+				<p>In general, any AGV Adapter class must implement a uniform interface that
+				comprises the following vehicle-specific operations:</p>
+				<ul>
+					<li>Traverse an edge</li>
+					<li>Stop traversing an edge</li>
+					<li>Check if a node, edge, or instant action is executable</li>
+					<li>Execute and cancel a node, edge, or instant action</li>
+					<li>Terminate an edge action</li>
+					<li>Report changes in action and vehicle state to AGV Controller</li>
+					<li>Check if a route of nodes and edges is traversable</li>
+					<li>Check if vehicle is positioned/oriented within a node&#39;s deviation range</li>
+					<li>Calculate trajectory paths (optional, if supported)</li>
+				</ul>
+				<a href="#pub-sub-communication-abstraction-layer" id="pub-sub-communication-abstraction-layer" style="color: inherit; text-decoration: none;">
+					<h3>Pub-Sub communication abstraction layer</h3>
+				</a>
+				<p>This layer abstracts VDA 5050 messaging over the MQTT transport protocol. It is
+					based on an abstract <em>Client</em> class that provides basic methods for publishing
+				on and subscribing to VDA 5050 topics, featuring</p>
+				<ul>
+					<li>type-safe use of VDA 5050 objects with type definitions autogenerated from
+					JSON schemas,</li>
+					<li>schema-based validation of inbound and outbound VDA 5050 messages,</li>
+					<li>efficient subscription-based message dispatching, and</li>
+					<li>extensibility by custom VDA 5050 topics and object types.</li>
+				</ul>
+				<p>The <em>Client</em> class also provides a rich set of configurable options that control
+				MQTT communication features, including</p>
+				<ul>
+					<li>MQTT protocol version (3.1.1, 5.0)</li>
+					<li>MQTT transport options: TCP, WebSocket, TLS</li>
+					<li>MQTT topic structure</li>
+					<li>Automatic reconnect to MQTT broker</li>
+					<li>Regular heartbeat exchange with MQTT broker</li>
+					<li>Offline buffering of publications and subscriptions (if required)</li>
+				</ul>
+				<p>All these options have recommended defaults which are used throughout the
+				examples in this document.</p>
+				<p>The following example shows how to set up a <em>Master Control Client</em> that
+					subscribes to state and visualization topics, publishes order topics, and tracks
+				the connection state of AGVs.</p>
+				<pre><code class="language-ts"><span style="color: #008000">// Create instance of Master Control Client with minimal options: communication namespace and broker endpoint address.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">mcClient</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">MasterControlClient</span><span style="color: #000000">({ </span><span style="color: #001080">interfaceName:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;logctx42&quot;</span><span style="color: #000000">, </span><span style="color: #001080">transport:</span><span style="color: #000000"> { </span><span style="color: #001080">brokerUrl:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;mqtt://mybroker.com:1883&quot;</span><span style="color: #000000"> } });</span>
+
+<span style="color: #008000">// Start client interaction, connect to MQTT broker.</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">mcClient</span><span style="color: #000000">.</span><span style="color: #795E26">start</span><span style="color: #000000">();</span>
+
+<span style="color: #008000">// Observe Visualization objects from all AGVs manufactured by &quot;RobotCompany&quot;.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">visSubscriptionId</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">mcClient</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">(</span><span style="color: #001080">Topic</span><span style="color: #000000">.</span><span style="color: #001080">Visualization</span><span style="color: #000000">, { </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;RobotCompany&quot;</span><span style="color: #000000"> }, </span><span style="color: #001080">vis</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Visualization object received: %o&quot;</span><span style="color: #000000">, </span><span style="color: #001080">vis</span><span style="color: #000000">));</span>
+
+<span style="color: #008000">// Publish an Order object targeted at a specific AGV.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">agvId001</span><span style="color: #000000">: </span><span style="color: #267F99">AgvId</span><span style="color: #000000"> = { </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;RobotCompany&quot;</span><span style="color: #000000">, </span><span style="color: #001080">serialNumber:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;001&quot;</span><span style="color: #000000"> };</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">order</span><span style="color: #000000">: </span><span style="color: #267F99">Headerless</span><span style="color: #000000">&lt;</span><span style="color: #267F99">Order</span><span style="color: #000000">&gt; = {</span>
+<span style="color: #000000">    </span><span style="color: #001080">orderId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;order0001&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">orderUpdateId:</span><span style="color: #000000"> </span><span style="color: #098658">0</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">nodes:</span><span style="color: #000000"> [{ </span><span style="color: #001080">nodeId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;productionunit_1&quot;</span><span style="color: #000000">, </span><span style="color: #001080">sequenceId:</span><span style="color: #000000"> </span><span style="color: #098658">0</span><span style="color: #000000">, </span><span style="color: #001080">released:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000">, </span><span style="color: #001080">actions:</span><span style="color: #000000"> [] }, { </span><span style="color: #001080">nodeId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;productionunit_2&quot;</span><span style="color: #000000">, </span><span style="color: #001080">sequenceId:</span><span style="color: #000000"> </span><span style="color: #098658">2</span><span style="color: #000000">, </span><span style="color: #001080">released:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000">, </span><span style="color: #001080">actions:</span><span style="color: #000000"> [] }],</span>
+<span style="color: #000000">    </span><span style="color: #001080">edges:</span><span style="color: #000000"> [{ </span><span style="color: #001080">edgeId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;edge1_1&quot;</span><span style="color: #000000">, </span><span style="color: #001080">sequenceId:</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">, </span><span style="color: #001080">startNodeId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;productionunit_1&quot;</span><span style="color: #000000">, </span><span style="color: #001080">endNodeId:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;productionunit_2&quot;</span><span style="color: #000000">, </span><span style="color: #001080">released:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000">, </span><span style="color: #001080">actions:</span><span style="color: #000000"> [] }],</span>
+<span style="color: #000000">};</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">orderWithHeader</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">mcClient</span><span style="color: #000000">.</span><span style="color: #795E26">publish</span><span style="color: #000000">(</span><span style="color: #001080">Topic</span><span style="color: #000000">.</span><span style="color: #001080">Order</span><span style="color: #000000">, </span><span style="color: #001080">agvId001</span><span style="color: #000000">, </span><span style="color: #001080">order</span><span style="color: #000000">);</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Published order %o&quot;</span><span style="color: #000000">, </span><span style="color: #001080">orderWithHeader</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Observe State objects emitted by the specific AGV Client.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">stateSubscriptionId</span><span style="color: #000000"> = </span><span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">mcClient</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">(</span><span style="color: #001080">Topic</span><span style="color: #000000">.</span><span style="color: #001080">Order</span><span style="color: #000000">, </span><span style="color: #001080">agvId001</span><span style="color: #000000">, </span><span style="color: #001080">state</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;State object received: %o&quot;</span><span style="color: #000000">, </span><span style="color: #001080">state</span><span style="color: #000000">);</span>
+<span style="color: #000000">    </span><span style="color: #008000">// Detect order state changes by delta comparison of received State objects.</span>
+<span style="color: #000000">});</span>
+
+<span style="color: #008000">// Track online-offline connection state of all AGVs within the context &quot;logctx42&quot;.</span>
+<span style="color: #001080">mcClient</span><span style="color: #000000">.</span><span style="color: #795E26">trackAgvs</span><span style="color: #000000">((</span><span style="color: #001080">agvId</span><span style="color: #000000">, </span><span style="color: #001080">connectionState</span><span style="color: #000000">, </span><span style="color: #001080">timestamp</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;AGV %o changed connection state to %s at %d&quot;</span><span style="color: #000000">, </span><span style="color: #001080">agvId</span><span style="color: #000000">, </span><span style="color: #001080">connectionState</span><span style="color: #000000">, </span><span style="color: #001080">timestamp</span><span style="color: #000000">));</span>
+
+<span style="color: #008000">// Stop observing Visualization and State objects.</span>
+<span style="color: #001080">mcClient</span><span style="color: #000000">.</span><span style="color: #795E26">unsubscribe</span><span style="color: #000000">(</span><span style="color: #001080">visSubscriptionId</span><span style="color: #000000">);</span>
+<span style="color: #001080">mcClient</span><span style="color: #000000">.</span><span style="color: #795E26">unsubscribe</span><span style="color: #000000">(</span><span style="color: #001080">stateSubscriptionId</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Stop client interaction gracefully; disconnect from MQTT broker.</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">mcClient</span><span style="color: #000000">.</span><span style="color: #795E26">stop</span><span style="color: #000000">();</span>
+</code></pre>
+				<p>The following example shows how to set up an <em>AGV Control Client</em> that
+				subscribes to order topics, and publishes state and visualization topics.</p>
+				<p>Usually, there should be no need to use this component as the AGV Controller
+					subclass provides a ready-to-use implementation of the complete control logic on
+				the vehicle plane.</p>
+				<pre><code class="language-ts"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">currentState</span><span style="color: #000000"> = {} </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #267F99">State</span><span style="color: #000000">;</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">currentPosition</span><span style="color: #000000"> = {} </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #267F99">AgvPosition</span><span style="color: #000000">;</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">currentVelocity</span><span style="color: #000000"> = {} </span><span style="color: #AF00DB">as</span><span style="color: #000000"> </span><span style="color: #267F99">Velocity</span><span style="color: #000000">;</span>
+
+<span style="color: #008000">// The target AGV.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">agvId001</span><span style="color: #000000">: </span><span style="color: #267F99">AgvId</span><span style="color: #000000"> = { </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;RobotCompany&quot;</span><span style="color: #000000">, </span><span style="color: #001080">serialNumber:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;001&quot;</span><span style="color: #000000"> };</span>
+
+<span style="color: #008000">// Create instance of AGV Client &quot;001&quot; with minimal options: communication namespace and broker endpoint address.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">agvClient</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">AgvClient</span><span style="color: #000000">(</span><span style="color: #001080">agvId001</span><span style="color: #000000">, { </span><span style="color: #001080">interfaceName:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;logctx42&quot;</span><span style="color: #000000">, </span><span style="color: #001080">transport:</span><span style="color: #000000"> { </span><span style="color: #001080">brokerUrl:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;mqtt://mybroker.com:1883&quot;</span><span style="color: #000000"> } });</span>
+
+<span style="color: #008000">// Start client interaction, connect to MQTT broker.</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">agvClient</span><span style="color: #000000">.</span><span style="color: #795E26">start</span><span style="color: #000000">();</span>
+
+<span style="color: #008000">// Observe Order objects emitted by the Master Control Client.</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">agvClient</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">(</span><span style="color: #001080">Topic</span><span style="color: #000000">.</span><span style="color: #001080">Order</span><span style="color: #000000">, </span><span style="color: #001080">order</span><span style="color: #000000"> </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Order object received: %o&quot;</span><span style="color: #000000">, </span><span style="color: #001080">order</span><span style="color: #000000">);</span>
+
+<span style="color: #000000">    </span><span style="color: #008000">// Start order handling according to VDA 5050 specification and</span>
+<span style="color: #000000">    </span><span style="color: #008000">// report order state changes by publishing State objects.</span>
+<span style="color: #000000">        </span><span style="color: #001080">agvClient</span><span style="color: #000000">.</span><span style="color: #795E26">publish</span><span style="color: #000000">(</span><span style="color: #001080">Topic</span><span style="color: #000000">.</span><span style="color: #001080">State</span><span style="color: #000000">, </span><span style="color: #001080">currentState</span><span style="color: #000000">);</span>
+<span style="color: #000000">});</span>
+
+<span style="color: #008000">// Periodically publish Visualization messages with AgvPosition and Velocity.</span>
+<span style="color: #795E26">setInterval</span><span style="color: #000000">(</span>
+<span style="color: #000000">    () </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">agvClient</span><span style="color: #000000">.</span><span style="color: #795E26">publish</span><span style="color: #000000">(</span><span style="color: #001080">Topic</span><span style="color: #000000">.</span><span style="color: #001080">Visualization</span><span style="color: #000000">,</span>
+<span style="color: #000000">        { </span><span style="color: #001080">agvPosition:</span><span style="color: #000000"> </span><span style="color: #001080">currentPosition</span><span style="color: #000000">, </span><span style="color: #001080">velocity:</span><span style="color: #000000"> </span><span style="color: #001080">currentVelocity</span><span style="color: #000000"> },</span>
+<span style="color: #000000">        { </span><span style="color: #001080">dropIfOffline:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000"> }),</span>
+<span style="color: #000000">    </span><span style="color: #098658">1000</span><span style="color: #000000">);</span>
+</code></pre>
+				<a href="#vda-5050-protocol-extensions" id="vda-5050-protocol-extensions" style="color: inherit; text-decoration: none;">
+					<h3>VDA 5050 protocol extensions</h3>
+				</a>
+				<p>The library supports VDA 5050 protocol extensions on two levels:</p>
+				<ul>
+					<li>Custom, non-predefined instant, node, and edge actions are handled by
+					providing custom AGV adapters that support them.</li>
+					<li>Custom extension topics and object types can be registered with Master
+					Control and AGV Control clients.</li>
+				</ul>
+				<p>The following example shows how to define and use an extension topic for inbound
+				and outbound communication on a Master Controller:</p>
+				<pre><code class="language-ts"><span style="color: #008000">// Create instance of Master Controller with minimal client options: communication namespace and broker endpoint address.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">masterController</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">MasterController</span><span style="color: #000000">({ </span><span style="color: #001080">interfaceName:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;logctx42&quot;</span><span style="color: #000000">, </span><span style="color: #001080">transport:</span><span style="color: #000000"> { </span><span style="color: #001080">brokerUrl:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;mqtt://mybroker.com:1883&quot;</span><span style="color: #000000"> } });</span>
+
+<span style="color: #008000">// Define extension object type including header properties.</span>
+<span style="color: #0000FF">interface</span><span style="color: #000000"> </span><span style="color: #267F99">MyExtensionObject</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">Header</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">key1</span><span style="color: #000000">: </span><span style="color: #267F99">number</span><span style="color: #000000">;</span>
+<span style="color: #000000">    </span><span style="color: #001080">key2</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">;</span>
+<span style="color: #000000">}</span>
+
+<span style="color: #008000">// Define a validator function for the extension topic/object (optional).</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">myExtensionValidator</span><span style="color: #000000">: </span><span style="color: #267F99">ExtensionValidator</span><span style="color: #000000"> = (</span><span style="color: #001080">topic</span><span style="color: #000000">, </span><span style="color: #001080">object</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #0000FF">typeof</span><span style="color: #000000"> </span><span style="color: #001080">object</span><span style="color: #000000">?.</span><span style="color: #001080">key1</span><span style="color: #000000"> !== </span><span style="color: #A31515">&quot;number&quot;</span><span style="color: #000000"> || </span><span style="color: #0000FF">typeof</span><span style="color: #000000"> </span><span style="color: #001080">object</span><span style="color: #000000">?.</span><span style="color: #001080">key2</span><span style="color: #000000"> !== </span><span style="color: #A31515">&quot;string&quot;</span><span style="color: #000000">) {</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">throw</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">TypeError</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Extension object is not valid&quot;</span><span style="color: #000000">);</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">};</span>
+
+<span style="color: #008000">// Register extension topic with validator for both inbound (subscribe) and outbound (publish) communication.</span>
+<span style="color: #001080">masterController</span><span style="color: #000000">.</span><span style="color: #795E26">registerExtensionTopic</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;myExtension&quot;</span><span style="color: #000000">, </span><span style="color: #0000FF">true</span><span style="color: #000000">, </span><span style="color: #0000FF">true</span><span style="color: #000000">, </span><span style="color: #001080">myExtensionValidator</span><span style="color: #000000">);</span>
+
+<span style="color: #008000">// Start client interaction, connect to MQTT broker.</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">masterController</span><span style="color: #000000">.</span><span style="color: #795E26">start</span><span style="color: #000000">();</span>
+
+<span style="color: #008000">// Observe myExtension messages from all AGVs manufactured by &quot;RobotCompany&quot;.</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">masterController</span><span style="color: #000000">.</span><span style="color: #795E26">subscribe</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;myExtension&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    { </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;RobotCompany&quot;</span><span style="color: #000000"> },</span>
+<span style="color: #000000">    (</span><span style="color: #001080">object</span><span style="color: #000000">: </span><span style="color: #267F99">ExtensionObject</span><span style="color: #000000">, </span><span style="color: #001080">subject</span><span style="color: #000000">: </span><span style="color: #267F99">AgvId</span><span style="color: #000000">, </span><span style="color: #001080">topic</span><span style="color: #000000">: </span><span style="color: #267F99">string</span><span style="color: #000000">) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Extension topic %s with object %o received from AGV %o&quot;</span><span style="color: #000000">, </span><span style="color: #001080">topic</span><span style="color: #000000">, </span><span style="color: #001080">object</span><span style="color: #000000">, </span><span style="color: #001080">subject</span><span style="color: #000000">));</span>
+
+<span style="color: #008000">// Publish myExtension object to AGV &quot;001&quot;.</span>
+<span style="color: #AF00DB">await</span><span style="color: #000000"> </span><span style="color: #001080">masterController</span><span style="color: #000000">.</span><span style="color: #795E26">publish</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;myExtension&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    { </span><span style="color: #001080">manufacturer:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;RobotCompany&quot;</span><span style="color: #000000">, </span><span style="color: #001080">serialNumber:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;001&quot;</span><span style="color: #000000"> },</span>
+<span style="color: #000000">    { </span><span style="color: #001080">key1:</span><span style="color: #000000"> </span><span style="color: #098658">42</span><span style="color: #000000">, </span><span style="color: #001080">key2:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;foo&quot;</span><span style="color: #000000"> });</span>
+</code></pre>
+				<a href="#programming-guidelines" id="programming-guidelines" style="color: inherit; text-decoration: none;">
+					<h3>Programming guidelines</h3>
+				</a>
+				<p>For the sake of brevity the examples shown in this document do not include error
+				handling. You should carefully follow best practices when using the library:</p>
+				<ul>
+					<li>The asynchronous publish/subscribe/unsubscribe methods throw <em>synchronously</em>
+						on <em>programming errors</em>, i.e. non-operational errors like passing invalid
+						arguments or invoking the function while the client is not started. In
+						contrast, <em>operational errors</em> are always signaled by rejecting the returned
+					promise.</li>
+					<li>Always catch and handle errors that might be thrown in your own subscription
+					and event handler callback code.</li>
+					<li>Do not perform long-lasting operations in subscription and event callbacks,
+					prefer to execute them asynchronously instead.</li>
+				</ul>
+				<p>To turn on debug output for this library, set the <code>DEBUG</code> environment variable
+					to <code>vda-5050:*</code>. To enable low-level MQTT debugging, use <code>vda-5050:*,mqttjs*</code>.
+				Use <code>*</code> to debug all debug-enabled modules in your application.</p>
+				<a href="#contributing" id="contributing" style="color: inherit; text-decoration: none;">
+					<h2>Contributing</h2>
+				</a>
+				<p>If you like this package, please consider &#x2605; starring <a href="https://github.com/coatyio/vda-5050-lib.js">the project on
+					github</a>. Contributions are
+				welcome and appreciated.</p>
+				<p>The recommended practice described in the <a href="https://github.com/coatyio/coaty-js/blob/master/CONTRIBUTING.md">contribution
+					guidelines</a> of
+				the Coaty JS framework also applies here.</p>
+				<p>To release a new version of this package, run <code>npm run release</code>. This includes
+					automatic version bumping, generation of a conventional changelog based on git
+					commit history, git tagging and pushing the release, and publishing the package
+				on npm registry. For a dry test run, invoke <code>npm run release:dry</code>.</p>
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h2>License</h2>
+				</a>
+				<p>Code and documentation copyright 2021 Siemens AG.</p>
+				<p>Code is licensed under the <a href="https://opensource.org/licenses/MIT">MIT License</a>.</p>
+				<p>Documentation is licensed under a
+				<a href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/actionstatus.html" class="tsd-kind-icon">Action<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/blockingtype.html" class="tsd-kind-icon">Blocking<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/connectionstate.html" class="tsd-kind-icon">Connection<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/estop.html" class="tsd-kind-icon">EStop</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/errorlevel.html" class="tsd-kind-icon">Error<wbr>Level</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/errortype.html" class="tsd-kind-icon">Error<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/infolevel.html" class="tsd-kind-icon">Info<wbr>Level</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/operatingmode.html" class="tsd-kind-icon">Operating<wbr>Mode</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/topic.html" class="tsd-kind-icon">Topic</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/agvclient.html" class="tsd-kind-icon">Agv<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/agvcontroller.html" class="tsd-kind-icon">Agv<wbr>Controller</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/agvidmap.html" class="tsd-kind-icon">Agv<wbr>IdMap</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/client.html" class="tsd-kind-icon">Client</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/mastercontrolclient.html" class="tsd-kind-icon">Master<wbr>Control<wbr>Client</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/mastercontroller.html" class="tsd-kind-icon">Master<wbr>Controller</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/virtualagvadapter.html" class="tsd-kind-icon">Virtual<wbr>Agv<wbr>Adapter</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/action.html" class="tsd-kind-icon">Action</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/actioncontext.html" class="tsd-kind-icon">Action<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/actionparameter.html" class="tsd-kind-icon">Action<wbr>Parameter</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/actionstate.html" class="tsd-kind-icon">Action<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/actionstatuschangeinfo.html" class="tsd-kind-icon">Action<wbr>Status<wbr>Change<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/agvadapter.html" class="tsd-kind-icon">Agv<wbr>Adapter</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/agvadapteroptions.html" class="tsd-kind-icon">Agv<wbr>Adapter<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/agvcontrolleroptions.html" class="tsd-kind-icon">Agv<wbr>Controller<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/agvid.html" class="tsd-kind-icon">Agv<wbr>Id</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/agvposition.html" class="tsd-kind-icon">Agv<wbr>Position</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/attachcontext.html" class="tsd-kind-icon">Attach<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/batterystate.html" class="tsd-kind-icon">Battery<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/boundingboxreference.html" class="tsd-kind-icon">Bounding<wbr>Box<wbr>Reference</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/clientoptions.html" class="tsd-kind-icon">Client<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/clientpublishoptions.html" class="tsd-kind-icon">Client<wbr>Publish<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/connection.html" class="tsd-kind-icon">Connection</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/controlpoint.html" class="tsd-kind-icon">Control<wbr>Point</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/detachcontext.html" class="tsd-kind-icon">Detach<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/edge.html" class="tsd-kind-icon">Edge</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/edgestate.html" class="tsd-kind-icon">Edge<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/error.html" class="tsd-kind-icon">Error</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/errorreference.html" class="tsd-kind-icon">Error<wbr>Reference</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/header.html" class="tsd-kind-icon">Header</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/inforeference.html" class="tsd-kind-icon">Info<wbr>Reference</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/information.html" class="tsd-kind-icon">Information</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/instantactioneventhandler.html" class="tsd-kind-icon">Instant<wbr>Action<wbr>Event<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/instantactions.html" class="tsd-kind-icon">Instant<wbr>Actions</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/load.html" class="tsd-kind-icon">Load</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/loaddimensions.html" class="tsd-kind-icon">Load<wbr>Dimensions</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/mastercontrolleroptions.html" class="tsd-kind-icon">Master<wbr>Controller<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/mqtttransportoptions.html" class="tsd-kind-icon">Mqtt<wbr>Transport<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/node.html" class="tsd-kind-icon">Node</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/nodeposition.html" class="tsd-kind-icon">Node<wbr>Position</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/nodestate.html" class="tsd-kind-icon">Node<wbr>State</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/order.html" class="tsd-kind-icon">Order</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ordercontext.html" class="tsd-kind-icon">Order<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ordereventhandler.html" class="tsd-kind-icon">Order<wbr>Event<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/routetraversablecontext.html" class="tsd-kind-icon">Route<wbr>Traversable<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/safetystatus.html" class="tsd-kind-icon">Safety<wbr>Status</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/state.html" class="tsd-kind-icon">State</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/stoptraversecontext.html" class="tsd-kind-icon">Stop<wbr>Traverse<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/trajectory.html" class="tsd-kind-icon">Trajectory</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/trajectorycontext.html" class="tsd-kind-icon">Trajectory<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/traverseedgecontext.html" class="tsd-kind-icon">Traverse<wbr>Edge<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/velocity.html" class="tsd-kind-icon">Velocity</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/virtualactiondefinition.html" class="tsd-kind-icon">Virtual<wbr>Action<wbr>Definition</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/virtualagvadapteroptions.html" class="tsd-kind-icon">Virtual<wbr>Agv<wbr>Adapter<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/visualization.html" class="tsd-kind-icon">Visualization</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#actionscope" class="tsd-kind-icon">Action<wbr>Scope</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#agvadapterconstructor" class="tsd-kind-icon">Agv<wbr>Adapter<wbr>Constructor</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#agvadapterdebugger" class="tsd-kind-icon">Agv<wbr>Adapter<wbr>Debugger</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#connectionstatechangecallback" class="tsd-kind-icon">Connection<wbr>State<wbr>Change<wbr>Callback</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#edgestatechanges" class="tsd-kind-icon">Edge<wbr>State<wbr>Changes</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#extensionobject" class="tsd-kind-icon">Extension<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#extensionvalidator" class="tsd-kind-icon">Extension<wbr>Validator</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#headerless" class="tsd-kind-icon">Headerless</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#optional" class="tsd-kind-icon">Optional</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#optionalkeys" class="tsd-kind-icon">Optional<wbr>Keys</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#subscriptionhandler" class="tsd-kind-icon">Subscription<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#subscriptionid" class="tsd-kind-icon">Subscription<wbr>Id</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#topicobject" class="tsd-kind-icon">Topic<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#vda5050object" class="tsd-kind-icon">Vda5050<wbr>Object</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#virtualactiontransitions" class="tsd-kind-icon">Virtual<wbr>Action<wbr>Transitions</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#createuuid" class="tsd-kind-icon">create<wbr>Uuid</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#isextensiontopic" class="tsd-kind-icon">is<wbr>Extension<wbr>Topic</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#isplainobject" class="tsd-kind-icon">is<wbr>Plain<wbr>Object</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

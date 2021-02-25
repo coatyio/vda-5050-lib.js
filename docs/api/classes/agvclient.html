@@ -1,0 +1,1296 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>AgvClient | vda-5050-lib for VDA 5050 version 1.1 - v1.0.0</title>
+	<meta name="description" content="Documentation for vda-5050-lib for VDA 5050 version 1.1 - v1.0.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">vda-5050-lib for VDA 5050 version 1.1 - v1.0.0</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules.html">vda-5050-lib for VDA 5050 version 1.1 - v1.0.0</a>
+				</li>
+				<li>
+					<a href="agvclient.html">AgvClient</a>
+				</li>
+			</ul>
+			<h1>Class AgvClient</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A client that implements a basic publish-subscribe communication abstraction
+							layer of the vehicle plane (AGV) of VDA 5050 on top of the MQTT transport
+						protocol.</p>
+					</div>
+					<dl class="tsd-comment-tags">
+						<dt>remarks</dt>
+						<dd><p>The counterpart of this component on the coordination plane is the
+							class <code>MasterControlClient</code>.</p>
+						</dd>
+					</dl>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="client.html" class="tsd-signature-type" data-tsd-kind="Class">Client</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">AgvClient</span>
+								<ul class="tsd-hierarchy">
+									<li>
+										<a href="agvcontroller.html" class="tsd-signature-type" data-tsd-kind="Class">AgvController</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><a href="agvclient.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="agvclient.html#agvid" class="tsd-kind-icon">agv<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="agvclient.html#clientid" class="tsd-kind-icon">client<wbr>Id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="agvclient.html#debug" class="tsd-kind-icon">debug</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="agvclient.html#clientoptions" class="tsd-kind-icon">client<wbr>Options</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="agvclient.html#isstarted" class="tsd-kind-icon">is<wbr>Started</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="agvclient.html#protocolversion" class="tsd-kind-icon">protocol<wbr>Version</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="agvclient.html#createuuid" class="tsd-kind-icon">create<wbr>Uuid</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected"><a href="agvclient.html#getlastwilltopic" class="tsd-kind-icon">get<wbr>Last<wbr>Will<wbr>Topic</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="agvclient.html#getprotocolversion" class="tsd-kind-icon">get<wbr>Protocol<wbr>Version</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected"><a href="agvclient.html#onstarted" class="tsd-kind-icon">on<wbr>Started</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected"><a href="agvclient.html#onstopping" class="tsd-kind-icon">on<wbr>Stopping</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="agvclient.html#publish" class="tsd-kind-icon">publish</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected"><a href="agvclient.html#publishtopic" class="tsd-kind-icon">publish<wbr>Topic</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="agvclient.html#registerconnectionstatechange" class="tsd-kind-icon">register<wbr>Connection<wbr>State<wbr>Change</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="agvclient.html#registerextensiontopic" class="tsd-kind-icon">register<wbr>Extension<wbr>Topic</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="agvclient.html#reset" class="tsd-kind-icon">reset</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="agvclient.html#start" class="tsd-kind-icon">start</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="agvclient.html#stop" class="tsd-kind-icon">stop</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter"><a href="agvclient.html#subscribe" class="tsd-kind-icon">subscribe</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected"><a href="agvclient.html#subscribetopic" class="tsd-kind-icon">subscribe<wbr>Topic</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="agvclient.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="agvclient.html#validateagvid" class="tsd-kind-icon">validate<wbr>Agv<wbr>Id</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected"><a href="agvclient.html#validatetopicdirection" class="tsd-kind-icon">validate<wbr>Topic<wbr>Direction</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected"><a href="agvclient.html#validatetopicobject" class="tsd-kind-icon">validate<wbr>Topic<wbr>Object</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Agv<wbr>Client<span class="tsd-signature-symbol">(</span>agvId<span class="tsd-signature-symbol">: </span><a href="../interfaces/agvid.html" class="tsd-signature-type" data-tsd-kind="Interface">AgvId</a>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/clientoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="agvclient.html" class="tsd-signature-type" data-tsd-kind="Class">AgvClient</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#constructor">constructor</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/client/agv-client.ts#L27">client/agv-client.ts:27</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates an instance of <code>AgvClient</code>.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>agvId: <a href="../interfaces/agvid.html" class="tsd-signature-type" data-tsd-kind="Interface">AgvId</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the identity of the AGV this client represents</p>
+									</div>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/clientoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>configuration options for the client</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="agvclient.html" class="tsd-signature-type" data-tsd-kind="Class">AgvClient</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="agvid" class="tsd-anchor"></a>
+					<h3>agv<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">agv<wbr>Id<span class="tsd-signature-symbol">:</span> <a href="../interfaces/agvid.html" class="tsd-signature-type" data-tsd-kind="Interface">AgvId</a></div>
+					<aside class="tsd-sources">
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="clientid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> client<wbr>Id</h3>
+					<div class="tsd-signature tsd-kind-icon">client<wbr>Id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#clientid">clientId</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L351">common/client.ts:351</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Gets the client&#39;s unique client ID to be used for logging purposes, etc.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="debug" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> debug</h3>
+					<div class="tsd-signature tsd-kind-icon">debug<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Debugger</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#debug">debug</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L366">common/client.ts:366</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Gets a debugger function associated with this client instance.</p>
+						</div>
+						<p>Used to log informational, debug, and error messages. The first argument
+							is a formatter string with printf-style formatting supporting the
+							following directives: <code>%O</code> (object multi-line), <code>%o</code> (object
+						single-line), <code>%s</code> (string), <code>%d</code> (number), <code>%j</code> (JSON), <code>%%</code> (escape).</p>
+						<p>To turn on debug output for this library, set the <code>DEBUG</code> environment
+							variable to <code>vda-5050:*</code>. To enable low-level MQTT debugging, use
+							<code>vda-5050:*,mqttjs*</code>. Use <code>*</code> to debug all debug-enabled modules in your
+						application.</p>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+					<a name="clientoptions" class="tsd-anchor"></a>
+					<h3>client<wbr>Options</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> clientOptions<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/clientoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientOptions</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L407">common/client.ts:407</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the client configuration options as a readonly object.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/clientoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientOptions</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="isstarted" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> is<wbr>Started</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> isStarted<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L611">common/client.ts:611</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Determines whether the client has been started.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>true if client has been started; false otherwise</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+					<a name="protocolversion" class="tsd-anchor"></a>
+					<h3>protocol<wbr>Version</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> protocolVersion<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L418">common/client.ts:418</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the semantic version of the VDA 5050 protocol this implementation
+									conforms to.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>a string in the format
+							<code>&quot;&lt;major-version-number&gt;.&lt;minor-version-number&gt;.&lt;patch-version-number&gt;&quot;</code></p>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="createuuid" class="tsd-anchor"></a>
+					<h3>create<wbr>Uuid</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Uuid<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#createuuid">createUuid</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L428">common/client.ts:428</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create a new Version 4 UUID to be used as a unique identifier for nodes,
+									edges, actions, etc.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>a unique Version 4 UUID</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+					<a name="getlastwilltopic" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> get<wbr>Last<wbr>Will<wbr>Topic</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Last<wbr>Will<wbr>Topic<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">{ </span>object<span class="tsd-signature-symbol">: </span><a href="../modules.html#headerless" class="tsd-signature-type" data-tsd-kind="Type alias">Headerless</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/connection.html" class="tsd-signature-type" data-tsd-kind="Interface">Connection</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>retainMessage<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>subject<span class="tsd-signature-symbol">: </span><a href="../interfaces/agvid.html" class="tsd-signature-type" data-tsd-kind="Interface">AgvId</a><span class="tsd-signature-symbol">; </span>topic<span class="tsd-signature-symbol">: </span><a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a><span class="tsd-signature-symbol"> }</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="client.html">Client</a>.<a href="client.html#getlastwilltopic">getLastWillTopic</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/client/agv-client.ts#L149">client/agv-client.ts:149</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register a last will message at the broker that triggers publication of a
+										connection topic for broken connection state whenever the connection is
+									interrupted unexpectedly.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">{ </span>object<span class="tsd-signature-symbol">: </span><a href="../modules.html#headerless" class="tsd-signature-type" data-tsd-kind="Type alias">Headerless</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/connection.html" class="tsd-signature-type" data-tsd-kind="Interface">Connection</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">; </span>retainMessage<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>subject<span class="tsd-signature-symbol">: </span><a href="../interfaces/agvid.html" class="tsd-signature-type" data-tsd-kind="Interface">AgvId</a><span class="tsd-signature-symbol">; </span>topic<span class="tsd-signature-symbol">: </span><a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a><span class="tsd-signature-symbol"> }</span></h4>
+							<ul class="tsd-parameters">
+								<li class="tsd-parameter">
+									<h5>object<span class="tsd-signature-symbol">: </span><a href="../modules.html#headerless" class="tsd-signature-type" data-tsd-kind="Type alias">Headerless</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/connection.html" class="tsd-signature-type" data-tsd-kind="Interface">Connection</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li class="tsd-parameter">
+									<h5>retain<wbr>Message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+								</li>
+								<li class="tsd-parameter">
+									<h5>subject<span class="tsd-signature-symbol">: </span><a href="../interfaces/agvid.html" class="tsd-signature-type" data-tsd-kind="Interface">AgvId</a></h5>
+								</li>
+								<li class="tsd-parameter">
+									<h5>topic<span class="tsd-signature-symbol">: </span><a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a></h5>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="getprotocolversion" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> get<wbr>Protocol<wbr>Version</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Protocol<wbr>Version<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#getprotocolversion">getProtocolVersion</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L602">common/client.ts:602</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Gets the semantic version of the VDA 5050 protocol this implementation
+									conforms to.</p>
+								</div>
+								<p>To be overridden by subclasses that provide VDA 5050 extensions. The
+									default version returned by the base method is the standard VDA 5050
+								protocol version this <code>Client</code> class implements.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>a string in the format
+							<code>&quot;&lt;major-version-number&gt;.&lt;minor-version-number&gt;.&lt;patch-version-number&gt;&quot;</code></p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+					<a name="onstarted" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> on<wbr>Started</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Started<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="client.html">Client</a>.<a href="client.html#onstarted">onStarted</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/client/agv-client.ts#L164">client/agv-client.ts:164</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Whenever client starts, publish a retained connection topic for online
+									connection state.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+					<a name="onstopping" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> on<wbr>Stopping</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">on<wbr>Stopping<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="client.html">Client</a>.<a href="client.html#onstopping">onStopping</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/client/agv-client.ts#L176">client/agv-client.ts:176</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Before client disconnects actively, publish a retained connection topic
+									for offline connection state.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<a name="publish" class="tsd-anchor"></a>
+					<h3>publish</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">publish&lt;T&gt;<span class="tsd-signature-symbol">(</span>topic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> extends </span><a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">string</span>, object<span class="tsd-signature-symbol">: </span><a href="../modules.html#headerless" class="tsd-signature-type" data-tsd-kind="Type alias">Headerless</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#topicobject" class="tsd-signature-type" data-tsd-kind="Type alias">TopicObject</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/clientpublishoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientPublishOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#topicobject" class="tsd-signature-type" data-tsd-kind="Type alias">TopicObject</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/client/agv-client.ts#L59">client/agv-client.ts:59</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Publishes the given VDA 5050 core or extension object on the given VDA
+									5050 communication topic.</p>
+								</div>
+								<p>On successful publication, this async function resolves a promise
+									containing a copy of the given headerless object including all header
+									properties as it has been published. If the publication is dropped
+									according to the <code>dropIfOffline</code> publish option, the promise resolves
+								with an <code>undefined</code> value.</p>
+								<dl class="tsd-comment-tags">
+									<dt>throws</dt>
+									<dd><p>synchronously if client is not started, if topic is not valid, if
+										object validation fails</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>topic: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> extends </span><a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the VDA 5050 communication topic to publish on</p>
+									</div>
+								</li>
+								<li>
+									<h5>object: <a href="../modules.html#headerless" class="tsd-signature-type" data-tsd-kind="Type alias">Headerless</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#topicobject" class="tsd-signature-type" data-tsd-kind="Type alias">TopicObject</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a VDA 5050 core or extension object without header
+										properties</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/clientpublishoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientPublishOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>client publish options (optional)</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#topicobject" class="tsd-signature-type" data-tsd-kind="Type alias">TopicObject</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a promise that resolves the published object if publication
+							succeeds or <code>undefined</code> if message should be dropped while offline</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
+					<a name="publishtopic" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> publish<wbr>Topic</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">publish<wbr>Topic&lt;T&gt;<span class="tsd-signature-symbol">(</span>topic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> extends </span><a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">string</span>, subject<span class="tsd-signature-symbol">: </span><a href="../interfaces/agvid.html" class="tsd-signature-type" data-tsd-kind="Interface">AgvId</a>, object<span class="tsd-signature-symbol">: </span><a href="../modules.html#headerless" class="tsd-signature-type" data-tsd-kind="Type alias">Headerless</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#topicobject" class="tsd-signature-type" data-tsd-kind="Type alias">TopicObject</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/clientpublishoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientPublishOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#topicobject" class="tsd-signature-type" data-tsd-kind="Type alias">TopicObject</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#publishtopic">publishTopic</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L678">common/client.ts:678</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Publishes the given VDA 5050 core or extension object on the given VDA
+									5050 communication topic related to the given AGV subject.</p>
+								</div>
+								<p>The <code>AgvId</code> subject is used to automatically fill in header properties of
+									the object to be published. Each of its properties must specify a
+								non-empty string and must be valid as an MQTT topic level.</p>
+								<p>On successful publication, this async function resolves a promise
+									containing a copy of the given headerless object including all header
+									properties as it has been published. If the publication is dropped
+									according to the <code>dropIfOffline</code> publish option, the promise resolves
+								with an <code>undefined</code> value.</p>
+								<dl class="tsd-comment-tags">
+									<dt>throws</dt>
+									<dd><p>synchronously if client is not started, if topic or subject is
+										not valid, if object validation fails</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>topic: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> extends </span><a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the VDA 5050 communication topic to publish on</p>
+									</div>
+								</li>
+								<li>
+									<h5>subject: <a href="../interfaces/agvid.html" class="tsd-signature-type" data-tsd-kind="Interface">AgvId</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>identity of the AGV which is related to this publication</p>
+									</div>
+								</li>
+								<li>
+									<h5>object: <a href="../modules.html#headerless" class="tsd-signature-type" data-tsd-kind="Type alias">Headerless</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#topicobject" class="tsd-signature-type" data-tsd-kind="Type alias">TopicObject</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a VDA 5050 core or extension object without header
+										properties</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../interfaces/clientpublishoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClientPublishOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>client publish options (optional)</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#topicobject" class="tsd-signature-type" data-tsd-kind="Type alias">TopicObject</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a promise that resolves the published object if publication
+							succeeds or <code>undefined</code> if message should be dropped while offline</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="registerconnectionstatechange" class="tsd-anchor"></a>
+					<h3>register<wbr>Connection<wbr>State<wbr>Change</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">register<wbr>Connection<wbr>State<wbr>Change<span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><a href="../modules.html#connectionstatechangecallback" class="tsd-signature-type" data-tsd-kind="Type alias">ConnectionStateChangeCallback</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#registerconnectionstatechange">registerConnectionStateChange</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L547">common/client.ts:547</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Register a callback function invoked whenever the client&#39;s connection
+									state changes.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>remarks</dt>
+									<dd><p>Upon registration, the given callback is invoked immediately
+										with the current connection state.</p>
+									</dd>
+									<dt>remarks</dt>
+									<dd><p>You can only register one callback per client; any previously
+										registered callback is discarded.</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>callback: <a href="../modules.html#connectionstatechangecallback" class="tsd-signature-type" data-tsd-kind="Type alias">ConnectionStateChangeCallback</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a callback function</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="registerextensiontopic" class="tsd-anchor"></a>
+					<h3>register<wbr>Extension<wbr>Topic</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">register<wbr>Extension<wbr>Topic<span class="tsd-signature-symbol">(</span>extensionTopic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, asInbound<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, asOutbound<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, validator<span class="tsd-signature-symbol">: </span><a href="../modules.html#extensionvalidator" class="tsd-signature-type" data-tsd-kind="Type alias">ExtensionValidator</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#registerextensiontopic">registerExtensionTopic</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L585">common/client.ts:585</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Registers a custom VDA 5050 communication topic with a validator function
+										to check structure and constraints of corresponding extension objects at
+									runtime.</p>
+								</div>
+								<p>The <code>asInbound</code> and <code>asOutbound</code> parameters indicate whether the
+									registered extension topic should be allowed for inbound communication
+									and/or outbound communication. If inbound communication is not allowed,
+									subscribing to the topic will fail. Likewise, if outbound communication
+								is not allowed, publishing on the topic will fail.</p>
+								<p>The validator function is invoked on inbound and/or outbound messages
+									with a registered extension topic according to the client option
+								<code>topicObjectValidation</code>.</p>
+								<p>The validator function should throw a <code>TypeError</code> synchronously if the
+									passed extension object structure does not conform to the passed
+								extension topic and the direction of the message (inbound, outbound).</p>
+								<dl class="tsd-comment-tags">
+									<dt>remarks</dt>
+									<dd><p>If the given topic is already registered, its registration will
+										be overridden with the new parameters.</p>
+									</dd>
+									<dt>remarks</dt>
+									<dd><p>Use the function <code>createValidators</code> in the <code>create-validators</code>
+											script provided by this package to generate JS validation functions for
+										your custom JSON schemas. Use these functions in this method override.</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>extensionTopic: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a custom VDA 5050 communication topic</p>
+									</div>
+								</li>
+								<li>
+									<h5>asInbound: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>whether topic should be allowed on inbound communication</p>
+									</div>
+								</li>
+								<li>
+									<h5>asOutbound: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>whether topic should be allowed on outbound
+										communication</p>
+									</div>
+								</li>
+								<li>
+									<h5>validator: <a href="../modules.html#extensionvalidator" class="tsd-signature-type" data-tsd-kind="Type alias">ExtensionValidator</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a function that validates message objects against the
+										given extension topic</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="reset" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> reset</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">reset<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#reset">reset</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L949">common/client.ts:949</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Invoked after client is stopped to reset internal client state.</p>
+								</div>
+								<p>To be extended by subclasses. Ensure to call <code>super.reset()</code> in your
+								override.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="start" class="tsd-anchor"></a>
+					<h3>start</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">start<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#start">start</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L443">common/client.ts:443</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Starts client interaction by connecting to the configured MQTT broker.</p>
+								</div>
+								<p>If client is already started, this operation is a noop.</p>
+								<dl class="tsd-comment-tags">
+									<dt>remarks</dt>
+									<dd><p>Always await this operation before invoking other operations on
+										this client instance.</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a promise resolved when client is initially connected, and
+							rejected when connection fails</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="stop" class="tsd-anchor"></a>
+					<h3>stop</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">stop<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#stop">stop</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L468">common/client.ts:468</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Stops client interaction by disconnecting from the MQTT broker and
+									cleaning up all active subscriptions and registered extension topics.</p>
+								</div>
+								<p>If client is not started, this operation is a noop.</p>
+								<dl class="tsd-comment-tags">
+									<dt>remarks</dt>
+									<dd><p>Always await this operation before invoking other operations on
+										this client instance, such as <code>start</code>.</p>
+									</dd>
+									<dt>remarks</dt>
+									<dd><p>After the client is stopped any publish, subscribe, and
+										unsubscribe operations will throw an error until the client is restarted.</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a promise resolved when client is disconnected from the
+							underlying MQTT transport.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+					<a name="subscribe" class="tsd-anchor"></a>
+					<h3>subscribe</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">subscribe&lt;T&gt;<span class="tsd-signature-symbol">(</span>topic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> extends </span><a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">string</span>, handler<span class="tsd-signature-symbol">: </span><a href="../modules.html#subscriptionhandler" class="tsd-signature-type" data-tsd-kind="Type alias">SubscriptionHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/client/agv-client.ts#L103">client/agv-client.ts:103</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Subscribes to the given VDA 5050 communication topic and registers a
+										handler function to be invoked when matching inbound publication messages
+									are received by this client.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>remarks</dt>
+									<dd><p>If multiple subscription handlers are registered for a given
+											subscription, they are invoked synchronously in series, one after the
+										other, but in arbitrary order.</p>
+									</dd>
+									<dt>remarks</dt>
+									<dd><p>A subscription handler should never perform long-lasting
+											synchronous operations as it blocks processing of other handlers and
+										incoming messages.</p>
+									</dd>
+									<dt>remarks</dt>
+									<dd><p>A subscription handler may also perform asynchronous operations
+											but these are are not awaited and not synchronized with the invocation of
+										other handlers.</p>
+									</dd>
+									<dt>remarks</dt>
+									<dd><p>A subscription handler is responsible for catching any errors.
+											Uncaught errors result in &quot;Uncaught Error&quot; or &quot;Unhandled Promise
+										Rejection&quot; reported by the runtime.</p>
+									</dd>
+									<dt>remarks</dt>
+									<dd><p>Take care to invoke <code>Client.unsubscribe</code> method on any
+											subscription ID that is no longer needed by the application to clean up
+											the subscription&#39;s handler function and to reduce network traffic.
+											Unsubscribing in a handler function is also possible; use the
+											corresponding subscription id passed as argument. If you want to keep a
+											subscription for the lifetime of the client, there is no need to
+										explicitely unsubscribe it before stopping the client.</p>
+									</dd>
+									<dt>throws</dt>
+									<dd><p>synchronously if client is not started, if topic or subject is
+										not valid</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>topic: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> extends </span><a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the VDA 5050 communication topic to subscribe to</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <a href="../modules.html#subscriptionhandler" class="tsd-signature-type" data-tsd-kind="Type alias">SubscriptionHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a function invoked on any inbound message matching the
+										subscription</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a promise that resolves a unique subscription ID when
+							subscription is set up successfully</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
+					<a name="subscribetopic" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> subscribe<wbr>Topic</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">subscribe<wbr>Topic&lt;T&gt;<span class="tsd-signature-symbol">(</span>topic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> extends </span><a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">string</span>, subject<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/agvid.html" class="tsd-signature-type" data-tsd-kind="Interface">AgvId</a><span class="tsd-signature-symbol">&gt;</span>, handler<span class="tsd-signature-symbol">: </span><a href="../modules.html#subscriptionhandler" class="tsd-signature-type" data-tsd-kind="Type alias">SubscriptionHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#subscribetopic">subscribeTopic</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L788">common/client.ts:788</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Subscribes to the given VDA 5050 communication topic for the given AGV
+										subject and registers a handler function to be invoked when matching
+									inbound publication messages are received by this client.</p>
+								</div>
+								<p>In the given partial <code>AgvId</code> subject, any property must either specify a
+									non-empty string which is valid as an MQTT topic level or be <code>undefined</code>
+									or excluded, to support wildcard subscriptions by control clients.
+								Otherwise, an error is thrown.</p>
+								<dl class="tsd-comment-tags">
+									<dt>remarks</dt>
+									<dd><p>If multiple subscription handlers are registered for a given
+											subscription, they are invoked synchronously in series, one after the
+										other, but in arbitrary order.</p>
+									</dd>
+									<dt>remarks</dt>
+									<dd><p>A subscription handler should never perform long-lasting
+											synchronous operations as it blocks processing of other handlers and
+										incoming messages.</p>
+									</dd>
+									<dt>remarks</dt>
+									<dd><p>A subscription handler may also perform asynchronous operations
+											but these are are not awaited and not synchronized with the invocation of
+										other handlers.</p>
+									</dd>
+									<dt>remarks</dt>
+									<dd><p>A subscription handler is responsible for catching any errors.
+											Uncaught errors result in &quot;Uncaught Error&quot; or &quot;Unhandled Promise
+										Rejection&quot; reported by the runtime.</p>
+									</dd>
+									<dt>remarks</dt>
+									<dd><p>Take care to invoke <code>Client.unsubscribe</code> method on any
+											subscription ID that is no longer needed by the application to clean up
+											the subscription&#39;s handler function and to reduce network traffic.
+											Unsubscribing in a handler function is also possible; use the
+											corresponding subscription id passed as argument. If you want to keep a
+											subscription for the lifetime of the client, there is no need to
+										explicitely unsubscribe it before stopping the client.</p>
+									</dd>
+									<dt>throws</dt>
+									<dd><p>synchronously if client is not started, if topic or subject is
+										not valid</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>topic: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> extends </span><a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a><span class="tsd-signature-symbol"> ? </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> : </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the VDA 5050 communication topic to subscribe to</p>
+									</div>
+								</li>
+								<li>
+									<h5>subject: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/agvid.html" class="tsd-signature-type" data-tsd-kind="Interface">AgvId</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>identity of the AGV(s) which are related to this
+										subscription</p>
+									</div>
+								</li>
+								<li>
+									<h5>handler: <a href="../modules.html#subscriptionhandler" class="tsd-signature-type" data-tsd-kind="Type alias">SubscriptionHandler</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a function invoked on any inbound message matching the
+										subscription</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a promise that resolves a unique subscription ID when
+							subscription is set up successfully</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="unsubscribe" class="tsd-anchor"></a>
+					<h3>unsubscribe</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">unsubscribe<span class="tsd-signature-symbol">(</span>subscriptionId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#unsubscribe">unsubscribe</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L496">common/client.ts:496</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Unsubscribes the subscription issued for the given subscription ID.</p>
+								</div>
+								<p>The subscription&#39;s handler function will be cleaned up and no longer
+									invoked. If there are no other active subscriptions on the associated VDA
+									5050 topic, the corresponding MQTT topic will also be unsubscribed to
+								prevent unnecessary network traffic.</p>
+								<p>If the given subscription ID is already unsubscribed, it is silently
+								ignored.</p>
+								<dl class="tsd-comment-tags">
+									<dt>throws</dt>
+									<dd><p>synchronously if client is not started</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>subscriptionId: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>the subscription ID related to an issued
+										subscription</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>a promise that resolves on successful unsubscription</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="validateagvid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> validate<wbr>Agv<wbr>Id</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">validate<wbr>Agv<wbr>Id<span class="tsd-signature-symbol">(</span>agvId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/agvid.html" class="tsd-signature-type" data-tsd-kind="Interface">AgvId</a><span class="tsd-signature-symbol">&gt;</span>, forSubscription<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#validateagvid">validateAgvId</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L871">common/client.ts:871</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Performs a runtime validation check of the given AGV identity to be used
+									as subject of a subscription or publication.</p>
+								</div>
+								<p>For publications, all <code>AgvId</code> properties must be specified and valid. For
+									subscriptions, any property may be omitted, but existing properties must
+								have valid values.</p>
+								<dl class="tsd-comment-tags">
+									<dt>throws</dt>
+									<dd><p>a <code>TypeError</code> if validation check fails</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>agvId: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/agvid.html" class="tsd-signature-type" data-tsd-kind="Interface">AgvId</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>(partial) identity of AGV</p>
+									</div>
+								</li>
+								<li>
+									<h5>forSubscription: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>whether to validate as a subscription or
+										publication subject</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+					<a name="validatetopicdirection" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> validate<wbr>Topic<wbr>Direction</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">validate<wbr>Topic<wbr>Direction<span class="tsd-signature-symbol">(</span>topic<span class="tsd-signature-symbol">: </span><a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a>, asInbound<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides <a href="client.html">Client</a>.<a href="client.html#validatetopicdirection">validateTopicDirection</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/client/agv-client.ts#L114">client/agv-client.ts:114</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Validate standard VDA 5050 topics at runtime with respect to the
+										direction of information exchange. An AGV client can only publish on
+									certain topics and only subscribe to certain topics.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>topic: <a href="../enums/topic.html" class="tsd-signature-type" data-tsd-kind="Enumeration">Topic</a></h5>
+								</li>
+								<li>
+									<h5>asInbound: <span class="tsd-signature-type">boolean</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+					<a name="validatetopicobject" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> validate<wbr>Topic<wbr>Object</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+						<li class="tsd-signature tsd-kind-icon">validate<wbr>Topic<wbr>Object<span class="tsd-signature-symbol">(</span>topic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, object<span class="tsd-signature-symbol">: </span><a href="../modules.html#vda5050object" class="tsd-signature-type" data-tsd-kind="Type alias">Vda5050Object</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="client.html">Client</a>.<a href="client.html#validatetopicobject">validateTopicObject</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/b8ff27f/src/common/client.ts#L903">common/client.ts:903</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Performs a runtime validation check of a VDA 5050 core or extension
+									object with respect to a given VDA 5050 topic.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>throws</dt>
+									<dd><p>a <code>TypeError</code> if validation check fails</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>topic: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a VDA 5050 communication topic</p>
+									</div>
+								</li>
+								<li>
+									<h5>object: <a href="../modules.html#vda5050object" class="tsd-signature-type" data-tsd-kind="Type alias">Vda5050Object</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a VDA 5050 core or extension object without header
+										properties</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
+						<a href="agvclient.html" class="tsd-kind-icon">Agv<wbr>Client</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
+								<a href="agvclient.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="agvclient.html#agvid" class="tsd-kind-icon">agv<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="agvclient.html#clientid" class="tsd-kind-icon">client<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="agvclient.html#debug" class="tsd-kind-icon">debug</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+								<a href="agvclient.html#clientoptions" class="tsd-kind-icon">client<wbr>Options</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="agvclient.html#isstarted" class="tsd-kind-icon">is<wbr>Started</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+								<a href="agvclient.html#protocolversion" class="tsd-kind-icon">protocol<wbr>Version</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="agvclient.html#createuuid" class="tsd-kind-icon">create<wbr>Uuid</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+								<a href="agvclient.html#getlastwilltopic" class="tsd-kind-icon">get<wbr>Last<wbr>Will<wbr>Topic</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="agvclient.html#getprotocolversion" class="tsd-kind-icon">get<wbr>Protocol<wbr>Version</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+								<a href="agvclient.html#onstarted" class="tsd-kind-icon">on<wbr>Started</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+								<a href="agvclient.html#onstopping" class="tsd-kind-icon">on<wbr>Stopping</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+								<a href="agvclient.html#publish" class="tsd-kind-icon">publish</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
+								<a href="agvclient.html#publishtopic" class="tsd-kind-icon">publish<wbr>Topic</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="agvclient.html#registerconnectionstatechange" class="tsd-kind-icon">register<wbr>Connection<wbr>State<wbr>Change</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="agvclient.html#registerextensiontopic" class="tsd-kind-icon">register<wbr>Extension<wbr>Topic</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="agvclient.html#reset" class="tsd-kind-icon">reset</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="agvclient.html#start" class="tsd-kind-icon">start</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="agvclient.html#stop" class="tsd-kind-icon">stop</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter">
+								<a href="agvclient.html#subscribe" class="tsd-kind-icon">subscribe</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-protected">
+								<a href="agvclient.html#subscribetopic" class="tsd-kind-icon">subscribe<wbr>Topic</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="agvclient.html#unsubscribe" class="tsd-kind-icon">unsubscribe</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="agvclient.html#validateagvid" class="tsd-kind-icon">validate<wbr>Agv<wbr>Id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-protected">
+								<a href="agvclient.html#validatetopicdirection" class="tsd-kind-icon">validate<wbr>Topic<wbr>Direction</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-protected">
+								<a href="agvclient.html#validatetopicobject" class="tsd-kind-icon">validate<wbr>Topic<wbr>Object</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>

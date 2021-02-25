@@ -1,18 +1,42 @@
 {
-    "name": "vda-5050",
-    "version": "0.0.1-schema",
-    "description": "VDA 5050 communication interface for Node.js and browsers",
-    "homepage": "https://github.com/coatyio/vda-5050.js",
+    "name": "vda-5050-lib",
+    "version": "1.0.0",
+    "description": "Universal VDA 5050 library for Node.js and browsers",
+    "homepage": "https://github.com/coatyio/vda-5050-lib.js",
     "repository": {
         "type": "git",
-        "url": "https://github.com/coatyio/vda-5050.js"
+        "url": "https://github.com/coatyio/vda-5050-lib.js"
     },
     "readme": "README.md",
+    "scripts": {
+        "build:schema": "vda-5050 schema -V 1.1 -q -c .vda-5050-cli.schema.config.json && node -e \"require('./scripts/create-validators.js').createCoreValidators('1.1')\"",
+        "build": "gulp build",
+        "lint": "gulp lint",
+        "lint:fix": "gulp lint:fix",
+        "doc": "gulp doc",
+        "test": "tap",
+        "test:detail": "tap --reporter=tap",
+        "test:coverage": "npm-run-all -s -c _test:cov1 _test:cov2 _test:cov3",
+        "_test:cov1": "tap --coverage --check-coverage --branches=75 --functions=75 --lines=75 --statements=75",
+        "_test:cov2": "node dist/test/test-after-coverage.js",
+        "_test:cov3": "opener coverage/lcov-report/index.html",
+        "test:debug": "cross-env DEBUG=\"vda-5050:*\" tap --reporter=tap",
+        "test:debug:mqtt": "cross-env DEBUG=\"vda-5050:*,mqttjs*\" tap --reporter=tap",
+        "test:debug:broker": "cross-env DEBUG=\"broker,vda-5050:*,mqttjs*\" tap --reporter=tap",
+        "test:hivemq": "cross-env VDA5050_TEST_BROKER=\"broker.hivemq.com:1883:8000/mqtt\" tap",
+        "test:hivemq:debug": "cross-env VDA5050_TEST_BROKER=\"broker.hivemq.com:1883:8000/mqtt\" cross-env DEBUG=\"vda-5050:*,mqttjs*\" tap --reporter=tap",
+        "release:prompt": "node -e \"require('./.release-it.js').promptReleaseNotes()\"",
+        "release:version": "npm run release:prompt && release-it --verbose --increment",
+        "release:dry": "npm run release:prompt && release-it --dry-run",
+        "release": "npm run release:prompt && release-it --verbose",
+        "release:ci": "release-it --ci"
+    },
     "keywords": [
         "VDMA",
         "VDA",
         "5050",
-        "definition",
+        "VDA 5050",
+        "2.0",
         "specification",
         "communication",
         "interface",
@@ -42,6 +66,40 @@
             "email": "markussauer@siemens.com"
         }
     ],
+    "bugs": {
+        "url": "https://github.com/coatyio/vda-5050-lib.js/issues"
+    },
+    "dependencies": {
+        "debug": "^4.3.1",
+        "mqtt": "^4.2.6",
+        "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "@exodus/schemasafe": "^1.0.0-rc.3",
+        "@release-it/conventional-changelog": "^2.0.1",
+        "@types/debug": "^4.1.5",
+        "@types/node": "^14.14.31",
+        "@types/tap": "^14.10.3",
+        "@types/uuid": "^8.3.0",
+        "cross-env": "^7.0.3",
+        "fast-glob": "^3.2.5",
+        "fs-extra": "^9.1.0",
+        "gulp": "^4.0.2",
+        "gulp-shell": "^0.8.0",
+        "gulp-tslint": "^8.1.4",
+        "gulp-typescript": "^5.0.1",
+        "lcov-parse": "^1.0.0",
+        "lcov-total": "^1.0.6",
+        "npm-run-all": "^4.1.5",
+        "opener": "^1.5.2",
+        "readline-sync": "^1.4.10",
+        "release-it": "^14.4.1",
+        "tap": "^14.11.0",
+        "tslint": "^5.20.1",
+        "typedoc": "^0.20.28",
+        "typescript": "~4.1.5",
+        "vda-5050-cli": "^2.0.12"
+    },
     "engines": {
         "node": ">=10.0.0"
     }
