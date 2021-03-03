@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![release](https://img.shields.io/badge/release-Conventional%20Commits-yellow.svg)](https://conventionalcommits.org/)
 [![npm version](https://badge.fury.io/js/vda-5050-lib.svg)](https://www.npmjs.com/package/vda-5050-lib)
-[![coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fcoatyio.github.io%2Fvda-5050-lib.js%2Fcoverage%2F.coverage.shieldsio.json)](https://coatyio.github.io/vda-5050-lib.js/coverage/lcov-report/index.html)
+[![coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fcoatyio.github.io%2Fvda-5050-lib.js%2Fcoverage%2Fcoverage.shieldsio.json)](https://coatyio.github.io/vda-5050-lib.js/coverage/lcov-report/index.html)
 
 ## Table of Contents
 
