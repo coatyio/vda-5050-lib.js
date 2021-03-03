@@ -1,21 +1,33 @@
 /*! Copyright (c) 2021 Siemens AG. Licensed under the MIT License. */
 
+const fs = require("fs");
 const fse = require("fs-extra");
 const lcovTotal = require("lcov-total");
 const path = require("path");
 
+function copySync(from, to) {
+    fs.mkdirSync(to, { recursive: true });
+    fs.readdirSync(from).forEach(elem => {
+        if (fs.lstatSync(path.join(from, elem)).isFile()) {
+            fs.copyFileSync(path.join(from, elem), path.join(to, elem));
+        } else {
+            copySync(path.join(from, elem), path.join(to, elem));
+        }
+    });
+}
+
 function releaseCoverageReport() {
-    const docsFolder = "docs/coverage/";
+    const docsFolder = "docs/coverage";
 
     try {
         fse.emptyDirSync(docsFolder);
-        fse.copySync("coverage", docsFolder);
+        copySync("coverage", docsFolder);
 
         const coveragePercent = Math.floor(lcovTotal("./coverage/lcov.info"));
 
         // Create a shields.io JSON endpoint for a dynamic coverage badge in the
         // project's README.md.
-        const shieldsioJsonFile = path.join(docsFolder, ".coverage.shieldsio.json");
+        const shieldsioJsonFile = path.join(docsFolder, "coverage.shieldsio.json");
         fse.writeFileSync(shieldsioJsonFile, JSON.stringify({
             "schemaVersion": 1,
             "label": "coverage",
