@@ -296,7 +296,8 @@ export class MasterController extends MasterControlClient {
 
     /**
      * Assign an order (including an order update or a stitching order) to be
-     * executed by an AGV and report back the order's execution state.
+     * executed by an AGV and report back changes in the order's execution
+     * state.
      *
      * An assigned order must fulfil the following characteristics to be
      * executable by an AGV:
@@ -350,8 +351,8 @@ export class MasterController extends MasterControlClient {
     }
 
     /**
-     * Initiate instant actions to be executed by an AGV and report back the
-     * actions' execution state.
+     * Initiate instant actions to be executed by an AGV and report back changes
+     * in the actions' execution state.
      *
      * @remarks All Action and AgvId objects passed to instant action event
      * handler callbacks are guaranteed to be reference equal to the original

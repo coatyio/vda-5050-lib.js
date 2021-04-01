@@ -70,7 +70,7 @@ npm install vda-5050-lib
 
 This package targets JavaScript/TypeScript projects using ECMAScript version
 `ES2019` and module format `ES2019`.  It runs in [Node.js](https://nodejs.org)
-v10 or newer and in modern browsers.
+v11 or newer and in modern browsers.
 
 ## Getting started
 
