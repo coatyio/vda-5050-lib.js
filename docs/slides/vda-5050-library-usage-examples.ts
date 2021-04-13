@@ -119,7 +119,7 @@ import {
     console.log("Published order %o", orderWithHeader);
 
     // Observe State objects emitted by the specific AGV Client.
-    const stateSubscriptionId = await mcClient.subscribe(Topic.Order, agvId001, state => {
+    const stateSubscriptionId = await mcClient.subscribe(Topic.State, agvId001, state => {
         console.log("State object received: %o", state);
         // Detect order state changes by delta comparison of received State objects.
     });

@@ -85,7 +85,7 @@ export interface OrderEventHandler {
      * place because it is not executable; otherwise `undefined`
      * @param byCancelation `true` if executing order has been canceled before
      * this callback is invoked; otherwise `false`
-     * @param active `true`if order is still active after processing, otherwise
+     * @param active `true` if order is still active after processing, otherwise
      * `false`
      * @param context context information of the order event
      */
