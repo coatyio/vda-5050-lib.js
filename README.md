@@ -48,9 +48,9 @@ The key objectives of this library are:
   management/handling into reusable components.
 * Provide abstraction layers for coordination/vehicle plane and communication.
 * Adapt to vehicle-specific navigation & control interfaces through uniform
-  protocol adapters realized by integrators or AGV manufacturers
+  protocol adapters realized by integrators or AGV manufacturers.
 * Use library components on coordination/vehicle plane in combination or
-  separartely.
+  separately.
 * Support custom VDA 5050 actions and extension topics/object models.
 
 This library supports cross platform deployments (Linux, Win, macOS, Android,

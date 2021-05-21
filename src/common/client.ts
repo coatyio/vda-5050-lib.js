@@ -445,8 +445,8 @@ export abstract class Client {
             return;
         }
         this.debug("Starting client");
-        this._isStarted = true;
         await this._connect();
+        this._isStarted = true;
         await this.onStarted();
     }
 
