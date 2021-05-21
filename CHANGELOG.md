@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.4](https://github.com/coatyio/vda-5050-lib.js/compare/v1.0.3...v1.0.4) (2021-05-21)
+
+This patch release fixes an issue concerning client restart.
+
+### Bug Fixes
+
+* **client:** reject consecutive invocations of method `start` as long as broker is not reachable ([b3400e3](https://github.com/coatyio/vda-5050-lib.js/commit/b3400e38611c8118190727e1c95d56e2dd70a428))
+
 ## [1.0.3](https://github.com/coatyio/vda-5050-lib.js/compare/v1.0.2...v1.0.3) (2021-04-01)
 
 This patch release clarifies that the library is only compatible with Node.js v11 or newer.
