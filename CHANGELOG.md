@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.5](https://github.com/coatyio/vda-5050-lib.js/compare/v1.0.4...v1.0.5) (2021-06-08)
+
+This patch release fixes an issue in the virtual AGV adapter.
+
+### Bug Fixes
+
+* **adapter:** fix issue in VirtualAgvAdapter concerning update of vehicle orientation while traversing an edge ([96a1475](https://github.com/coatyio/vda-5050-lib.js/commit/96a14752f8da78c182f08d866f64efc1cf947c2e))
+
 ## [1.0.4](https://github.com/coatyio/vda-5050-lib.js/compare/v1.0.3...v1.0.4) (2021-05-21)
 
 This patch release fixes an issue concerning client restart.
