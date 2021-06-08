@@ -484,7 +484,6 @@ export class VirtualAgvAdapter implements AgvAdapter {
     private _tick: number;
     private _tickIntervalId: any;
     private _traverseContext: TraverseEdgeContext;
-    private _traverseStarted: boolean;
     private _batteryLowError: Error;
 
     constructor(
@@ -692,7 +691,6 @@ export class VirtualAgvAdapter implements AgvAdapter {
      */
     traverseEdge(context: TraverseEdgeContext) {
         this._traverseContext = context;
-        this._traverseStarted = true;
     }
 
     stopTraverse(context: StopTraverseContext) {
@@ -1014,14 +1012,11 @@ export class VirtualAgvAdapter implements AgvAdapter {
             return;
         }
 
-        const hasTraverseStarted = this._traverseStarted;
         const traverseContext = this._traverseContext;
         const endNodePosition = traverseContext.endNode.nodePosition;
         const tx = endNodePosition.x - this._vehicleState.position.x;
         const ty = endNodePosition.y - this._vehicleState.position.y;
         const alpha = Math.atan2(ty, tx);
-
-        this._traverseStarted = false;
 
         if (!this._vehicleState.isDriving) {
             if (this._vehicleState.batteryState.batteryCharge < this.options.lowBatteryChargeThreshold) {
@@ -1047,9 +1042,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
                 const isBatteryLow = this._vehicleState.batteryState.batteryCharge < this.options.lowBatteryChargeThreshold;
                 this._vehicleState.position.x += dx;
                 this._vehicleState.position.y += dy;
-                if (hasTraverseStarted) {
-                    this._vehicleState.position.theta = traverseContext.edge.orientation ?? alpha;
-                }
+                this._vehicleState.position.theta = traverseContext.edge.orientation ?? alpha;
                 this._updateBatteryState(dx, dy);
                 this.controller.updateAgvPositionVelocity(this._vehicleState.position);
 
