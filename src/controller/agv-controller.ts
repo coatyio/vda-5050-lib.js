@@ -513,7 +513,7 @@ export interface AgvAdapter {
 
     /**
      * Registers a handler that is invoked by the associated controller to check
-     * synchronously whether AGV can a given route with regard to
+     * synchronously whether AGV can traverse a given route with regard to
      * vehicle-specific constraints on node/edge properties that must be
      * validated by the AGV adapter as the AGV controller is not aware of them.
      *
