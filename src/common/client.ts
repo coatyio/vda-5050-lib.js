@@ -958,7 +958,12 @@ export abstract class Client {
         const transOpts = this.clientOptions.transport;
         const mqttOpts: IClientOptions = {
             keepalive: transOpts.heartbeat ?? 15,
-            reschedulePings: true,
+
+            // Do not reschedule keep-alive messages after sending packets. This can cause a
+            // broken connection to never be detected as long as messages with QoS 0 are being
+            // published continuously.
+            reschedulePings: false,
+
             clientId: this.clientId,
             protocolId: "MQTT",
             protocolVersion: transOpts.protocolVersion === "5.0" ? 5 : 4,
