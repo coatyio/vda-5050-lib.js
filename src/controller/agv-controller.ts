@@ -1141,6 +1141,10 @@ export class AgvController extends AgvClient {
     }
 
     private async _subscribeOnStarted() {
+        // First, subscribe to orders and instant actions.
+        await this.subscribe(Topic.Order, order => this._processOrder(order));
+        await this.subscribe(Topic.InstantActions, actions => this._processInstantActions(actions));
+
         // Ensure State is reported immediately once after client is online again.
         this.registerConnectionStateChange((currentState, prevState) => {
             if (currentState === "online" && prevState !== "online") {
@@ -1148,8 +1152,6 @@ export class AgvController extends AgvClient {
             }
         });
 
-        await this.subscribe(Topic.Order, order => this._processOrder(order));
-        await this.subscribe(Topic.InstantActions, actions => this._processInstantActions(actions));
         this._setupPublishVisualizationInterval();
     }
 
