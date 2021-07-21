@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.6](https://github.com/coatyio/vda-5050-lib.js/compare/v1.0.5...v1.0.6) (2021-07-21)
+
+This patch release ensures that subscriptions on Orders and Instant Actions are issued by the AGV controller before publishing the initial State event.
+
+### Bug Fixes
+
+* **agv-controller:** ensure to issue subscriptions on Orders and Instant Actions before publishing initial State event ([7cb6a27](https://github.com/coatyio/vda-5050-lib.js/commit/7cb6a27ccd6ce1118ad267d5911c51b05fcb8899))
+* **client:** do not reschedule MQTT keep-alive messages after publishing to detect broken connections more quickly ([055eff1](https://github.com/coatyio/vda-5050-lib.js/commit/055eff1f1163f56844e84b34fc57e6aa2cd9cad4))
+
 ## [1.0.5](https://github.com/coatyio/vda-5050-lib.js/compare/v1.0.4...v1.0.5) (2021-06-08)
 
 This patch release fixes an issue in the virtual AGV adapter.
