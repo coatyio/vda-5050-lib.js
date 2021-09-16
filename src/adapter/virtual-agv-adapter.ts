@@ -15,6 +15,7 @@ import {
     BatteryState,
     BlockingType,
     DetachContext,
+    Edge,
     Error,
     ErrorLevel,
     ErrorReference,
@@ -72,7 +73,7 @@ export interface VirtualActionDefinition {
      *
      * To constraint the value of a specific action parameter key-value pair,
      * specify a function that returns `true` if the parameter's actual value is
-     * valid; `false` otherwise. If the action parameter key is not specfied,
+     * valid; `false` otherwise. If the action parameter key is not specified,
      * `undefined` is passed as action parameter value to the constraint
      * function.
      *
@@ -80,7 +81,10 @@ export interface VirtualActionDefinition {
      * constraints are satified.
      */
     actionParameterConstraints?: {
-        [actionParameterKey: string]: (actionParameterValue: string | number | boolean | any[], scope: ActionScope) => boolean;
+        [actionParameterKey: string]: (
+            actionParameterValue: string | number | boolean | any[],
+            scope: ActionScope,
+            allActionParams: { [actionParameterKey: string]: string | number | boolean | any[] }) => boolean;
     };
 
     /**
@@ -530,7 +534,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
                     batteryCharge: this.options.initialBatteryCharge,
                     batteryVoltage: 24.0,
                     charging: false,
-                    reach: this._getBatteryReach(this.options.initialBatteryCharge),
+                    reach: this.getBatteryReach(this.options.initialBatteryCharge),
                 },
                 safetyState: { eStop: EStop.None, fieldViolation: false },
                 operatingMode: OperatingMode.Automatic,
@@ -578,7 +582,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
             }
         }
         if (stopDriving && this._vehicleState.isDriving) {
-            this._stopDriving(true);
+            this.stopDriving(true);
         }
         const asm = new VirtualActionStateMachine(
             context,
@@ -613,10 +617,11 @@ export class VirtualAgvAdapter implements AgvAdapter {
         if (!actionDef) {
             errorRefs.push({ referenceKey: AgvController.REF_KEY_ERROR_DESCRIPTION_DETAIL, referenceValue: "not supported" });
         } else if (actionDef.actionParameterConstraints !== undefined) {
+            const allActionParams = Object.fromEntries(action.actionParameters?.map(p => ([p.key, p.value])) ?? []);
             Object.keys(actionDef.actionParameterConstraints).forEach(key => {
                 const constraints = actionDef.actionParameterConstraints[key];
                 const actionParam = action.actionParameters?.find(p => p.key === key);
-                if (!constraints(actionParam?.value, scope)) {
+                if (!constraints(actionParam?.value, scope, allActionParams)) {
                     errorRefs.push({ referenceKey: "actionParameter", referenceValue: key });
                 }
             });
@@ -695,12 +700,19 @@ export class VirtualAgvAdapter implements AgvAdapter {
 
     stopTraverse(context: StopTraverseContext) {
         this._traverseContext = undefined;
-        this._vehicleState.isDriving && this._stopDriving(true);
+        this._vehicleState.isDriving && this.stopDriving(true);
         this._vehicleState.isPaused && this._stopPause();
         context.stopped();
     }
 
-    /* Protected methods to be overwritten by subclasses */
+    /* Protected methods to be accessed and overwritten by subclasses */
+
+    /**
+     * Gets the vehicle state as a readonly object.
+     */
+    protected get vehicleState(): Readonly<VirtualAgvState> {
+        return this._vehicleState;
+    }
 
     /**
      * Gets the default set of action definitions supported by the virtual AGV.
@@ -919,6 +931,141 @@ export class VirtualAgvAdapter implements AgvAdapter {
         ];
     }
 
+    /**
+     * Vehicle starts driving with the given velocity.
+     *
+     * @param vx velocity in x direction
+     * @param vy velocity in y direction
+     * @param reportImmediately true if velocity update should be reported
+     * immediately; false otherwise
+     */
+    protected startDriving(vx: number, vy: number, reportImmediately = false) {
+        this._vehicleState.isDriving = true;
+        this._vehicleState.velocity.vx = vx;
+        this._vehicleState.velocity.vy = vy;
+        this.controller.updateDrivingState(true);
+        this.controller.updateAgvPositionVelocity(undefined, this._vehicleState.velocity, reportImmediately);
+        this.debug("start driving");
+    }
+
+    /**
+     * Vehicle stops driving.
+     * 
+     * @param reportImmediately true if velocity update should be reported
+     * immediately; false otherwise
+     */
+    protected stopDriving(reportImmediately = false) {
+        this._vehicleState.isDriving = false;
+        this._vehicleState.velocity.vx = 0;
+        this._vehicleState.velocity.vy = 0;
+        this.controller.updateDrivingState(false);
+        this.controller.updateAgvPositionVelocity(undefined, this._vehicleState.velocity, reportImmediately);
+        this.debug("stop driving");
+    }
+
+    /**
+     * Gets duration of given action in seconds.
+     * 
+     * @param action an order action
+     * @returns duration of action (in seconds)
+     */
+    protected getNodeActionDuration(action: Action) {
+        const actionDef = this._getActionDefinition(action, "node");
+        let duration = 0;
+        let state = actionDef.transitions.ON_INIT.next as ActionStatus;
+        while (state !== ActionStatus.Finished && state !== ActionStatus.Failed) {
+            const transition = actionDef.transitions[state];
+            if ("durationTime" in transition) {
+                duration += transition.durationTime;
+            }
+            state = transition.next;
+        }
+        return duration;
+    }
+
+    /**
+     * Gets target speed of vehicle depending on related adapter options.
+     *
+     * @param useMean whether to use the constant mean speed or the random speed
+     * if a driving speed or time distribution has been specified in the adapter
+     * options; otherwise this parameter is ignored
+     * @param distance the target distance to travel; only used if driving time
+     * distribution has been specified in the adapter options
+     * @param maxSpeed a speed limit that must not be exceeded (optional, only
+     * used if no driving distribution function has been specified in the
+     * adapter options)
+     * @returns target speed of vehicle depending on the given parameters and
+     * adapter options
+     */
+    protected getTargetSpeed(useMean = false, distance: number, maxSpeed?: number) {
+        if (this.options.vehicleSpeedDistribution) {
+            return this.options.vehicleSpeedDistribution()[useMean ? 1 : 0];
+        } else if (this.options.vehicleTimeDistribution) {
+            return distance / this.options.vehicleTimeDistribution()[useMean ? 1 : 0];
+        } else {
+            return maxSpeed === undefined ? this.options.vehicleSpeed : Math.min(maxSpeed, this.options.vehicleSpeed);
+        }
+    }
+
+    /**
+     * Determines whether the given order could be executed potentially by
+     * checking whether the order route is traversable and all node actions are
+     * potentially executable.
+     *
+     * @param nodes nodes of order
+     * @param edges edges of order
+     * @returns true if order can be executed potentially; false otherwise
+     */
+    protected canExecuteOrder(nodes: Node[], edges: Edge[]) {
+        let errorRefs = this.isRouteTraversable({ nodes, edges });
+        if (errorRefs && errorRefs.length > 0) {
+            return false;
+        }
+
+        for (const node of nodes) {
+            for (const action of node.actions) {
+                const context: ActionContext = {
+                    action,
+                    scope: "node",
+                    updateActionStatus: undefined,
+                    node,
+                };
+                errorRefs = this.isActionExecutable(context);
+                if (errorRefs && errorRefs.length > 0) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Updates battery state of vehicle according to the given travel distance.
+     *
+     * @param dx distance travelled in x direction
+     * @param dy distance travelled in y direction
+     */
+    protected updateBatteryState(dx: number, dy: number) {
+        // Assume state of charge decreases linearly with distance travelled.
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const { batteryCharge } = this._vehicleState.batteryState;
+        this._vehicleState.batteryState.batteryCharge = Math.max(0, batteryCharge - (dist * 100 / this.options.batteryMaxReach));
+        this._vehicleState.batteryState.reach = this.getBatteryReach(this._vehicleState.batteryState.batteryCharge);
+        this.controller.updateBatteryState(this._vehicleState.batteryState);
+    }
+
+    /**
+     * Gets battery reach of vehicle for the given state of charge.
+     * 
+     * @param charge battery state of charge (in percent)
+     * @returns battery reach according to given state of charge
+     */
+    protected getBatteryReach(charge: number) {
+        // Assuming battery reach and battery charge are proportional.
+        return Math.floor(this.options.batteryMaxReach * charge / 100);
+    }
+
     /* Private */
 
     private _optionsWithDefaults(options: VirtualAgvAdapterOptions): Required<VirtualAgvAdapterOptions> {
@@ -940,21 +1087,6 @@ export class VirtualAgvAdapter implements AgvAdapter {
         return Object.assign(optionalDefaults, options);
     }
 
-    private _getBatteryReach(charge: number) {
-        // Assuming battery reach and battery charge are proportional.
-        return Math.floor(this.options.batteryMaxReach * charge / 100);
-    }
-
-    private _getTargetSpeed(useMean = false, distance: number, maxSpeed?: number) {
-        if (this.options.vehicleSpeedDistribution) {
-            return this.options.vehicleSpeedDistribution()[useMean ? 1 : 0];
-        } else if (this.options.vehicleTimeDistribution) {
-            return distance / this.options.vehicleTimeDistribution()[useMean ? 1 : 0];
-        } else {
-            return maxSpeed === undefined ? this.options.vehicleSpeed : Math.min(maxSpeed, this.options.vehicleSpeed);
-        }
-    }
-
     private _getActionDefinition(action: Action, scope: ActionScope) {
         return this.actionDefinitions.find(d =>
             d.actionType === action.actionType &&
@@ -963,33 +1095,6 @@ export class VirtualAgvAdapter implements AgvAdapter {
 
     private _finalizeAction(asm: VirtualActionStateMachine) {
         this._actionStateMachines.splice(this._actionStateMachines.indexOf(asm), 1);
-    }
-
-    private _startDriving(vx: number, vy: number, reportImmediately = false) {
-        this._vehicleState.isDriving = true;
-        this._vehicleState.velocity.vx = vx;
-        this._vehicleState.velocity.vy = vy;
-        this.controller.updateDrivingState(true);
-        this.controller.updateAgvPositionVelocity(undefined, this._vehicleState.velocity, reportImmediately);
-        this.debug("start driving");
-    }
-
-    private _stopDriving(reportImmediately = false) {
-        this._vehicleState.isDriving = false;
-        this._vehicleState.velocity.vx = 0;
-        this._vehicleState.velocity.vy = 0;
-        this.controller.updateDrivingState(false);
-        this.controller.updateAgvPositionVelocity(undefined, this._vehicleState.velocity, reportImmediately);
-        this.debug("stop driving");
-    }
-
-    private _updateBatteryState(dx: number, dy: number) {
-        // Assume state of charge decreases linearly with distance travelled.
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const { batteryCharge } = this._vehicleState.batteryState;
-        this._vehicleState.batteryState.batteryCharge = Math.max(0, batteryCharge - (dist * 100 / this.options.batteryMaxReach));
-        this._vehicleState.batteryState.reach = this._getBatteryReach(this._vehicleState.batteryState.batteryCharge);
-        this.controller.updateBatteryState(this._vehicleState.batteryState);
     }
 
     /* Tick-based execution of actions, motion */
@@ -1023,8 +1128,8 @@ export class VirtualAgvAdapter implements AgvAdapter {
                 return;
             }
             const targetDistance = Math.sqrt(tx ** 2 + ty ** 2);
-            const targetSpeed = this._getTargetSpeed(false, targetDistance, traverseContext.edge.maxSpeed);
-            this._startDriving(Math.cos(alpha) * targetSpeed, Math.sin(alpha) * targetSpeed, true);
+            const targetSpeed = this.getTargetSpeed(false, targetDistance, traverseContext.edge.maxSpeed);
+            this.startDriving(Math.cos(alpha) * targetSpeed, Math.sin(alpha) * targetSpeed, true);
         } else {
             const dx = this._vehicleState.velocity.vx * realInterval;
             const dy = this._vehicleState.velocity.vy * realInterval;
@@ -1033,9 +1138,9 @@ export class VirtualAgvAdapter implements AgvAdapter {
                 this._vehicleState.position.x = endNodePosition.x;
                 this._vehicleState.position.y = endNodePosition.y;
                 this._vehicleState.position.theta = endNodePosition.theta ?? this._vehicleState.position.theta;
-                this._updateBatteryState(tx, ty);
+                this.updateBatteryState(tx, ty);
                 this.controller.updateAgvPositionVelocity(this._vehicleState.position);
-                this._stopDriving(true);
+                this.stopDriving(true);
                 this._traverseContext = undefined;
                 traverseContext.edgeTraversed();
             } else {
@@ -1043,12 +1148,12 @@ export class VirtualAgvAdapter implements AgvAdapter {
                 this._vehicleState.position.x += dx;
                 this._vehicleState.position.y += dy;
                 this._vehicleState.position.theta = traverseContext.edge.orientation ?? alpha;
-                this._updateBatteryState(dx, dy);
+                this.updateBatteryState(dx, dy);
                 this.controller.updateAgvPositionVelocity(this._vehicleState.position);
 
                 if (isBatteryLow) {
                     this.debug("low battery charge %d", this._vehicleState.batteryState.batteryCharge);
-                    this._stopDriving();
+                    this.stopDriving();
                     // Report an error that is reverted on charging (see _advanceBatteryCharge).
                     this._batteryLowError = {
                         errorDescription: "stop driving due to low battery",
@@ -1081,7 +1186,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
 
         // Update charge and reach.
         this._vehicleState.batteryState.batteryCharge = newCharge;
-        this._vehicleState.batteryState.reach = this._getBatteryReach(newCharge);
+        this._vehicleState.batteryState.reach = this.getBatteryReach(newCharge);
 
         // Remove batteryLowError from state as soon as charge is 10% above threshold.
         let batteryLowError: Error;
@@ -1149,7 +1254,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
         }
         // Vehicle must stand still.
         if (this._vehicleState.isDriving) {
-            this._stopDriving();
+            this.stopDriving();
         }
         this.debug("start pause");
         this._vehicleState.isPaused = true;
@@ -1188,7 +1293,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
         }
         // Charging is done on a charging spot (vehicle standing).
         if (this._vehicleState.isDriving) {
-            this._stopDriving();
+            this.stopDriving();
         }
         this.debug("start charging");
         this._vehicleState.batteryState.charging = true;
@@ -1210,6 +1315,9 @@ export class VirtualAgvAdapter implements AgvAdapter {
         let currentNodePosition = this._vehicleState.position as NodePosition;
         try {
             for (const order of orders) {
+                if (!this.canExecuteOrder(order.nodes, order.edges)) {
+                    throw new Error("order is not executable");
+                }
                 results.push(this._calculateEstimatedOrderExecutionTime(order, currentNodePosition).toString());
                 currentNodePosition = order.nodes[order.nodes.length - 1].nodePosition;
             }
@@ -1227,10 +1335,10 @@ export class VirtualAgvAdapter implements AgvAdapter {
             for (const action of node.actions) {
                 if (action.blockingType === BlockingType.Hard) {
                     effectiveActionDuration += nonHardMaxDuration;
-                    effectiveActionDuration += this._getNodeActionDuration(action);
+                    effectiveActionDuration += this.getNodeActionDuration(action);
                     nonHardMaxDuration = 0;
                 } else {
-                    nonHardMaxDuration = Math.max(nonHardMaxDuration, this._getNodeActionDuration(action));
+                    nonHardMaxDuration = Math.max(nonHardMaxDuration, this.getNodeActionDuration(action));
                 }
             }
         }
@@ -1243,23 +1351,9 @@ export class VirtualAgvAdapter implements AgvAdapter {
             const startNodePosition = startNode.nodePosition ?? currentNodePosition;
             const distance = Math.sqrt((endNode.nodePosition.x - startNodePosition.x) ** 2 +
                 (endNode.nodePosition.y - startNodePosition.y) ** 2);
-            edgeTraversalTime += (distance / this._getTargetSpeed(true, distance, edge.maxSpeed));
+            edgeTraversalTime += (distance / this.getTargetSpeed(true, distance, edge.maxSpeed));
         }
         return edgeTraversalTime + effectiveActionDuration;
-    }
-
-    private _getNodeActionDuration(action: Action) {
-        const actionDef = this._getActionDefinition(action, "node");
-        let duration = 0;
-        let state = actionDef.transitions.ON_INIT.next as ActionStatus;
-        while (state !== ActionStatus.Finished && state !== ActionStatus.Failed) {
-            const transition = actionDef.transitions[state];
-            if ("durationTime" in transition) {
-                duration += transition.durationTime;
-            }
-            state = transition.next;
-        }
-        return duration;
     }
 }
 
