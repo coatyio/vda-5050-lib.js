@@ -74,7 +74,7 @@ function startBroker() {
             brokerUrls,
         }));
 
-        child.disconnect();
+        child.connected && child.disconnect();
         child.unref();
 
         awaitBrokerStarted(brokerUrls, resolve);
@@ -105,7 +105,7 @@ async function stopBroker() {
     try {
         fs.unlinkSync(testBrokerConfigFile);
     } catch { }
-    return { isStopped: options.shouldTerminateBroker, brokerPid: options.brokerPid };
+    return options === undefined ? false : options.shouldTerminateBroker;
 }
 
 module.exports = {
