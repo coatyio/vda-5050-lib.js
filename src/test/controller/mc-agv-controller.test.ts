@@ -108,19 +108,19 @@ async function testOrderError(
                 ts.equal(errorInvocations, 1);
                 ts.equal(byCancelation, false);
                 ts.equal(active, false);
-                ts.notEqual(withError, undefined);
+                ts.not(withError, undefined);
                 ts.equal(withError.errorLevel, ErrorLevel.Warning);
                 ts.equal(withError.errorType, errorType);
-                ts.true(withError.errorReferences.some(r => r.referenceKey === "orderId" && r.referenceValue === order.orderId));
-                ts.true(!withError.errorReferences.some(r => r.referenceKey === "orderUpdateId"));
-                ts.true(!withError.errorReferences.some(r => r.referenceKey === "topic") ||
+                ts.ok(withError.errorReferences.some(r => r.referenceKey === "orderId" && r.referenceValue === order.orderId));
+                ts.ok(!withError.errorReferences.some(r => r.referenceKey === "orderUpdateId"));
+                ts.ok(!withError.errorReferences.some(r => r.referenceKey === "topic") ||
                     withError.errorReferences.some(r => r.referenceKey === "topic" && r.referenceValue === Topic.Order));
-                ts.true(!withError.errorReferences.some(r => r.referenceKey === "headerId") ||
+                ts.ok(!withError.errorReferences.some(r => r.referenceKey === "headerId") ||
                     withError.errorReferences.some(r => r.referenceKey === "headerId" &&
                         r.referenceValue === headeredOrder.headerId.toString()));
-                ts.true(expectedErrorRefs.every(er => withError.errorReferences.some(r =>
+                ts.ok(expectedErrorRefs.every(er => withError.errorReferences.some(r =>
                     r.referenceKey === er.referenceKey && r.referenceValue === er.referenceValue)));
-                ts.strictDeepEqual(context.agvId, agvId);
+                ts.strictSame(context.agvId, agvId);
                 ts.equal(context.order, headeredOrder);
 
                 if (withStateChange) {
@@ -180,12 +180,12 @@ async function testOrder(
                 }
                 processedInvocations++;
                 ts.equal(processedInvocations, 1);
-                ts.strictDeepEqual(context.agvId, agvId);
+                ts.strictSame(context.agvId, agvId);
                 ts.equal(context.order, headeredOrder);
 
                 if (expectedChanges.errorRefs?.length > 0) {
-                    ts.notEqual(withError, undefined);
-                    ts.true(expectedChanges.errorRefs.every(er => withError.errorReferences.some(r =>
+                    ts.not(withError, undefined);
+                    ts.ok(expectedChanges.errorRefs.every(er => withError.errorReferences.some(r =>
                         r.referenceKey === er.referenceKey && r.referenceValue === er.referenceValue)));
                 } else {
                     ts.equal(withError, undefined);
@@ -205,9 +205,9 @@ async function testOrder(
                 ts.equal(node, context.order.nodes[nodeTraversedIndex]);
                 ts.equal(nextEdge, context.order.edges[nodeTraversedIndex]);
                 ts.equal(nextNode, context.order.nodes[nodeTraversedIndex + 1]);
-                ts.strictDeepEqual(context.agvId, agvId);
+                ts.strictSame(context.agvId, agvId);
                 ts.equal(context.order, headeredOrder);
-                ts.strictDeepEqual(getHeaderlessOrder(context.order), order);
+                ts.strictSame(getHeaderlessOrder(context.order), order);
                 if (node.nodePosition) {
                     ts.equal(context.state.agvPosition.positionInitialized, true);
                     ts.equal(context.state.agvPosition.mapId, node.nodePosition.mapId);
@@ -234,9 +234,9 @@ async function testOrder(
                 ts.equal(edge, context.order.edges[edgeTraversedIndex]);
                 ts.equal(startNode, context.order.nodes[edgeTraversedIndex]);
                 ts.equal(endNode, context.order.nodes[edgeTraversedIndex + 1]);
-                ts.strictDeepEqual(context.agvId, agvId);
+                ts.strictSame(context.agvId, agvId);
                 ts.equal(context.order, headeredOrder);
-                ts.strictDeepEqual(getHeaderlessOrder(context.order), order);
+                ts.strictSame(getHeaderlessOrder(context.order), order);
             },
             onEdgeTraversing: (edge, startNode, endNode, stateChanges, invocationCount, context) => {
                 if (failAfter !== undefined) {
@@ -250,9 +250,9 @@ async function testOrder(
                 ts.equal(edge, context.order.edges[edgeTraversedIndex + 1]);
                 ts.equal(startNode, context.order.nodes[edgeTraversedIndex + 1]);
                 ts.equal(endNode, context.order.nodes[edgeTraversedIndex + 2]);
-                ts.strictDeepEqual(context.agvId, agvId);
+                ts.strictSame(context.agvId, agvId);
                 ts.equal(context.order, headeredOrder);
-                ts.strictDeepEqual(getHeaderlessOrder(context.order), order);
+                ts.strictSame(getHeaderlessOrder(context.order), order);
                 if (edgeTraversingCount === 1) {
                     ts.equal(stateChanges.distanceSinceLastNode, undefined);
                     // ts.equal(stateChanges.driving, false);
@@ -279,15 +279,15 @@ async function testOrder(
                 }
                 const targetActions = target.actions;
                 const actionIndex = targetActions.indexOf(action);
-                ts.notEqual(actionIndex, -1);
+                ts.not(actionIndex, -1);
                 ts.equal(actionState.actionType, action.actionType);
                 ts.equal(actionState.actionId, action.actionId);
                 ts.equal(actionState.actionDescription, action.actionDescription);
 
                 if (actionState.actionStatus === ActionStatus.Failed && expectedChanges.actionErrorRefs?.length > 0) {
-                    ts.notEqual(withError, undefined);
+                    ts.not(withError, undefined);
                     ts.equal(withError.errorType, ErrorType.OrderAction);
-                    ts.true(expectedChanges.actionErrorRefs.every(er => withError.errorReferences.some(r =>
+                    ts.ok(expectedChanges.actionErrorRefs.every(er => withError.errorReferences.some(r =>
                         r.referenceKey === er.referenceKey && r.referenceValue === er.referenceValue)));
                 } else {
                     ts.equal(withError, undefined);
@@ -329,10 +329,10 @@ tap.test("Master Controller - AGV Controller", async t => {
     const agvAdapterOptions2: VirtualAgvAdapterOptions = { initialBatteryCharge: 80, timeLapse: 100 };
     const agvController2 = new AgvController(agvId2, testClientOptions(t), agvControllerOptions2, agvAdapterOptions2);
 
-    t.tearDown(() => agvController1.stop());
-    t.tearDown(() => agvController2.stop());
-    t.tearDown(() => mcController.stop());
-    t.tearDown(() => mcControllerWithoutValidation.stop());
+    t.teardown(() => agvController1.stop());
+    t.teardown(() => agvController2.stop());
+    t.teardown(() => mcController.stop());
+    t.teardown(() => mcControllerWithoutValidation.stop());
 
     await t.test("start AGV Controller 1", () => agvController1.start());
     await t.test("start AGV Controller 2", () => agvController2.start());
@@ -353,10 +353,10 @@ tap.test("Master Controller - AGV Controller", async t => {
         let lastTimestamp: string;
         await mcController.subscribe(Topic.Visualization, agvId1, async (vis, _agvId, _topic, subscriptionId) => {
             invocations++;
-            ts.strictDeepEqual(vis.agvPosition, { x: 0, y: 0, theta: 0, mapId: "local", positionInitialized: true });
-            ts.strictDeepEqual(vis.velocity, { vx: 0, vy: 0, omega: 0 });
+            ts.strictSame(vis.agvPosition, { x: 0, y: 0, theta: 0, mapId: "local", positionInitialized: true });
+            ts.strictSame(vis.velocity, { vx: 0, vy: 0, omega: 0 });
             if (lastTimestamp !== undefined) {
-                ts.notEqual(lastTimestamp, vis.timestamp);
+                ts.not(lastTimestamp, vis.timestamp);
             }
             lastTimestamp = vis.timestamp;
 
@@ -399,10 +399,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             onActionError: (error, action) => {
                 errorInvocations++;
                 ts.equal(errorInvocations, 1);
-                ts.strictDeepEqual(action, actions.instantActions[0]);
+                ts.strictSame(action, actions.instantActions[0]);
                 ts.equal(error.errorLevel, ErrorLevel.Warning);
                 ts.equal(error.errorType, ErrorType.InstantActionValidation);
-                ts.true(!error.errorReferences.some(r => r.referenceKey === "topic") ||
+                ts.ok(!error.errorReferences.some(r => r.referenceKey === "topic") ||
                     error.errorReferences.some(r => r.referenceKey === "topic" && r.referenceValue === Topic.InstantActions));
                 resolve();
             },
@@ -425,12 +425,13 @@ tap.test("Master Controller - AGV Controller", async t => {
             onActionError: (error, action) => {
                 errorInvocations++;
                 ts.equal(errorInvocations, 1);
-                ts.strictDeepEqual(action, actions.instantActions[0]);
+                ts.strictSame(action, actions.instantActions[0]);
                 ts.equal(error.errorLevel, ErrorLevel.Warning);
                 ts.equal(error.errorType, ErrorType.InstantActionNoOrderToCancel);
-                ts.true(!error.errorReferences.some(r => r.referenceKey === "topic") ||
+                ts.ok(!error.errorReferences.some(r => r.referenceKey === "topic") ||
                     error.errorReferences.some(r => r.referenceKey === "topic" && r.referenceValue === Topic.InstantActions));
-                ts.true(error.errorReferences.some(r => r.referenceKey === "actionId" && r.referenceValue === action.actionId));
+                ts.ok(error.errorReferences.some(r => r.referenceKey === "actionId" && r.referenceValue === action.actionId));
+                ts.ok(error.errorReferences.some(r => r.referenceKey === "actionType" && r.referenceValue === action.actionType));
                 resolve();
             },
         });
@@ -449,12 +450,13 @@ tap.test("Master Controller - AGV Controller", async t => {
             onActionError: (error, action) => {
                 errorInvocations++;
                 ts.equal(errorInvocations, 1);
-                ts.strictDeepEqual(action, actions.instantActions[0]);
+                ts.strictSame(action, actions.instantActions[0]);
                 ts.equal(error.errorLevel, ErrorLevel.Warning);
                 ts.equal(error.errorType, ErrorType.InstantAction);
-                ts.true(!error.errorReferences.some(r => r.referenceKey === "topic") ||
+                ts.ok(!error.errorReferences.some(r => r.referenceKey === "topic") ||
                     error.errorReferences.some(r => r.referenceKey === "topic" && r.referenceValue === Topic.InstantActions));
-                ts.true(error.errorReferences.some(r => r.referenceKey === "actionId" && r.referenceValue === action.actionId));
+                ts.ok(error.errorReferences.some(r => r.referenceKey === "actionId" && r.referenceValue === action.actionId));
+                ts.ok(error.errorReferences.some(r => r.referenceKey === "actionType" && r.referenceValue === action.actionType));
                 resolve();
             },
         });
@@ -493,25 +495,25 @@ tap.test("Master Controller - AGV Controller", async t => {
         }, {
             onActionStateChanged: (actionState, withError, action, _agvId, state) => {
                 actionStateInvocations++;
-                ts.true(actionStateInvocations === 1 || actionStateInvocations === 2);
+                ts.ok(actionStateInvocations === 1 || actionStateInvocations === 2);
                 if (actionStateInvocations === 1) {
-                    ts.strictDeepEqual(action, actions.instantActions[0]);
+                    ts.strictSame(action, actions.instantActions[0]);
                     ts.equal(withError, undefined);
                     ts.equal(actionState.actionId, actions.instantActions[0].actionId);
                     ts.equal(actionState.actionStatus, ActionStatus.Finished);
                     ts.equal(actionState.actionDescription, actions.instantActions[0].actionDescription);
                     ts.equal(actionState.resultDescription, "Position initialized");
-                    ts.strictDeepEqual(state.agvPosition, { x: 10, y: 10, theta: 0, mapId: "floor2", positionInitialized: true });
+                    ts.strictSame(state.agvPosition, { x: 10, y: 10, theta: 0, mapId: "floor2", positionInitialized: true });
                     ts.equal(state.lastNodeId, "n1");
                     ts.equal(state.lastNodeSequenceId, 1);
                 } else {
-                    ts.strictDeepEqual(action, actions.instantActions[1]);
+                    ts.strictSame(action, actions.instantActions[1]);
                     ts.equal(withError, undefined);
                     ts.equal(actionState.actionId, actions.instantActions[1].actionId);
                     ts.equal(actionState.actionStatus, ActionStatus.Finished);
                     ts.equal(actionState.actionDescription, actions.instantActions[1].actionDescription);
                     ts.equal(actionState.resultDescription, "Position initialized");
-                    ts.strictDeepEqual(state.agvPosition, { x: 0, y: 0, theta: 0, mapId: "local", positionInitialized: true });
+                    ts.strictSame(state.agvPosition, { x: 0, y: 0, theta: 0, mapId: "local", positionInitialized: true });
                     ts.equal(state.lastNodeId, "");
                     ts.equal(state.lastNodeSequenceId, 0);
                     resolve();
@@ -540,9 +542,9 @@ tap.test("Master Controller - AGV Controller", async t => {
         }, {
             onActionStateChanged: (actionState, withError, action, _agvId, state) => {
                 actionStateInvocations++;
-                ts.true(actionStateInvocations === 1 || actionStateInvocations === 2);
+                ts.ok(actionStateInvocations === 1 || actionStateInvocations === 2);
                 if (actionStateInvocations === 1) {
-                    ts.strictDeepEqual(action, actions.instantActions[0]);
+                    ts.strictSame(action, actions.instantActions[0]);
                     ts.equal(withError, undefined);
                     ts.equal(actionState.actionId, actions.instantActions[0].actionId);
                     ts.equal(actionState.actionStatus, ActionStatus.Finished);
@@ -550,7 +552,7 @@ tap.test("Master Controller - AGV Controller", async t => {
                     ts.equal(actionState.resultDescription, "Paused");
                     ts.equal(state.paused, true);
                 } else {
-                    ts.strictDeepEqual(action, actions.instantActions[1]);
+                    ts.strictSame(action, actions.instantActions[1]);
                     ts.equal(withError, undefined);
                     ts.equal(actionState.actionId, actions.instantActions[1].actionId);
                     ts.equal(actionState.actionStatus, ActionStatus.Finished);
@@ -580,7 +582,7 @@ tap.test("Master Controller - AGV Controller", async t => {
             onActionStateChanged: (actionState, withError, action) => {
                 actionStateInvocations++;
                 ts.equal(actionStateInvocations, 1);
-                ts.strictDeepEqual(action, actions.instantActions[0]);
+                ts.strictSame(action, actions.instantActions[0]);
                 ts.equal(withError, undefined);
                 ts.equal(actionState.actionId, actions.instantActions[0].actionId);
                 ts.equal(actionState.actionStatus, ActionStatus.Finished);
@@ -607,8 +609,8 @@ tap.test("Master Controller - AGV Controller", async t => {
         }, {
             onActionStateChanged: async (actionState, withError, action, _agvId, state) => {
                 actionStateInvocations++;
-                ts.true(actionStateInvocations === 1 || actionStateInvocations === 2);
-                ts.strictDeepEqual(action, actions.instantActions[0]);
+                ts.ok(actionStateInvocations === 1 || actionStateInvocations === 2);
+                ts.strictSame(action, actions.instantActions[0]);
                 ts.equal(withError, undefined);
                 ts.equal(actionState.actionId, actions.instantActions[0].actionId);
                 ts.equal(actionState.actionDescription, actions.instantActions[0].actionDescription);
@@ -639,8 +641,8 @@ tap.test("Master Controller - AGV Controller", async t => {
                         }, {
                             onActionStateChanged: async (actionState1, withError1, action1, _agvId11, state11) => {
                                 actionStateInvocations1++;
-                                ts.true(actionStateInvocations1 === 1 || actionStateInvocations1 === 2);
-                                ts.strictDeepEqual(action1, actions1.instantActions[0]);
+                                ts.ok(actionStateInvocations1 === 1 || actionStateInvocations1 === 2);
+                                ts.strictSame(action1, actions1.instantActions[0]);
                                 ts.equal(withError1, undefined);
                                 ts.equal(actionState1.actionId, actions1.instantActions[0].actionId);
                                 ts.equal(actionState1.actionDescription, actions1.instantActions[0].actionDescription);
@@ -651,9 +653,9 @@ tap.test("Master Controller - AGV Controller", async t => {
                                 ts.equal(state11.batteryState.charging, actionStateInvocations1 === 1 ? true : false);
 
                                 if (actionStateInvocations1 === 2) {
-                                    ts.true(stateChangesReceived >= 9);
-                                    ts.true(state11.batteryState.reach - reachOnCharging >= 25920 - 23040);
-                                    ts.true(state11.batteryState.reach - reachOnCharging <= 28800 - 23040);
+                                    ts.ok(stateChangesReceived >= 9);
+                                    ts.ok(state11.batteryState.reach - reachOnCharging >= 25920 - 23040);
+                                    ts.ok(state11.batteryState.reach - reachOnCharging <= 28800 - 23040);
                                     await mcController.unsubscribe(subscriptionId);
                                     resolve();
                                 }
@@ -1287,8 +1289,8 @@ tap.test("Master Controller - AGV Controller", async t => {
                     return;
                 }
                 ts.equal(actionState.actionStatus, changeInvocation === 0 ? ActionStatus.Running : ActionStatus.Finished);
-                ts.strictDeepEqual(agvId, agvId1);
-                ts.notEqual(actions.instantActions.indexOf(action), -1);
+                ts.strictSame(agvId, agvId1);
+                ts.not(actions.instantActions.indexOf(action), -1);
                 ts.equal(withError, undefined);
 
                 if (actionState.actionStatus === ActionStatus.Finished) {

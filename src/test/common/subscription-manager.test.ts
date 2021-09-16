@@ -81,7 +81,7 @@ function testGetAll(
     mqttTopicsExpected: string[]) {
     test.test(name, ts => {
         const mqttTopics = manager.getAll();
-        ts.strictDeepEqual(mqttTopics.sort(), mqttTopicsExpected.sort());
+        ts.strictSame(mqttTopics.sort(), mqttTopicsExpected.sort());
         ts.end();
     });
 }

@@ -17,7 +17,7 @@ tap.test("AGV Client", async t => {
     const client = new AgvClient(agvId, clientOptions);
 
     await t.test("validate subscription topic direction", async ts => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
 
         ts.throws(() => client.subscribe(Topic.Connection, () => { }));
@@ -28,7 +28,7 @@ tap.test("AGV Client", async t => {
     });
 
     await t.test("validate publication topic direction", async ts => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
 
         ts.resolves(client.publish(Topic.Connection, createHeaderlessObject(Topic.Connection)));

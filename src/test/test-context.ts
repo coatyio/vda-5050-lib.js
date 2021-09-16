@@ -26,9 +26,8 @@ export function initTestContext(tap: typeof tp) {
     Object.assign(tap.context, testContext);
 
     // Ensure test context is propagated to all child tests.
-    tap.beforeEach((done, t) => {
+    tap.beforeEach(t => {
         Object.assign(t.context, testContext);
-        done();
     });
 }
 

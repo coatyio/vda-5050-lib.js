@@ -4,8 +4,8 @@
 
 module.exports = {
 
-    // Should TypeDoc disable the automatic testing and cleaning of the output directory?
-    disableOutputCheck: true,
+    // Can be used to prevent TypeDoc from cleaning the output directory specified with --out.
+    cleanOutputDir: false,
 
     // Prevent externally resolved TypeScript files from being documented.
     excludeExternals: false,
@@ -23,7 +23,7 @@ module.exports = {
     // Add the package version to the project name
     includeVersion: true,
 
-    readme: "README.md",
+    readme: "none",
 
     // Set the name of the project that will be used in the header of the template.
     name: `vda-5050-lib for VDA 5050 version 1.1`,

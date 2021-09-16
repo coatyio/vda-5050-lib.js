@@ -35,10 +35,10 @@ tap.test("AgvIdMap", t => {
     for (const [agvId, value] of agvIdMap) {
         iteration++;
         if (iteration === 1) {
-            t.strictDeepEqual(agvId, agvId1);
+            t.strictSame(agvId, agvId1);
             t.equal(value, 42);
         } else if (iteration === 2) {
-            t.strictDeepEqual(agvId, agvId2);
+            t.strictSame(agvId, agvId2);
             t.equal(value, 43);
         } else {
             t.fail("Iteration returns superfluous entries");

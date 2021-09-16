@@ -17,7 +17,7 @@ tap.test("Master Control Client", async t => {
     const client = new MasterControlClient(clientOptions);
 
     await t.test("validate subscription topic direction", async ts => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
 
         ts.resolves(client.subscribe(Topic.Connection, agvId, () => { }));
@@ -28,7 +28,7 @@ tap.test("Master Control Client", async t => {
     });
 
     await t.test("validate publication topic direction", async ts => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
 
         ts.throws(() => client.publish(Topic.Connection, agvId, createHeaderlessObject(Topic.Connection)));

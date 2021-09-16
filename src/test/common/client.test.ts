@@ -65,7 +65,7 @@ tap.test("Client", async t => {
     });
 
     t.test("check client options, protocol version, and UUID creation", ts => {
-        ts.strictDeepEqual(client.clientOptions, clientOptions, "expect supplied options");
+        ts.strictSame(client.clientOptions, clientOptions, "expect supplied options");
         ts.equal(client.protocolVersion, "1.1.0", "expect correct protocol version");
         ts.match(client.createUuid(), UUID_REGEX);
         ts.end();
@@ -92,14 +92,14 @@ tap.test("Client", async t => {
     await t.test("connection refused on unreachable broker", async ts => {
         // Some broker connections, such as public broker.hivemq.com, do not emit an error
         // immediately but time out after approx. 20sec with a close event.
-        ts.tearDown(() => client1.stop());
+        ts.teardown(() => client1.stop());
         const opts = testClientOptions(ts, { transport: { brokerUrl: testClientOptions(ts).transport.brokerUrl + "0" } });
         const client1 = new TestClient(opts);
         ts.rejects(client1.start());
     });
 
     await t.test("connect with websocket protocol on browser platform", async ts => {
-        ts.tearDown(() => client1.stop());
+        ts.teardown(() => client1.stop());
         const opts = testClientOptions(ts, { transport: { brokerUrl: (testClientOptions(ts).transport as any).wsBrokerUrl } });
         const client1 = new TestClient(opts);
         (client1 as any)._isWebPlatform = true;
@@ -107,7 +107,7 @@ tap.test("Client", async t => {
     });
 
     await t.test("start-stop in series", async ts => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.stop();
         await client.start();
         await client.start();
@@ -146,7 +146,7 @@ tap.test("Client", async t => {
     });
 
     await t.test("validate subscription topic and subject", async ts => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
 
         ts.throws(() => client.subscribe(undefined, agvId, () => { }));
@@ -199,7 +199,7 @@ tap.test("Client", async t => {
     });
 
     await t.test("validate publication topic and subject", async ts => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
 
         ts.throws(() => client.publish(undefined, agvId, createHeaderlessObject(Topic.InstantActions)));
@@ -246,7 +246,7 @@ tap.test("Client", async t => {
     });
 
     await t.test("validate publication topic object", async ts => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
 
         let headerlessObject: Headerless<Vda5050Object> = createHeaderlessObject(Topic.Connection);
@@ -299,7 +299,7 @@ tap.test("Client", async t => {
     });
 
     await t.test("validate extension topic direction", async ts => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
 
         client.registerExtensionTopic("extension1", true, true, () => { });
@@ -321,12 +321,12 @@ tap.test("Client", async t => {
     });
 
     await t.test("pub-sub validated standard topic object", ts => new Promise(async resolve => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
         await client.subscribe(Topic.Order, agvId, (object, subject, topic) => {
             ts.equal(topic, Topic.Order);
-            ts.strictDeepEqual(subject, agvId);
-            ts.strictDeepEqual(object, order);
+            ts.strictSame(subject, agvId);
+            ts.strictSame(object, order);
             resolve();
         });
         const order = await client.publish(Topic.Order, agvId, createHeaderlessObject(Topic.Order));
@@ -334,45 +334,45 @@ tap.test("Client", async t => {
 
     await t.test("pub-sub non-validated standard topic object", ts => new Promise(async resolve => {
         const client1 = new TestClient({ ...clientOptions, topicObjectValidation: { inbound: false, outbound: false } });
-        ts.tearDown(() => client1.stop());
+        ts.teardown(() => client1.stop());
         await client1.start();
         await client1.subscribe(Topic.Order, agvId, (object, subject, topic) => {
             ts.equal(topic, Topic.Order);
-            ts.strictDeepEqual(subject, agvId);
-            ts.strictDeepEqual(object, action);
+            ts.strictSame(subject, agvId);
+            ts.strictSame(object, action);
             resolve();
         });
         const action = await client1.publish(Topic.Order, agvId, createHeaderlessObject(Topic.InstantActions) as any);
     }));
 
     await t.test("pub-sub validated extension topic object", ts => new Promise(async resolve => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         client.registerExtensionTopic("extension1", true, true, extensionValidator);
         await client.start();
         await client.subscribe("extension1", agvId, (object, subject, topic) => {
             ts.equal(topic, "extension1");
-            ts.strictDeepEqual(subject, agvId);
-            ts.strictDeepEqual(object, extension1Object);
+            ts.strictSame(subject, agvId);
+            ts.strictSame(object, extension1Object);
             resolve();
         });
         const extension1Object = await client.publish("extension1", agvId, createHeaderlessObject("extension1"));
     }));
 
     await t.test("pub-sub non-validated extension topic object", ts => new Promise(async resolve => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         client.registerExtensionTopic("extension1", true, true, () => { });
         await client.start();
         await client.subscribe("extension1", agvId, (object, subject, topic) => {
             ts.equal(topic, "extension1");
-            ts.strictDeepEqual(subject, agvId);
-            ts.strictDeepEqual(object, extensionObject2);
+            ts.strictSame(subject, agvId);
+            ts.strictSame(object, extensionObject2);
             resolve();
         });
         const extensionObject2 = await client.publish("extension1", agvId, createHeaderlessObject("extension2"));
     }));
 
     await t.test("pub-sub with explicit timestamp in topic object", ts => new Promise(async resolve => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         const timestamp = new Date(2000, 2, 10).toISOString();
         await client.start();
         await client.subscribe(Topic.Order, agvId, (object) => {
@@ -397,12 +397,12 @@ tap.test("Client", async t => {
                 wsOptions: {},
             },
         });
-        ts.tearDown(() => client1.stop());
+        ts.teardown(() => client1.stop());
         await client1.start();
         await client1.subscribe(Topic.Order, agvId, (object, subject, topic) => {
             ts.equal(topic, Topic.Order);
-            ts.strictDeepEqual(subject, agvId);
-            ts.strictDeepEqual(object, order);
+            ts.strictSame(subject, agvId);
+            ts.strictSame(object, order);
             resolve();
         });
         const order = await client1.publish(Topic.Order, agvId, createHeaderlessObject(Topic.Order));
@@ -412,7 +412,7 @@ tap.test("Client", async t => {
     // scripts as these brokers cannot be stopped and restarted programmatically while testing.
     if (t.context.canStopAndRestartBrokerWhileTesting) {
         await t.test("pub-sub-unsub while offline", ts => new Promise(async (resolve, reject) => {
-            ts.tearDown(() => client.stop());
+            ts.teardown(() => client.stop());
             await client.start();
             const subIdOrder = await client.subscribe(Topic.Order, agvId, () => {
                 ts.fail("receive unexpected order message");
@@ -428,8 +428,8 @@ tap.test("Client", async t => {
             await client.subscribe(Topic.Order, agvId, (object, subject, topic) => {
                 ts.comment("callback second order subscribe");
                 ts.equal(topic, Topic.Order);
-                ts.strictDeepEqual(subject, agvId);
-                ts.strictDeepEqual(object, order);
+                ts.strictSame(subject, agvId);
+                ts.strictSame(object, order);
                 resolve();
             });
             const vis = await client.publish(Topic.Visualization, agvId, createHeaderlessObject(Topic.Visualization),
@@ -445,7 +445,7 @@ tap.test("Client", async t => {
     // the client gracefully (with await) or resolved after stopping the client gracefully
     // without await (see test "pub-sub-unsub resolves after client is stopped without await").
     await t.test("pub-sub-unsub fails if client is disconnecting", async ts => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
         const subId1 = await client.subscribe(Topic.Visualization, agvId, () => { });
         (client as any)._mqtt.disconnecting = true;
@@ -457,7 +457,7 @@ tap.test("Client", async t => {
 
     await t.test("pub-sub-unsub resolves after client is stopped without await", async ts => {
         const client1 = new TestClient(testClientOptions(ts));
-        ts.tearDown(() => stopPromise);
+        ts.teardown(() => stopPromise);
         await client1.start();
         const subId1 = await client1.subscribe(Topic.Visualization, agvId, () => { });
         const stopPromise = client1.stop();
@@ -467,7 +467,7 @@ tap.test("Client", async t => {
     });
 
     await t.test("publication rejected on cyclic object", async ts => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
         client.registerExtensionTopic("extension1", true, true, () => { });
         const obj = createHeaderlessObject("extension1");
@@ -481,12 +481,12 @@ tap.test("Client", async t => {
     if (t.context.supportsMqtt5) {
         await t.test("pub-sub with MQTT 5.0 protocol version", ts => new Promise(async resolve => {
             const client1 = new TestClient(testClientOptions(ts, { transport: { protocolVersion: "5.0" } }));
-            ts.tearDown(() => client1.stop());
+            ts.teardown(() => client1.stop());
             await client1.start();
             await client1.subscribe(Topic.Order, agvId, (object, subject, topic) => {
                 ts.equal(topic, Topic.Order);
-                ts.strictDeepEqual(subject, agvId);
-                ts.strictDeepEqual(object, order);
+                ts.strictSame(subject, agvId);
+                ts.strictSame(object, order);
                 resolve();
             });
             const order = await client1.publish(Topic.Order, agvId, createHeaderlessObject(Topic.Order));
@@ -496,7 +496,7 @@ tap.test("Client", async t => {
         // @todo remove code as soon as aedes broker supports MQTT 5.0
         await t.test("pub-sub with MQTT 5.0 protocol version not supported", ts => new Promise(resolve => {
             const client1 = new TestClient(testClientOptions(ts, { transport: { protocolVersion: "5.0" } }));
-            ts.tearDown(async () => {
+            ts.teardown(async () => {
                 await client1.stop();
                 await stopBroker();
                 await startBroker();
@@ -511,7 +511,7 @@ tap.test("Client", async t => {
     }
 
     await t.test("inbound message dropped on invalid payload", ts => new Promise(async resolve => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
         await client.subscribe(Topic.Order, agvId, () => { });
         const mqttTopicOrder = ((client as any)._subscriptionManager as SubscriptionManager).getMqttTopic(Topic.Order, agvId);
@@ -531,23 +531,23 @@ tap.test("Client", async t => {
     }));
 
     await t.test("subscription handlers invoked in series", ts => new Promise(async resolve => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
         let handlerInvocationCount = 0;
         const subIdOrder1 = await client.subscribe(Topic.Order, agvId, (object, subject, topic, subId) => {
             handlerInvocationCount++;
             ts.equal(handlerInvocationCount, 1);
             ts.equal(topic, Topic.Order);
-            ts.strictDeepEqual(subject, agvId);
-            ts.strictDeepEqual(object, order);
+            ts.strictSame(subject, agvId);
+            ts.strictSame(object, order);
             ts.equal(subId, subIdOrder1);
         });
         const subIdOrder2 = await client.subscribe(Topic.Order, agvId, (object, subject, topic, subId) => {
             handlerInvocationCount++;
             ts.equal(handlerInvocationCount, 2);
             ts.equal(topic, Topic.Order);
-            ts.strictDeepEqual(subject, agvId);
-            ts.strictDeepEqual(object, order);
+            ts.strictSame(subject, agvId);
+            ts.strictSame(object, order);
             ts.equal(subId, subIdOrder2);
             resolve();
         });
@@ -555,7 +555,7 @@ tap.test("Client", async t => {
     }));
 
     await t.test("subscription handler unsubscribed in other handler", ts => new Promise(async resolve => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
         let handlerInvocationCount = 0;
         const subIdOrder = await client.subscribe(Topic.Order, agvId, async (object, subject, topic, subId) => {
@@ -563,8 +563,8 @@ tap.test("Client", async t => {
             await client.unsubscribe(subId2);
             ts.equal(handlerInvocationCount, 1);
             ts.equal(topic, Topic.Order);
-            ts.strictDeepEqual(subject, agvId);
-            ts.strictDeepEqual(object, order);
+            ts.strictSame(subject, agvId);
+            ts.strictSame(object, order);
             ts.equal(subId, subIdOrder);
             resolve();
         });
@@ -575,7 +575,7 @@ tap.test("Client", async t => {
     }));
 
     await t.test("subscription handler unsubscribed in same handler", ts => new Promise(async resolve => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
         let handlerInvocationCount = 0;
         const subIdOrder = await client.subscribe(Topic.Order, agvId, async (object, subject, topic, subId) => {
@@ -587,8 +587,8 @@ tap.test("Client", async t => {
             await client.unsubscribe(subId);
             ts.equal(handlerInvocationCount, 1);
             ts.equal(topic, Topic.Order);
-            ts.strictDeepEqual(subject, agvId);
-            ts.strictDeepEqual(object, order1);
+            ts.strictSame(subject, agvId);
+            ts.strictSame(object, order1);
             ts.equal(subId, subIdOrder);
             resolve();
         });
@@ -597,7 +597,7 @@ tap.test("Client", async t => {
     }));
 
     await t.test("subscription handler throws synchronously", ts => new Promise(async resolve => {
-        ts.tearDown(() => client.stop());
+        ts.teardown(() => client.stop());
         await client.start();
         await client.subscribe(Topic.Order, agvId, () => {
             setTimeout(resolve, 0);

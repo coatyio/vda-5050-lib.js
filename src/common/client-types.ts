@@ -123,10 +123,12 @@ export function isExtensionTopic(topic: string) {
 }
 
 /**
- * Internal type that maps VDA 5050 communication topic types to VDA 5050 object
+ * Type that maps VDA 5050 communication topic types to VDA 5050 object
  * types. Used to infer typesafe parameters.
+ * 
+ * @category Common
  */
-interface TopicObjectTypeMappings {
+export interface TopicObjectTypeMappings {
     [Topic.Connection]: Connection;
     [Topic.Order]: Order;
     [Topic.InstantActions]: InstantActions;

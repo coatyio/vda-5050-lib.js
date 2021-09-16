@@ -119,5 +119,5 @@ export async function testObjectResolvesMatch(
     delete copy.serialNumber;
     delete copy.timestamp;
     delete copy.version;
-    test.strictDeepEqual(copy, headerlessObject);
+    test.strictSame(copy, headerlessObject);
 }
