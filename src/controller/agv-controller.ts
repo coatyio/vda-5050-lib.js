@@ -1119,9 +1119,14 @@ export class AgvController extends AgvClient {
     private _attachAdapter() {
         this.debug("Invoking attach handler");
         this._agvAdapter.attach({
-            attached: initialState => {
-                this.updatePartialState(initialState, true);
-                this._subscribeOnStarted();
+            attached: async initialState => {
+                // Ensure subscriptions on orders and instant actions are
+                // registered with the broker before publishing the initial
+                // state. A Master Control may observe this state to immediately
+                // trigger initial instant actions or orders.
+                this.updatePartialState(initialState, false);
+                await this._subscribeOnStarted();
+                this._publishCurrentState();
             },
         });
     }
@@ -2449,6 +2454,7 @@ export class AgvController extends AgvClient {
         errorRefs = [
             { referenceKey: "topic", referenceValue: scope === "instant" ? Topic.InstantActions : Topic.Order },
             { referenceKey: "actionId", referenceValue: action.actionId },
+            { referenceKey: "actionType", referenceValue: action.actionType },
             ...errorRefs.filter(r => r.referenceKey !== AgvController.REF_KEY_ERROR_DESCRIPTION_DETAIL),
         ];
         return {
