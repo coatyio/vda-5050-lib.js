@@ -548,7 +548,7 @@ export interface State {
     loads?: Load[];
     /**
      * True: AGV is almost at the end of the base and will reduce speed if no new base is
-     * transmitted. Trigger for MC to send ne base
+     * transmitted. Trigger for MC to send new base
      * False: no base update required
      */
     newBaseRequest?: boolean;
