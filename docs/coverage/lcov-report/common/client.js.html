@@ -5,12 +5,13 @@
 <head>
     <title>Code coverage report for common/client.js</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="..\prettify.css" />
-    <link rel="stylesheet" href="..\base.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(..\sort-arrow-sprite.png);
+            background-image: url(../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -18,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="..\index.html">All files</a> / <a href="index.html">common</a> client.js</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">common</a> client.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -980,7 +981,7 @@ const mqtt_utils_1 = require("./mqtt-utils");
 const subscription_manager_1 = require("./subscription-manager");
 const vda_5050_validators_1 = require("./vda-5050-validators");
 function createUuid() {
-    return uuid_1.v4();
+    return (0, uuid_1.v4)();
 }
 exports.createUuid = createUuid;
 class Client {
@@ -988,8 +989,8 @@ class Client {
         this._isStarted = false;
         this._isStopping = false;
         this._clientOptions = options;
-        this.clientId = `${uuid_1.v4().replace(/-/g, "").substr(0, 23)}`;
-        this.debug = debug_1.default(`vda-5050:${this.clientId.substr(0, 10)}`).extend(this.constructor.name);
+        this.clientId = `${(0, uuid_1.v4)().replace(/-/g, "").substr(0, 23)}`;
+        this.debug = (0, debug_1.default)(`vda-5050:${this.clientId.substr(0, 10)}`).extend(this.constructor.name);
         this._validateOptions(options);
         this._headerIds = new Map();
         this._subscriptionManager = new subscription_manager_1.SubscriptionManager(options.transport.topicFormat || Client.DEFAULT_MQTT_TOPIC_FORMAT, this.clientOptions.interfaceName, this.getProtocolVersion());
@@ -1089,7 +1090,7 @@ class Client {
             this.validateTopicObject(topic, headerfullObject);
         }
         const mqttTopic = this._subscriptionManager.getMqttTopic(topic, subject);
-        mqtt_utils_1.assertMqttTopicLength(mqttTopic);
+        (0, mqtt_utils_1.assertMqttTopicLength)(mqttTopic);
         const mqttPayload = JSON.stringify(headerfullObject);
         return new Promise((resolve, reject) =&gt; {
             var _a;
@@ -1180,27 +1181,27 @@ class Client {
         }
         switch (topic) {
             case __1.Topic.Connection:
-                if (!vda_5050_validators_1.validateConnection(object)) {
+                if (!(0, vda_5050_validators_1.validateConnection)(object)) {
                     throw new TypeError(`Invalid VDA 5050 Connection at ${vda_5050_validators_1.validateConnection.errors[0].keywordLocation}, ${vda_5050_validators_1.validateConnection.errors[0].instanceLocation}`);
                 }
                 break;
             case __1.Topic.InstantActions:
-                if (!vda_5050_validators_1.validateInstantActions(object)) {
+                if (!(0, vda_5050_validators_1.validateInstantActions)(object)) {
                     throw new TypeError(`Invalid VDA 5050 InstantActions at ${vda_5050_validators_1.validateInstantActions.errors[0].keywordLocation}, ${vda_5050_validators_1.validateInstantActions.errors[0].instanceLocation}`);
                 }
                 break;
             case __1.Topic.Order:
-                if (!vda_5050_validators_1.validateOrder(object)) {
+                if (!(0, vda_5050_validators_1.validateOrder)(object)) {
                     throw new TypeError(`Invalid VDA 5050 Order at ${vda_5050_validators_1.validateOrder.errors[0].keywordLocation}, ${vda_5050_validators_1.validateOrder.errors[0].instanceLocation}`);
                 }
                 break;
             case __1.Topic.State:
-                if (!vda_5050_validators_1.validateState(object)) {
+                if (!(0, vda_5050_validators_1.validateState)(object)) {
                     throw new TypeError(`Invalid VDA 5050 State at ${vda_5050_validators_1.validateState.errors[0].keywordLocation}, ${vda_5050_validators_1.validateState.errors[0].instanceLocation}`);
                 }
                 break;
             case __1.Topic.Visualization:
-                if (!vda_5050_validators_1.validateVisualization(object)) {
+                if (!(0, vda_5050_validators_1.validateVisualization)(object)) {
                     throw new TypeError(`Invalid VDA 5050 Visualization at ${vda_5050_validators_1.validateVisualization.errors[0].keywordLocation}, ${vda_5050_validators_1.validateVisualization.errors[0].instanceLocation}`);
                 }
                 break;
@@ -1243,7 +1244,7 @@ class Client {
             connectionUrl.startsWith("ali");
         return new Promise((resolve, reject) =&gt; {
             this.debug("Connecting to %s", connectionUrl);
-            const mqtt = this._mqtt = mqtt_1.connect(connectionUrl, mqttOpts);
+            const mqtt = this._mqtt = (0, mqtt_1.connect)(connectionUrl, mqttOpts);
             const onceFailureListener = error =&gt; {
                 this._mqtt = undefined;
                 mqtt.end(true, () =&gt; {
@@ -1356,7 +1357,7 @@ class Client {
         if (!this._isValidTopicLevel(topic)) {
             throw new TypeError(`Topic ${topic} is not a valid MQTT topic level`);
         }
-        if (__1.isExtensionTopic(topic)) {
+        if ((0, __1.isExtensionTopic)(topic)) {
             if (!this._extensionTopics.has(topic)) {
                 throw new TypeError(`Extension topic ${topic} is not registered`);
             }
@@ -1431,17 +1432,17 @@ Client.DEFAULT_MQTT_TOPIC_FORMAT = "%interfaceName%/%majorVersion%/%manufacturer
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Jul 21 2021 11:15:21 GMT+0200 (GMT+02:00)
+                at Thu Sep 16 2021 13:17:25 GMT+0200 (GMT+02:00)
             </div>
         </div>
-        <script src="..\prettify.js"></script>
+        <script src="../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="..\sorter.js"></script>
-        <script src="..\block-navigation.js"></script>
+        <script src="../sorter.js"></script>
+        <script src="../block-navigation.js"></script>
     </body>
 </html>
     

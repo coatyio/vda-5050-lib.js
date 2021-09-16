@@ -1,5 +1,20 @@
 # Changelog
 
+# [1.1.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.0.6...v1.1.0) (2021-09-16)
+
+This release fixes a potential race condition among Master and AGV Controller, and 
+features a refactored Virtual AGV Adapter for easier extensibility. 
+
+### Bug Fixes
+
+* **agv-controller:** fix potential race condition where instant actions or orders issued in response to an initial state message are dropped by broker as related subscriptions have not yet been registered ([15c6a0c](https://github.com/coatyio/vda-5050-lib.js/commit/15c6a0c352ce71704f65521244df5de8fd9a4bf5))
+* **test:** fix issue that sporadically occurs when tests are run with broker in debug mode ([546336e](https://github.com/coatyio/vda-5050-lib.js/commit/546336efff4fc9e1227cbd57352d400691c42852))
+
+
+### Features
+
+* **adapter:** redesign VirtualAgvAdapter for easier extensibility by subclassing ([973f12d](https://github.com/coatyio/vda-5050-lib.js/commit/973f12d47150dac53f6196032400950da201bf58))
+
 ## [1.0.6](https://github.com/coatyio/vda-5050-lib.js/compare/v1.0.5...v1.0.6) (2021-07-21)
 
 This patch release ensures that subscriptions on Orders and Instant Actions are issued by the AGV controller before publishing the initial State event.
