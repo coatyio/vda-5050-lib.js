@@ -37,8 +37,10 @@ import {
 
 /**
  * Represents the internal vehicle state of a virtual AGV.
+ * 
+ * @category AGV Adapter
  */
-interface VirtualAgvState {
+export interface VirtualAgvState {
     isDriving: boolean;
     isPaused: boolean;
     position: AgvPosition;
