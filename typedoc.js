@@ -1,6 +1,6 @@
 /*! Copyright (c) 2021 Siemens AG. Licensed under the MIT License. */
 
-// Typedoc options (execute "typedoc --help" in node_modules/.bin)
+// Typedoc options (execute "npx typedoc --help")
 
 module.exports = {
 
