@@ -557,16 +557,25 @@ export class MasterController extends MasterControlClient {
             }
         }
 
-        // Check if next node has been traversed/reached.
-        if (state.lastNodeId !== "") {
-            if (cache.lastNodeTraversed?.nodeId !== state.lastNodeId || cache.lastNodeTraversed?.sequenceId !== state.lastNodeSequenceId) {
-                const node = cache.lastNodeTraversed = this._getNode(cache.order, state.lastNodeId, state.lastNodeSequenceId);
-                const nextEdge = this._getNextEdge(cache.order, node);
-                const nextNode = nextEdge ? this._getEdgeEndNode(cache.order, nextEdge) : undefined;
-                this.debug("onNodeTraversed %o for cache %o with state %j", node, cache, state);
-                if (cache.eventHandler.onNodeTraversed) {
-                    cache.eventHandler.onNodeTraversed(node, nextEdge, nextNode, { order: cache.order, agvId: cache.agvId, state });
-                }
+        // Check if next node has been traversed/reached. 
+        let nextNode: Node;
+        if (cache.lastNodeTraversed === undefined) {
+            const firstNode = cache.order.nodes[0];
+            if (!state.nodeStates.find(n => n.nodeId === firstNode.nodeId && n.sequenceId === firstNode.sequenceId)) {
+                nextNode = firstNode;
+            }
+        } else {
+            if (cache.lastNodeTraversed.nodeId !== state.lastNodeId || cache.lastNodeTraversed.sequenceId !== state.lastNodeSequenceId) {
+                nextNode = this._getNode(cache.order, state.lastNodeId, state.lastNodeSequenceId);
+            }
+        }
+        if (nextNode !== undefined) {
+            cache.lastNodeTraversed = nextNode;
+            const nextEdge = this._getNextEdge(cache.order, nextNode);
+            const edgeEndNode = nextEdge ? this._getEdgeEndNode(cache.order, nextEdge) : undefined;
+            this.debug("onNodeTraversed %o for cache %o with state %j", nextNode, cache, state);
+            if (cache.eventHandler.onNodeTraversed) {
+                cache.eventHandler.onNodeTraversed(nextNode, nextEdge, edgeEndNode, { order: cache.order, agvId: cache.agvId, state });
             }
         }
 
