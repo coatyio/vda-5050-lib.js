@@ -1469,8 +1469,10 @@ export class AgvController extends AgvClient {
                 this._updateState({
                     orderId: order.orderId,
                     orderUpdateId: order.orderUpdateId,
-                    lastNodeId: "",
-                    lastNodeSequenceId: 0,
+                    // Keep and do not reset lastNodeId/lastNodeSequenceId as it should still
+                    // represent the last node of the previous order, if any. If necessary, the
+                    // values are adjusted in the next state change event triggered by the
+                    // _processNode invocation below.
                     errors: this._getNonOrderRejectionErrors(false),
                     nodeStates: this._getNodeStates(order),
                     edgeStates: this._getEdgeStates(order),
