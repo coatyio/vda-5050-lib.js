@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.1](https://github.com/coatyio/vda-5050-lib.js/compare/v1.1.0...v1.1.1) (2021-10-01)
+
+This patch release fixes an issue regarding handling of lastNodeId/lastNodeSequenceId 
+in initial state changes of new orders. Both Master Controller and AGV Controller are
+affected by this issue.
+
+### Bug Fixes
+
+* **agv-controller:** do not reset lastNodeId/lastNodeSequenceId in initial state change published for a new order ([38155b3](https://github.com/coatyio/vda-5050-lib.js/commit/38155b328152f334a13db1a4acc3aeca6d707a75))
+* **master-controller:** do not assume that lastNodeId/lastNodeSequenceId are always reset when receiving an initial state change for a new order ([24a23eb](https://github.com/coatyio/vda-5050-lib.js/commit/24a23eb5391af7a1a7bd7736e998dea1ef53402e))
+
 # [1.1.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.0.6...v1.1.0) (2021-09-16)
 
 This release fixes a potential race condition among Master and AGV Controller, and 
