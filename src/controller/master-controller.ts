@@ -861,6 +861,17 @@ export class MasterController extends MasterControlClient {
     }
 
     private _updateInstantActionsValidationError(errors: Error[]) {
+        if (this._currentInstantActionsRef === undefined) {
+            // Validation error cannot be associated with this master controller
+            // as it has not yet issued any instant actions.
+            return;
+        }
+
+        // Note: If multiple master controllers are concurrently issuing instant
+        // actions on the same agvId, it cannot be determined uniquely which
+        // controller issued the actions which caused a validation error. This
+        // can cause validation errors to be erroneously reported to unaffected
+        // controllers.
         const validationErrors = errors.filter(error =>
             // We must check topic reference to distinguish between order and instant action
             // validation errors as both have the same value.

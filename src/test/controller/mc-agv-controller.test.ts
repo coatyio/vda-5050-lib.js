@@ -315,7 +315,16 @@ tap.test("Master Controller - AGV Controller", async t => {
     const agvId1 = createAgvId("RobotCompany", "001");
     const agvId2 = createAgvId("RobotCompany", "002");
 
+    // Only controlled by mcControllerWithoutValidation to perform validation
+    // tests on orders and instant actions.
+    const agvId3 = createAgvId("RobotCompany", "003");
+
     const mcController = new MasterController(testClientOptions(t), {});
+
+    // This master controller must not control AGVs that are also controlled by
+    // other master controllers as it performs tests with validation errors on
+    // instant actions. In VDA 5050, we cannot uniquely associate this error
+    // type with the issuing controller if there are multiple of them.
     const mcControllerWithoutValidation = new MasterController({
         ...testClientOptions(t),
         topicObjectValidation: { inbound: true, outbound: false },
@@ -325,17 +334,26 @@ tap.test("Master Controller - AGV Controller", async t => {
     const agvAdapterOptions1: VirtualAgvAdapterOptions = { initialBatteryCharge: 80, timeLapse: 100 };
     const agvController1 = new AgvController(agvId1, testClientOptions(t), agvControllerOptions1, agvAdapterOptions1);
 
-    const agvControllerOptions2: AgvControllerOptions = { agvAdapterType: VirtualAgvAdapter, publishVisualizationInterval: 0 };
+    const agvControllerOptions2: AgvControllerOptions = {
+        agvAdapterType: VirtualAgvAdapter,
+        publishVisualizationInterval: 0,
+    };
     const agvAdapterOptions2: VirtualAgvAdapterOptions = { initialBatteryCharge: 80, timeLapse: 100 };
     const agvController2 = new AgvController(agvId2, testClientOptions(t), agvControllerOptions2, agvAdapterOptions2);
 
+    const agvControllerOptions3: AgvControllerOptions = { agvAdapterType: VirtualAgvAdapter };
+    const agvAdapterOptions3: VirtualAgvAdapterOptions = { initialBatteryCharge: 80, timeLapse: 100 };
+    const agvController3 = new AgvController(agvId3, testClientOptions(t), agvControllerOptions3, agvAdapterOptions3);
+
     t.teardown(() => agvController1.stop());
     t.teardown(() => agvController2.stop());
+    t.teardown(() => agvController3.stop());
     t.teardown(() => mcController.stop());
     t.teardown(() => mcControllerWithoutValidation.stop());
 
     await t.test("start AGV Controller 1", () => agvController1.start());
     await t.test("start AGV Controller 2", () => agvController2.start());
+    await t.test("start AGV Controller 3", () => agvController3.start());
     await t.test("start Master Controller", () => mcController.start());
     await t.test("start Master Controller without validation", () => mcControllerWithoutValidation.start());
 
@@ -385,7 +403,7 @@ tap.test("Master Controller - AGV Controller", async t => {
 
     await t.test("instant action invalid - not well-formed", ts => new Promise(async resolve => {
         let errorInvocations = 0;
-        const actions = await mcControllerWithoutValidation.initiateInstantActions(agvId1, {
+        const actions = await mcControllerWithoutValidation.initiateInstantActions(agvId3, {
             instantActions: [{
                 actionId: createUuid(),
                 actionType: 42,
@@ -680,7 +698,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - not well-formed",
         ErrorType.OrderValidation,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: "o42",
             orderUpdateId: "foo",
@@ -695,7 +713,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - nodes empty",
         ErrorType.OrderValidation,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: "o42",
             orderUpdateId: 0,
@@ -710,7 +728,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - invalid node sequenceId",
         ErrorType.OrderValidation,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: "o42",
             orderUpdateId: 0,
@@ -725,7 +743,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - invalid node horizon",
         ErrorType.OrderValidation,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: "o42",
             orderUpdateId: 0,
@@ -743,7 +761,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - invalid number of edges",
         ErrorType.OrderValidation,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: "o42",
             orderUpdateId: 0,
@@ -761,7 +779,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - invalid edge sequenceId",
         ErrorType.OrderValidation,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: "o42",
             orderUpdateId: 0,
@@ -779,7 +797,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - invalid edge horizon",
         ErrorType.OrderValidation,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: "o42",
             orderUpdateId: 0,
@@ -797,7 +815,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - invalid edge start end nodes",
         ErrorType.OrderValidation,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: "o42",
             orderUpdateId: 0,
@@ -815,7 +833,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - incorrect mapId",
         ErrorType.OrderNoRoute,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: createUuid(),
             orderUpdateId: 0,
@@ -830,7 +848,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - nodePosition missing",
         ErrorType.OrderNoRoute,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: createUuid(),
             orderUpdateId: 0,
@@ -850,7 +868,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - first node not within deviation range",
         ErrorType.OrderNoRoute,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: createUuid(),
             orderUpdateId: 0,
@@ -865,7 +883,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - node action not supported",
         ErrorType.Order,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: createUuid(),
             orderUpdateId: 0,
@@ -884,7 +902,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - edge action not supported",
         ErrorType.Order,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: createUuid(),
             orderUpdateId: 0,
@@ -907,7 +925,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - missing action parameter",
         ErrorType.Order,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: createUuid(),
             orderUpdateId: 0,
@@ -927,7 +945,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order invalid - invalid action parameter",
         ErrorType.Order,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: createUuid(),
             orderUpdateId: 0,
@@ -953,56 +971,56 @@ tap.test("Master Controller - AGV Controller", async t => {
     await testOrderError(t, "order not executable while charging",
         ErrorType.Order,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: createUuid(),
             orderUpdateId: 0,
             nodes: [{ nodeId: "n1", sequenceId: 0, released: true, actions: [] }],
             edges: [],
         },
-        { ac: agvController1, keyChain: "batteryState.charging", newValue: true },
+        { ac: agvController3, keyChain: "batteryState.charging", newValue: true },
         { referenceKey: "batteryState.charging", referenceValue: "true" },
     );
 
     await testOrderError(t, "order not executable as emergency stop is active",
         ErrorType.Order,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: createUuid(),
             orderUpdateId: 0,
             nodes: [{ nodeId: "n1", sequenceId: 0, released: true, actions: [] }],
             edges: [],
         },
-        { ac: agvController1, keyChain: "safetyState.eStop", newValue: "MANUAL" },
+        { ac: agvController3, keyChain: "safetyState.eStop", newValue: "MANUAL" },
         { referenceKey: "safetyState.eStop", referenceValue: "MANUAL" },
     );
 
     await testOrderError(t, "order not executable due to protective field violation",
         ErrorType.Order,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: createUuid(),
             orderUpdateId: 0,
             nodes: [{ nodeId: "n1", sequenceId: 0, released: true, actions: [] }],
             edges: [],
         },
-        { ac: agvController1, keyChain: "safetyState.fieldViolation", newValue: true },
+        { ac: agvController3, keyChain: "safetyState.fieldViolation", newValue: true },
         { referenceKey: "safetyState.fieldViolation", referenceValue: "true" },
     );
 
     await testOrderError(t, "order not executable due to operating mode",
         ErrorType.Order,
         mcControllerWithoutValidation,
-        agvId1,
+        agvId3,
         {
             orderId: createUuid(),
             orderUpdateId: 0,
             nodes: [{ nodeId: "n1", sequenceId: 0, released: true, actions: [] }],
             edges: [],
         },
-        { ac: agvController1, keyChain: "operatingMode", newValue: "SERVICE" },
+        { ac: agvController3, keyChain: "operatingMode", newValue: "SERVICE" },
         { referenceKey: "operatingMode", referenceValue: "SERVICE" },
     );
 
