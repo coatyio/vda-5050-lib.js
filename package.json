@@ -75,10 +75,10 @@
         "uuid": "^8.3.2"
     },
     "devDependencies": {
-        "@exodus/schemasafe": "^1.0.0-rc.4",
+        "@exodus/schemasafe": "^1.0.0-rc.6",
         "@release-it/conventional-changelog": "^3.3.0",
         "@types/debug": "^4.1.7",
-        "@types/node": "^16.9.1",
+        "@types/node": "^16.11.3",
         "@types/tap": "^15.0.5",
         "@types/uuid": "^8.3.1",
         "cross-env": "^7.0.3",
@@ -93,11 +93,11 @@
         "npm-run-all": "^4.1.5",
         "opener": "^1.5.2",
         "readline-sync": "^1.4.10",
-        "release-it": "^14.11.5",
-        "tap": "^15.0.9",
+        "release-it": "^14.11.6",
+        "tap": "^15.0.10",
         "tslint": "^5.20.1",
-        "typedoc": "^0.22.3",
-        "typescript": "~4.4.3",
+        "typedoc": "^0.22.6",
+        "typescript": "~4.4.4",
         "vda-5050-cli": "^2.0.13"
     },
     "engines": {

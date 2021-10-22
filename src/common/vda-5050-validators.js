@@ -7,39 +7,49 @@ const validateConnection = (function() {
 const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 const format0 = (input) => {
     if (input.length > 10 + 1 + 9 + 12 + 6) return false
-    const full = /^\d{4}-(0[1-9]|1[0-2])-[0-3]\d[t\s]([0-2]\d:[0-5]\d:[0-5]\d|23:59:60)(\.\d+)?(z|[+-]\d\d(:?\d\d)?)$/i
-    if (!full.test(input)) return false
-    if (/^\d\d\d\d-(0[13-9]|1[012])-([012][1-9]|[123]0)/.test(input)) return true
-    if (/^\d\d\d\d-02-([012][1-8]|[12]0|[01]9)/.test(input)) return true
-    if (/^\d\d\d\d-(0[13578]|1[02])-31/.test(input)) return true
-    const matches = input.match(/^(\d\d\d\d)-02-29/)
-    if (!matches) return false
-    const year = matches[1] | 0
-    return year % 16 === 0 || (year % 4 === 0 && year % 25 !== 0)
+    const full = /^\d\d\d\d-(?:0[1-9]|1[0-2])-(?:[0-2]\d|3[01])[t\s](?:2[0-3]|[0-1]\d):[0-5]\d:(?:[0-5]\d|60)(?:\.\d+)?(?:z|[+-](?:2[0-3]|[0-1]\d)(?::?[0-5]\d)?)$/i
+    const feb = input[5] === '0' && input[6] === '2'
+    if ((feb && input[8] === '3') || !full.test(input)) return false
+    if (input[17] === '6') {
+      const p = input.slice(11).match(/([0-9.]+|[^0-9.])/g)
+      let hm = Number(p[0]) * 60 + Number(p[2])
+      if (p[5] === '+') hm += 24 * 60 - Number(p[6] || 0) * 60 - Number(p[8] || 0)
+      else if (p[5] === '-') hm += Number(p[6] || 0) * 60 + Number(p[8] || 0)
+      if (hm % (24 * 60) !== 23 * 60 + 59) return false
+    }
+    if (feb) {
+      if (/^\d\d\d\d-02-(?:[012][1-8]|[12]0|[01]9)/.test(input)) return true
+      const matches = input.match(/^(\d\d\d\d)-02-29/)
+      if (!matches) return false
+      const year = matches[1] | 0
+      return year % 16 === 0 || (year % 4 === 0 && year % 25 !== 0)
+    }
+    if (input[8] === '3' && input[9] === '1') return /^\d\d\d\d-(?:0[13578]|1[02])-31/.test(input)
+    return /^\d\d\d\d-(?:0[13-9]|1[012])-(?:[012][1-9]|[123]0)/.test(input)
   };
-const ref1 = function validate(data, recursive) {
+const ref1 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.headerId !== undefined && hasOwn(data, "headerId"))) {
+  if (!("headerId" in data && hasOwn(data, "headerId"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/headerId" }]
     return false
   }
-  if (!(data.timestamp !== undefined && hasOwn(data, "timestamp"))) {
+  if (!("timestamp" in data && hasOwn(data, "timestamp"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/timestamp" }]
     return false
   }
-  if (!(data.version !== undefined && hasOwn(data, "version"))) {
+  if (!("version" in data && hasOwn(data, "version"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/version" }]
     return false
   }
-  if (!(data.manufacturer !== undefined && hasOwn(data, "manufacturer"))) {
+  if (!("manufacturer" in data && hasOwn(data, "manufacturer"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/manufacturer" }]
     return false
   }
-  if (!(data.serialNumber !== undefined && hasOwn(data, "serialNumber"))) {
+  if (!("serialNumber" in data && hasOwn(data, "serialNumber"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/serialNumber" }]
     return false
   }
@@ -73,21 +83,21 @@ const errorMerge = ({ keywordLocation, instanceLocation }, schemaBase, dataBase)
   keywordLocation: `${schemaBase}${keywordLocation.slice(1)}`,
   instanceLocation: `${dataBase}${instanceLocation.slice(1)}`,
 });
-const ref0 = function validate(data, recursive) {
+const ref0 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
   const err0 = validate.errors
-  const res0 = ref1(data, recursive)
+  const res0 = ref1(data)
   const suberr0 = ref1.errors
   validate.errors = err0
   if (!res0) {
     validate.errors = [errorMerge(suberr0[0], "#/allOf/0/$ref", "#")]
     return false
   }
-  if (!(data.connectionState !== undefined && hasOwn(data, "connectionState"))) {
+  if (!("connectionState" in data && hasOwn(data, "connectionState"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/connectionState" }]
     return false
   }
@@ -108,39 +118,49 @@ const validateHeader = (function() {
 const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 const format0 = (input) => {
     if (input.length > 10 + 1 + 9 + 12 + 6) return false
-    const full = /^\d{4}-(0[1-9]|1[0-2])-[0-3]\d[t\s]([0-2]\d:[0-5]\d:[0-5]\d|23:59:60)(\.\d+)?(z|[+-]\d\d(:?\d\d)?)$/i
-    if (!full.test(input)) return false
-    if (/^\d\d\d\d-(0[13-9]|1[012])-([012][1-9]|[123]0)/.test(input)) return true
-    if (/^\d\d\d\d-02-([012][1-8]|[12]0|[01]9)/.test(input)) return true
-    if (/^\d\d\d\d-(0[13578]|1[02])-31/.test(input)) return true
-    const matches = input.match(/^(\d\d\d\d)-02-29/)
-    if (!matches) return false
-    const year = matches[1] | 0
-    return year % 16 === 0 || (year % 4 === 0 && year % 25 !== 0)
+    const full = /^\d\d\d\d-(?:0[1-9]|1[0-2])-(?:[0-2]\d|3[01])[t\s](?:2[0-3]|[0-1]\d):[0-5]\d:(?:[0-5]\d|60)(?:\.\d+)?(?:z|[+-](?:2[0-3]|[0-1]\d)(?::?[0-5]\d)?)$/i
+    const feb = input[5] === '0' && input[6] === '2'
+    if ((feb && input[8] === '3') || !full.test(input)) return false
+    if (input[17] === '6') {
+      const p = input.slice(11).match(/([0-9.]+|[^0-9.])/g)
+      let hm = Number(p[0]) * 60 + Number(p[2])
+      if (p[5] === '+') hm += 24 * 60 - Number(p[6] || 0) * 60 - Number(p[8] || 0)
+      else if (p[5] === '-') hm += Number(p[6] || 0) * 60 + Number(p[8] || 0)
+      if (hm % (24 * 60) !== 23 * 60 + 59) return false
+    }
+    if (feb) {
+      if (/^\d\d\d\d-02-(?:[012][1-8]|[12]0|[01]9)/.test(input)) return true
+      const matches = input.match(/^(\d\d\d\d)-02-29/)
+      if (!matches) return false
+      const year = matches[1] | 0
+      return year % 16 === 0 || (year % 4 === 0 && year % 25 !== 0)
+    }
+    if (input[8] === '3' && input[9] === '1') return /^\d\d\d\d-(?:0[13578]|1[02])-31/.test(input)
+    return /^\d\d\d\d-(?:0[13-9]|1[012])-(?:[012][1-9]|[123]0)/.test(input)
   };
-const ref1 = function validate(data, recursive) {
+const ref1 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.headerId !== undefined && hasOwn(data, "headerId"))) {
+  if (!("headerId" in data && hasOwn(data, "headerId"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/headerId" }]
     return false
   }
-  if (!(data.timestamp !== undefined && hasOwn(data, "timestamp"))) {
+  if (!("timestamp" in data && hasOwn(data, "timestamp"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/timestamp" }]
     return false
   }
-  if (!(data.version !== undefined && hasOwn(data, "version"))) {
+  if (!("version" in data && hasOwn(data, "version"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/version" }]
     return false
   }
-  if (!(data.manufacturer !== undefined && hasOwn(data, "manufacturer"))) {
+  if (!("manufacturer" in data && hasOwn(data, "manufacturer"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/manufacturer" }]
     return false
   }
-  if (!(data.serialNumber !== undefined && hasOwn(data, "serialNumber"))) {
+  if (!("serialNumber" in data && hasOwn(data, "serialNumber"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/serialNumber" }]
     return false
   }
@@ -174,10 +194,10 @@ const errorMerge = ({ keywordLocation, instanceLocation }, schemaBase, dataBase)
   keywordLocation: `${schemaBase}${keywordLocation.slice(1)}`,
   instanceLocation: `${dataBase}${instanceLocation.slice(1)}`,
 });
-const ref0 = function validate(data, recursive) {
+const ref0 = function validate(data) {
   validate.errors = null
   const err0 = validate.errors
-  const res0 = ref1(data, recursive)
+  const res0 = ref1(data)
   const suberr0 = ref1.errors
   validate.errors = err0
   if (!res0) {
@@ -193,39 +213,49 @@ const validateInstantActions = (function() {
 const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 const format0 = (input) => {
     if (input.length > 10 + 1 + 9 + 12 + 6) return false
-    const full = /^\d{4}-(0[1-9]|1[0-2])-[0-3]\d[t\s]([0-2]\d:[0-5]\d:[0-5]\d|23:59:60)(\.\d+)?(z|[+-]\d\d(:?\d\d)?)$/i
-    if (!full.test(input)) return false
-    if (/^\d\d\d\d-(0[13-9]|1[012])-([012][1-9]|[123]0)/.test(input)) return true
-    if (/^\d\d\d\d-02-([012][1-8]|[12]0|[01]9)/.test(input)) return true
-    if (/^\d\d\d\d-(0[13578]|1[02])-31/.test(input)) return true
-    const matches = input.match(/^(\d\d\d\d)-02-29/)
-    if (!matches) return false
-    const year = matches[1] | 0
-    return year % 16 === 0 || (year % 4 === 0 && year % 25 !== 0)
+    const full = /^\d\d\d\d-(?:0[1-9]|1[0-2])-(?:[0-2]\d|3[01])[t\s](?:2[0-3]|[0-1]\d):[0-5]\d:(?:[0-5]\d|60)(?:\.\d+)?(?:z|[+-](?:2[0-3]|[0-1]\d)(?::?[0-5]\d)?)$/i
+    const feb = input[5] === '0' && input[6] === '2'
+    if ((feb && input[8] === '3') || !full.test(input)) return false
+    if (input[17] === '6') {
+      const p = input.slice(11).match(/([0-9.]+|[^0-9.])/g)
+      let hm = Number(p[0]) * 60 + Number(p[2])
+      if (p[5] === '+') hm += 24 * 60 - Number(p[6] || 0) * 60 - Number(p[8] || 0)
+      else if (p[5] === '-') hm += Number(p[6] || 0) * 60 + Number(p[8] || 0)
+      if (hm % (24 * 60) !== 23 * 60 + 59) return false
+    }
+    if (feb) {
+      if (/^\d\d\d\d-02-(?:[012][1-8]|[12]0|[01]9)/.test(input)) return true
+      const matches = input.match(/^(\d\d\d\d)-02-29/)
+      if (!matches) return false
+      const year = matches[1] | 0
+      return year % 16 === 0 || (year % 4 === 0 && year % 25 !== 0)
+    }
+    if (input[8] === '3' && input[9] === '1') return /^\d\d\d\d-(?:0[13578]|1[02])-31/.test(input)
+    return /^\d\d\d\d-(?:0[13-9]|1[012])-(?:[012][1-9]|[123]0)/.test(input)
   };
-const ref1 = function validate(data, recursive) {
+const ref1 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.headerId !== undefined && hasOwn(data, "headerId"))) {
+  if (!("headerId" in data && hasOwn(data, "headerId"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/headerId" }]
     return false
   }
-  if (!(data.timestamp !== undefined && hasOwn(data, "timestamp"))) {
+  if (!("timestamp" in data && hasOwn(data, "timestamp"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/timestamp" }]
     return false
   }
-  if (!(data.version !== undefined && hasOwn(data, "version"))) {
+  if (!("version" in data && hasOwn(data, "version"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/version" }]
     return false
   }
-  if (!(data.manufacturer !== undefined && hasOwn(data, "manufacturer"))) {
+  if (!("manufacturer" in data && hasOwn(data, "manufacturer"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/manufacturer" }]
     return false
   }
-  if (!(data.serialNumber !== undefined && hasOwn(data, "serialNumber"))) {
+  if (!("serialNumber" in data && hasOwn(data, "serialNumber"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/serialNumber" }]
     return false
   }
@@ -259,21 +289,21 @@ const errorMerge = ({ keywordLocation, instanceLocation }, schemaBase, dataBase)
   keywordLocation: `${schemaBase}${keywordLocation.slice(1)}`,
   instanceLocation: `${dataBase}${instanceLocation.slice(1)}`,
 });
-const ref2 = function validate(data, recursive) {
+const ref2 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.actionId !== undefined && hasOwn(data, "actionId"))) {
+  if (!("actionId" in data && hasOwn(data, "actionId"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/actionId" }]
     return false
   }
-  if (!(data.actionType !== undefined && hasOwn(data, "actionType"))) {
+  if (!("actionType" in data && hasOwn(data, "actionType"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/actionType" }]
     return false
   }
-  if (!(data.blockingType !== undefined && hasOwn(data, "blockingType"))) {
+  if (!("blockingType" in data && hasOwn(data, "blockingType"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/blockingType" }]
     return false
   }
@@ -285,7 +315,7 @@ const ref2 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/properties/actionId/type", instanceLocation: "#/actionId" }]
     return false
   }
-  if (data.actionDescription !== undefined && hasOwn(data, "actionDescription")) {
+  if ("actionDescription" in data && hasOwn(data, "actionDescription")) {
     if (!(typeof data.actionDescription === "string")) {
       validate.errors = [{ keywordLocation: "#/properties/actionDescription/type", instanceLocation: "#/actionDescription" }]
       return false
@@ -299,22 +329,22 @@ const ref2 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/properties/blockingType/enum", instanceLocation: "#/blockingType" }]
     return false
   }
-  if (data.actionParameters !== undefined && hasOwn(data, "actionParameters")) {
+  if ("actionParameters" in data && hasOwn(data, "actionParameters")) {
     if (!Array.isArray(data.actionParameters)) {
       validate.errors = [{ keywordLocation: "#/properties/actionParameters/type", instanceLocation: "#/actionParameters" }]
       return false
     }
     for (let j = 0; j < data.actionParameters.length; j++) {
-      if (data.actionParameters[j] !== undefined && hasOwn(data.actionParameters, j)) {
+      if (j in data.actionParameters && hasOwn(data.actionParameters, j)) {
         if (!(typeof data.actionParameters[j] === "object" && data.actionParameters[j] && !Array.isArray(data.actionParameters[j]))) {
           validate.errors = [{ keywordLocation: "#/properties/actionParameters/items/type", instanceLocation: "#/actionParameters/"+j }]
           return false
         }
-        if (!(data.actionParameters[j].key !== undefined && hasOwn(data.actionParameters[j], "key"))) {
+        if (!("key" in data.actionParameters[j] && hasOwn(data.actionParameters[j], "key"))) {
           validate.errors = [{ keywordLocation: "#/properties/actionParameters/items/required", instanceLocation: "#/actionParameters/"+j+"/key" }]
           return false
         }
-        if (!(data.actionParameters[j].value !== undefined && hasOwn(data.actionParameters[j], "value"))) {
+        if (!("value" in data.actionParameters[j] && hasOwn(data.actionParameters[j], "value"))) {
           validate.errors = [{ keywordLocation: "#/properties/actionParameters/items/required", instanceLocation: "#/actionParameters/"+j+"/value" }]
           return false
         }
@@ -331,21 +361,21 @@ const ref2 = function validate(data, recursive) {
   }
   return true
 };
-const ref0 = function validate(data, recursive) {
+const ref0 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
   const err0 = validate.errors
-  const res0 = ref1(data, recursive)
+  const res0 = ref1(data)
   const suberr0 = ref1.errors
   validate.errors = err0
   if (!res0) {
     validate.errors = [errorMerge(suberr0[0], "#/allOf/0/$ref", "#")]
     return false
   }
-  if (!(data.instantActions !== undefined && hasOwn(data, "instantActions"))) {
+  if (!("instantActions" in data && hasOwn(data, "instantActions"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/instantActions" }]
     return false
   }
@@ -354,9 +384,9 @@ const ref0 = function validate(data, recursive) {
     return false
   }
   for (let i = 0; i < data.instantActions.length; i++) {
-    if (data.instantActions[i] !== undefined && hasOwn(data.instantActions, i)) {
+    if (i in data.instantActions && hasOwn(data.instantActions, i)) {
       const err1 = validate.errors
-      const res1 = ref2(data.instantActions[i], recursive)
+      const res1 = ref2(data.instantActions[i])
       const suberr1 = ref2.errors
       validate.errors = err1
       if (!res1) {
@@ -374,39 +404,49 @@ const validateOrder = (function() {
 const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 const format0 = (input) => {
     if (input.length > 10 + 1 + 9 + 12 + 6) return false
-    const full = /^\d{4}-(0[1-9]|1[0-2])-[0-3]\d[t\s]([0-2]\d:[0-5]\d:[0-5]\d|23:59:60)(\.\d+)?(z|[+-]\d\d(:?\d\d)?)$/i
-    if (!full.test(input)) return false
-    if (/^\d\d\d\d-(0[13-9]|1[012])-([012][1-9]|[123]0)/.test(input)) return true
-    if (/^\d\d\d\d-02-([012][1-8]|[12]0|[01]9)/.test(input)) return true
-    if (/^\d\d\d\d-(0[13578]|1[02])-31/.test(input)) return true
-    const matches = input.match(/^(\d\d\d\d)-02-29/)
-    if (!matches) return false
-    const year = matches[1] | 0
-    return year % 16 === 0 || (year % 4 === 0 && year % 25 !== 0)
+    const full = /^\d\d\d\d-(?:0[1-9]|1[0-2])-(?:[0-2]\d|3[01])[t\s](?:2[0-3]|[0-1]\d):[0-5]\d:(?:[0-5]\d|60)(?:\.\d+)?(?:z|[+-](?:2[0-3]|[0-1]\d)(?::?[0-5]\d)?)$/i
+    const feb = input[5] === '0' && input[6] === '2'
+    if ((feb && input[8] === '3') || !full.test(input)) return false
+    if (input[17] === '6') {
+      const p = input.slice(11).match(/([0-9.]+|[^0-9.])/g)
+      let hm = Number(p[0]) * 60 + Number(p[2])
+      if (p[5] === '+') hm += 24 * 60 - Number(p[6] || 0) * 60 - Number(p[8] || 0)
+      else if (p[5] === '-') hm += Number(p[6] || 0) * 60 + Number(p[8] || 0)
+      if (hm % (24 * 60) !== 23 * 60 + 59) return false
+    }
+    if (feb) {
+      if (/^\d\d\d\d-02-(?:[012][1-8]|[12]0|[01]9)/.test(input)) return true
+      const matches = input.match(/^(\d\d\d\d)-02-29/)
+      if (!matches) return false
+      const year = matches[1] | 0
+      return year % 16 === 0 || (year % 4 === 0 && year % 25 !== 0)
+    }
+    if (input[8] === '3' && input[9] === '1') return /^\d\d\d\d-(?:0[13578]|1[02])-31/.test(input)
+    return /^\d\d\d\d-(?:0[13-9]|1[012])-(?:[012][1-9]|[123]0)/.test(input)
   };
-const ref1 = function validate(data, recursive) {
+const ref1 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.headerId !== undefined && hasOwn(data, "headerId"))) {
+  if (!("headerId" in data && hasOwn(data, "headerId"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/headerId" }]
     return false
   }
-  if (!(data.timestamp !== undefined && hasOwn(data, "timestamp"))) {
+  if (!("timestamp" in data && hasOwn(data, "timestamp"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/timestamp" }]
     return false
   }
-  if (!(data.version !== undefined && hasOwn(data, "version"))) {
+  if (!("version" in data && hasOwn(data, "version"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/version" }]
     return false
   }
-  if (!(data.manufacturer !== undefined && hasOwn(data, "manufacturer"))) {
+  if (!("manufacturer" in data && hasOwn(data, "manufacturer"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/manufacturer" }]
     return false
   }
-  if (!(data.serialNumber !== undefined && hasOwn(data, "serialNumber"))) {
+  if (!("serialNumber" in data && hasOwn(data, "serialNumber"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/serialNumber" }]
     return false
   }
@@ -440,21 +480,21 @@ const errorMerge = ({ keywordLocation, instanceLocation }, schemaBase, dataBase)
   keywordLocation: `${schemaBase}${keywordLocation.slice(1)}`,
   instanceLocation: `${dataBase}${instanceLocation.slice(1)}`,
 });
-const ref2 = function validate(data, recursive) {
+const ref2 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.x !== undefined && hasOwn(data, "x"))) {
+  if (!("x" in data && hasOwn(data, "x"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/x" }]
     return false
   }
-  if (!(data.y !== undefined && hasOwn(data, "y"))) {
+  if (!("y" in data && hasOwn(data, "y"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/y" }]
     return false
   }
-  if (!(data.mapId !== undefined && hasOwn(data, "mapId"))) {
+  if (!("mapId" in data && hasOwn(data, "mapId"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/mapId" }]
     return false
   }
@@ -466,7 +506,7 @@ const ref2 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/properties/y/type", instanceLocation: "#/y" }]
     return false
   }
-  if (data.theta !== undefined && hasOwn(data, "theta")) {
+  if ("theta" in data && hasOwn(data, "theta")) {
     if (!(typeof data.theta === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/theta/type", instanceLocation: "#/theta" }]
       return false
@@ -480,7 +520,7 @@ const ref2 = function validate(data, recursive) {
       return false
     }
   }
-  if (data.allowedDeviationXy !== undefined && hasOwn(data, "allowedDeviationXy")) {
+  if ("allowedDeviationXy" in data && hasOwn(data, "allowedDeviationXy")) {
     if (!(typeof data.allowedDeviationXy === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/allowedDeviationXy/type", instanceLocation: "#/allowedDeviationXy" }]
       return false
@@ -490,7 +530,7 @@ const ref2 = function validate(data, recursive) {
       return false
     }
   }
-  if (data.allowedDeviationTheta !== undefined && hasOwn(data, "allowedDeviationTheta")) {
+  if ("allowedDeviationTheta" in data && hasOwn(data, "allowedDeviationTheta")) {
     if (!(typeof data.allowedDeviationTheta === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/allowedDeviationTheta/type", instanceLocation: "#/allowedDeviationTheta" }]
       return false
@@ -508,7 +548,7 @@ const ref2 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/properties/mapId/type", instanceLocation: "#/mapId" }]
     return false
   }
-  if (data.mapDescription !== undefined && hasOwn(data, "mapDescription")) {
+  if ("mapDescription" in data && hasOwn(data, "mapDescription")) {
     if (!(typeof data.mapDescription === "string")) {
       validate.errors = [{ keywordLocation: "#/properties/mapDescription/type", instanceLocation: "#/mapDescription" }]
       return false
@@ -516,21 +556,21 @@ const ref2 = function validate(data, recursive) {
   }
   return true
 };
-const ref3 = function validate(data, recursive) {
+const ref3 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.actionId !== undefined && hasOwn(data, "actionId"))) {
+  if (!("actionId" in data && hasOwn(data, "actionId"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/actionId" }]
     return false
   }
-  if (!(data.actionType !== undefined && hasOwn(data, "actionType"))) {
+  if (!("actionType" in data && hasOwn(data, "actionType"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/actionType" }]
     return false
   }
-  if (!(data.blockingType !== undefined && hasOwn(data, "blockingType"))) {
+  if (!("blockingType" in data && hasOwn(data, "blockingType"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/blockingType" }]
     return false
   }
@@ -542,7 +582,7 @@ const ref3 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/properties/actionId/type", instanceLocation: "#/actionId" }]
     return false
   }
-  if (data.actionDescription !== undefined && hasOwn(data, "actionDescription")) {
+  if ("actionDescription" in data && hasOwn(data, "actionDescription")) {
     if (!(typeof data.actionDescription === "string")) {
       validate.errors = [{ keywordLocation: "#/properties/actionDescription/type", instanceLocation: "#/actionDescription" }]
       return false
@@ -556,22 +596,22 @@ const ref3 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/properties/blockingType/enum", instanceLocation: "#/blockingType" }]
     return false
   }
-  if (data.actionParameters !== undefined && hasOwn(data, "actionParameters")) {
+  if ("actionParameters" in data && hasOwn(data, "actionParameters")) {
     if (!Array.isArray(data.actionParameters)) {
       validate.errors = [{ keywordLocation: "#/properties/actionParameters/type", instanceLocation: "#/actionParameters" }]
       return false
     }
     for (let k = 0; k < data.actionParameters.length; k++) {
-      if (data.actionParameters[k] !== undefined && hasOwn(data.actionParameters, k)) {
+      if (k in data.actionParameters && hasOwn(data.actionParameters, k)) {
         if (!(typeof data.actionParameters[k] === "object" && data.actionParameters[k] && !Array.isArray(data.actionParameters[k]))) {
           validate.errors = [{ keywordLocation: "#/properties/actionParameters/items/type", instanceLocation: "#/actionParameters/"+k }]
           return false
         }
-        if (!(data.actionParameters[k].key !== undefined && hasOwn(data.actionParameters[k], "key"))) {
+        if (!("key" in data.actionParameters[k] && hasOwn(data.actionParameters[k], "key"))) {
           validate.errors = [{ keywordLocation: "#/properties/actionParameters/items/required", instanceLocation: "#/actionParameters/"+k+"/key" }]
           return false
         }
-        if (!(data.actionParameters[k].value !== undefined && hasOwn(data.actionParameters[k], "value"))) {
+        if (!("value" in data.actionParameters[k] && hasOwn(data.actionParameters[k], "value"))) {
           validate.errors = [{ keywordLocation: "#/properties/actionParameters/items/required", instanceLocation: "#/actionParameters/"+k+"/value" }]
           return false
         }
@@ -588,21 +628,21 @@ const ref3 = function validate(data, recursive) {
   }
   return true
 };
-const ref4 = function validate(data, recursive) {
+const ref4 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.degree !== undefined && hasOwn(data, "degree"))) {
+  if (!("degree" in data && hasOwn(data, "degree"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/degree" }]
     return false
   }
-  if (!(data.knotVector !== undefined && hasOwn(data, "knotVector"))) {
+  if (!("knotVector" in data && hasOwn(data, "knotVector"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/knotVector" }]
     return false
   }
-  if (!(data.controlPoints !== undefined && hasOwn(data, "controlPoints"))) {
+  if (!("controlPoints" in data && hasOwn(data, "controlPoints"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/controlPoints" }]
     return false
   }
@@ -615,7 +655,7 @@ const ref4 = function validate(data, recursive) {
     return false
   }
   for (let m = 0; m < data.knotVector.length; m++) {
-    if (data.knotVector[m] !== undefined && hasOwn(data.knotVector, m)) {
+    if (m in data.knotVector && hasOwn(data.knotVector, m)) {
       if (!(typeof data.knotVector[m] === "number")) {
         validate.errors = [{ keywordLocation: "#/properties/knotVector/items/type", instanceLocation: "#/knotVector/"+m }]
         return false
@@ -635,20 +675,20 @@ const ref4 = function validate(data, recursive) {
     return false
   }
   for (let n = 0; n < data.controlPoints.length; n++) {
-    if (data.controlPoints[n] !== undefined && hasOwn(data.controlPoints, n)) {
+    if (n in data.controlPoints && hasOwn(data.controlPoints, n)) {
       if (!(typeof data.controlPoints[n] === "object" && data.controlPoints[n] && !Array.isArray(data.controlPoints[n]))) {
         validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/type", instanceLocation: "#/controlPoints/"+n }]
         return false
       }
-      if (!(data.controlPoints[n].x !== undefined && hasOwn(data.controlPoints[n], "x"))) {
+      if (!("x" in data.controlPoints[n] && hasOwn(data.controlPoints[n], "x"))) {
         validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/required", instanceLocation: "#/controlPoints/"+n+"/x" }]
         return false
       }
-      if (!(data.controlPoints[n].y !== undefined && hasOwn(data.controlPoints[n], "y"))) {
+      if (!("y" in data.controlPoints[n] && hasOwn(data.controlPoints[n], "y"))) {
         validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/required", instanceLocation: "#/controlPoints/"+n+"/y" }]
         return false
       }
-      if (!(data.controlPoints[n].weight !== undefined && hasOwn(data.controlPoints[n], "weight"))) {
+      if (!("weight" in data.controlPoints[n] && hasOwn(data.controlPoints[n], "weight"))) {
         validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/required", instanceLocation: "#/controlPoints/"+n+"/weight" }]
         return false
       }
@@ -664,7 +704,7 @@ const ref4 = function validate(data, recursive) {
         validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/weight/type", instanceLocation: "#/controlPoints/"+n+"/weight" }]
         return false
       }
-      if (data.controlPoints[n].orientation !== undefined && hasOwn(data.controlPoints[n], "orientation")) {
+      if ("orientation" in data.controlPoints[n] && hasOwn(data.controlPoints[n], "orientation")) {
         if (!(typeof data.controlPoints[n].orientation === "number")) {
           validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/orientation/type", instanceLocation: "#/controlPoints/"+n+"/orientation" }]
           return false
@@ -682,33 +722,33 @@ const ref4 = function validate(data, recursive) {
   }
   return true
 };
-const ref0 = function validate(data, recursive) {
+const ref0 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
   const err0 = validate.errors
-  const res0 = ref1(data, recursive)
+  const res0 = ref1(data)
   const suberr0 = ref1.errors
   validate.errors = err0
   if (!res0) {
     validate.errors = [errorMerge(suberr0[0], "#/allOf/0/$ref", "#")]
     return false
   }
-  if (!(data.orderId !== undefined && hasOwn(data, "orderId"))) {
+  if (!("orderId" in data && hasOwn(data, "orderId"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/orderId" }]
     return false
   }
-  if (!(data.orderUpdateId !== undefined && hasOwn(data, "orderUpdateId"))) {
+  if (!("orderUpdateId" in data && hasOwn(data, "orderUpdateId"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/orderUpdateId" }]
     return false
   }
-  if (!(data.nodes !== undefined && hasOwn(data, "nodes"))) {
+  if (!("nodes" in data && hasOwn(data, "nodes"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/nodes" }]
     return false
   }
-  if (!(data.edges !== undefined && hasOwn(data, "edges"))) {
+  if (!("edges" in data && hasOwn(data, "edges"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/edges" }]
     return false
   }
@@ -728,7 +768,7 @@ const ref0 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/orderUpdateId/maximum", instanceLocation: "#/orderUpdateId" }]
     return false
   }
-  if (data.zoneSetId !== undefined && hasOwn(data, "zoneSetId")) {
+  if ("zoneSetId" in data && hasOwn(data, "zoneSetId")) {
     if (!(typeof data.zoneSetId === "string")) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/zoneSetId/type", instanceLocation: "#/zoneSetId" }]
       return false
@@ -743,24 +783,24 @@ const ref0 = function validate(data, recursive) {
     return false
   }
   for (let i = 0; i < data.nodes.length; i++) {
-    if (data.nodes[i] !== undefined && hasOwn(data.nodes, i)) {
+    if (i in data.nodes && hasOwn(data.nodes, i)) {
       if (!(typeof data.nodes[i] === "object" && data.nodes[i] && !Array.isArray(data.nodes[i]))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodes/items/type", instanceLocation: "#/nodes/"+i }]
         return false
       }
-      if (!(data.nodes[i].nodeId !== undefined && hasOwn(data.nodes[i], "nodeId"))) {
+      if (!("nodeId" in data.nodes[i] && hasOwn(data.nodes[i], "nodeId"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodes/items/required", instanceLocation: "#/nodes/"+i+"/nodeId" }]
         return false
       }
-      if (!(data.nodes[i].sequenceId !== undefined && hasOwn(data.nodes[i], "sequenceId"))) {
+      if (!("sequenceId" in data.nodes[i] && hasOwn(data.nodes[i], "sequenceId"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodes/items/required", instanceLocation: "#/nodes/"+i+"/sequenceId" }]
         return false
       }
-      if (!(data.nodes[i].released !== undefined && hasOwn(data.nodes[i], "released"))) {
+      if (!("released" in data.nodes[i] && hasOwn(data.nodes[i], "released"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodes/items/required", instanceLocation: "#/nodes/"+i+"/released" }]
         return false
       }
-      if (!(data.nodes[i].actions !== undefined && hasOwn(data.nodes[i], "actions"))) {
+      if (!("actions" in data.nodes[i] && hasOwn(data.nodes[i], "actions"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodes/items/required", instanceLocation: "#/nodes/"+i+"/actions" }]
         return false
       }
@@ -780,7 +820,7 @@ const ref0 = function validate(data, recursive) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodes/items/properties/sequenceId/maximum", instanceLocation: "#/nodes/"+i+"/sequenceId" }]
         return false
       }
-      if (data.nodes[i].nodeDescription !== undefined && hasOwn(data.nodes[i], "nodeDescription")) {
+      if ("nodeDescription" in data.nodes[i] && hasOwn(data.nodes[i], "nodeDescription")) {
         if (!(typeof data.nodes[i].nodeDescription === "string")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodes/items/properties/nodeDescription/type", instanceLocation: "#/nodes/"+i+"/nodeDescription" }]
           return false
@@ -790,9 +830,9 @@ const ref0 = function validate(data, recursive) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodes/items/properties/released/type", instanceLocation: "#/nodes/"+i+"/released" }]
         return false
       }
-      if (data.nodes[i].nodePosition !== undefined && hasOwn(data.nodes[i], "nodePosition")) {
+      if ("nodePosition" in data.nodes[i] && hasOwn(data.nodes[i], "nodePosition")) {
         const err1 = validate.errors
-        const res1 = ref2(data.nodes[i].nodePosition, recursive)
+        const res1 = ref2(data.nodes[i].nodePosition)
         const suberr1 = ref2.errors
         validate.errors = err1
         if (!res1) {
@@ -805,9 +845,9 @@ const ref0 = function validate(data, recursive) {
         return false
       }
       for (let j = 0; j < data.nodes[i].actions.length; j++) {
-        if (data.nodes[i].actions[j] !== undefined && hasOwn(data.nodes[i].actions, j)) {
+        if (j in data.nodes[i].actions && hasOwn(data.nodes[i].actions, j)) {
           const err2 = validate.errors
-          const res2 = ref3(data.nodes[i].actions[j], recursive)
+          const res2 = ref3(data.nodes[i].actions[j])
           const suberr2 = ref3.errors
           validate.errors = err2
           if (!res2) {
@@ -823,32 +863,32 @@ const ref0 = function validate(data, recursive) {
     return false
   }
   for (let l = 0; l < data.edges.length; l++) {
-    if (data.edges[l] !== undefined && hasOwn(data.edges, l)) {
+    if (l in data.edges && hasOwn(data.edges, l)) {
       if (!(typeof data.edges[l] === "object" && data.edges[l] && !Array.isArray(data.edges[l]))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/type", instanceLocation: "#/edges/"+l }]
         return false
       }
-      if (!(data.edges[l].edgeId !== undefined && hasOwn(data.edges[l], "edgeId"))) {
+      if (!("edgeId" in data.edges[l] && hasOwn(data.edges[l], "edgeId"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/required", instanceLocation: "#/edges/"+l+"/edgeId" }]
         return false
       }
-      if (!(data.edges[l].sequenceId !== undefined && hasOwn(data.edges[l], "sequenceId"))) {
+      if (!("sequenceId" in data.edges[l] && hasOwn(data.edges[l], "sequenceId"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/required", instanceLocation: "#/edges/"+l+"/sequenceId" }]
         return false
       }
-      if (!(data.edges[l].released !== undefined && hasOwn(data.edges[l], "released"))) {
+      if (!("released" in data.edges[l] && hasOwn(data.edges[l], "released"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/required", instanceLocation: "#/edges/"+l+"/released" }]
         return false
       }
-      if (!(data.edges[l].startNodeId !== undefined && hasOwn(data.edges[l], "startNodeId"))) {
+      if (!("startNodeId" in data.edges[l] && hasOwn(data.edges[l], "startNodeId"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/required", instanceLocation: "#/edges/"+l+"/startNodeId" }]
         return false
       }
-      if (!(data.edges[l].endNodeId !== undefined && hasOwn(data.edges[l], "endNodeId"))) {
+      if (!("endNodeId" in data.edges[l] && hasOwn(data.edges[l], "endNodeId"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/required", instanceLocation: "#/edges/"+l+"/endNodeId" }]
         return false
       }
-      if (!(data.edges[l].actions !== undefined && hasOwn(data.edges[l], "actions"))) {
+      if (!("actions" in data.edges[l] && hasOwn(data.edges[l], "actions"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/required", instanceLocation: "#/edges/"+l+"/actions" }]
         return false
       }
@@ -868,7 +908,7 @@ const ref0 = function validate(data, recursive) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/sequenceId/maximum", instanceLocation: "#/edges/"+l+"/sequenceId" }]
         return false
       }
-      if (data.edges[l].edgeDescription !== undefined && hasOwn(data.edges[l], "edgeDescription")) {
+      if ("edgeDescription" in data.edges[l] && hasOwn(data.edges[l], "edgeDescription")) {
         if (!(typeof data.edges[l].edgeDescription === "string")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/edgeDescription/type", instanceLocation: "#/edges/"+l+"/edgeDescription" }]
           return false
@@ -886,25 +926,25 @@ const ref0 = function validate(data, recursive) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/endNodeId/type", instanceLocation: "#/edges/"+l+"/endNodeId" }]
         return false
       }
-      if (data.edges[l].maxSpeed !== undefined && hasOwn(data.edges[l], "maxSpeed")) {
+      if ("maxSpeed" in data.edges[l] && hasOwn(data.edges[l], "maxSpeed")) {
         if (!(typeof data.edges[l].maxSpeed === "number")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/maxSpeed/type", instanceLocation: "#/edges/"+l+"/maxSpeed" }]
           return false
         }
       }
-      if (data.edges[l].maxHeight !== undefined && hasOwn(data.edges[l], "maxHeight")) {
+      if ("maxHeight" in data.edges[l] && hasOwn(data.edges[l], "maxHeight")) {
         if (!(typeof data.edges[l].maxHeight === "number")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/maxHeight/type", instanceLocation: "#/edges/"+l+"/maxHeight" }]
           return false
         }
       }
-      if (data.edges[l].minHeight !== undefined && hasOwn(data.edges[l], "minHeight")) {
+      if ("minHeight" in data.edges[l] && hasOwn(data.edges[l], "minHeight")) {
         if (!(typeof data.edges[l].minHeight === "number")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/minHeight/type", instanceLocation: "#/edges/"+l+"/minHeight" }]
           return false
         }
       }
-      if (data.edges[l].orientation !== undefined && hasOwn(data.edges[l], "orientation")) {
+      if ("orientation" in data.edges[l] && hasOwn(data.edges[l], "orientation")) {
         if (!(typeof data.edges[l].orientation === "number")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/orientation/type", instanceLocation: "#/edges/"+l+"/orientation" }]
           return false
@@ -918,33 +958,33 @@ const ref0 = function validate(data, recursive) {
           return false
         }
       }
-      if (data.edges[l].direction !== undefined && hasOwn(data.edges[l], "direction")) {
+      if ("direction" in data.edges[l] && hasOwn(data.edges[l], "direction")) {
         if (!(typeof data.edges[l].direction === "string")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/direction/type", instanceLocation: "#/edges/"+l+"/direction" }]
           return false
         }
       }
-      if (data.edges[l].rotationAllowed !== undefined && hasOwn(data.edges[l], "rotationAllowed")) {
+      if ("rotationAllowed" in data.edges[l] && hasOwn(data.edges[l], "rotationAllowed")) {
         if (!(typeof data.edges[l].rotationAllowed === "boolean")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/rotationAllowed/type", instanceLocation: "#/edges/"+l+"/rotationAllowed" }]
           return false
         }
       }
-      if (data.edges[l].maxRotationSpeed !== undefined && hasOwn(data.edges[l], "maxRotationSpeed")) {
+      if ("maxRotationSpeed" in data.edges[l] && hasOwn(data.edges[l], "maxRotationSpeed")) {
         if (!(typeof data.edges[l].maxRotationSpeed === "number")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/maxRotationSpeed/type", instanceLocation: "#/edges/"+l+"/maxRotationSpeed" }]
           return false
         }
       }
-      if (data.edges[l].distance !== undefined && hasOwn(data.edges[l], "distance")) {
+      if ("distance" in data.edges[l] && hasOwn(data.edges[l], "distance")) {
         if (!(typeof data.edges[l].distance === "number")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/distance/type", instanceLocation: "#/edges/"+l+"/distance" }]
           return false
         }
       }
-      if (data.edges[l].trajectory !== undefined && hasOwn(data.edges[l], "trajectory")) {
+      if ("trajectory" in data.edges[l] && hasOwn(data.edges[l], "trajectory")) {
         const err3 = validate.errors
-        const res3 = ref4(data.edges[l].trajectory, recursive)
+        const res3 = ref4(data.edges[l].trajectory)
         const suberr3 = ref4.errors
         validate.errors = err3
         if (!res3) {
@@ -957,9 +997,9 @@ const ref0 = function validate(data, recursive) {
         return false
       }
       for (let o = 0; o < data.edges[l].actions.length; o++) {
-        if (data.edges[l].actions[o] !== undefined && hasOwn(data.edges[l].actions, o)) {
+        if (o in data.edges[l].actions && hasOwn(data.edges[l].actions, o)) {
           const err4 = validate.errors
-          const res4 = ref3(data.edges[l].actions[o], recursive)
+          const res4 = ref3(data.edges[l].actions[o])
           const suberr4 = ref3.errors
           validate.errors = err4
           if (!res4) {
@@ -979,39 +1019,49 @@ const validateState = (function() {
 const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 const format0 = (input) => {
     if (input.length > 10 + 1 + 9 + 12 + 6) return false
-    const full = /^\d{4}-(0[1-9]|1[0-2])-[0-3]\d[t\s]([0-2]\d:[0-5]\d:[0-5]\d|23:59:60)(\.\d+)?(z|[+-]\d\d(:?\d\d)?)$/i
-    if (!full.test(input)) return false
-    if (/^\d\d\d\d-(0[13-9]|1[012])-([012][1-9]|[123]0)/.test(input)) return true
-    if (/^\d\d\d\d-02-([012][1-8]|[12]0|[01]9)/.test(input)) return true
-    if (/^\d\d\d\d-(0[13578]|1[02])-31/.test(input)) return true
-    const matches = input.match(/^(\d\d\d\d)-02-29/)
-    if (!matches) return false
-    const year = matches[1] | 0
-    return year % 16 === 0 || (year % 4 === 0 && year % 25 !== 0)
+    const full = /^\d\d\d\d-(?:0[1-9]|1[0-2])-(?:[0-2]\d|3[01])[t\s](?:2[0-3]|[0-1]\d):[0-5]\d:(?:[0-5]\d|60)(?:\.\d+)?(?:z|[+-](?:2[0-3]|[0-1]\d)(?::?[0-5]\d)?)$/i
+    const feb = input[5] === '0' && input[6] === '2'
+    if ((feb && input[8] === '3') || !full.test(input)) return false
+    if (input[17] === '6') {
+      const p = input.slice(11).match(/([0-9.]+|[^0-9.])/g)
+      let hm = Number(p[0]) * 60 + Number(p[2])
+      if (p[5] === '+') hm += 24 * 60 - Number(p[6] || 0) * 60 - Number(p[8] || 0)
+      else if (p[5] === '-') hm += Number(p[6] || 0) * 60 + Number(p[8] || 0)
+      if (hm % (24 * 60) !== 23 * 60 + 59) return false
+    }
+    if (feb) {
+      if (/^\d\d\d\d-02-(?:[012][1-8]|[12]0|[01]9)/.test(input)) return true
+      const matches = input.match(/^(\d\d\d\d)-02-29/)
+      if (!matches) return false
+      const year = matches[1] | 0
+      return year % 16 === 0 || (year % 4 === 0 && year % 25 !== 0)
+    }
+    if (input[8] === '3' && input[9] === '1') return /^\d\d\d\d-(?:0[13578]|1[02])-31/.test(input)
+    return /^\d\d\d\d-(?:0[13-9]|1[012])-(?:[012][1-9]|[123]0)/.test(input)
   };
-const ref1 = function validate(data, recursive) {
+const ref1 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.headerId !== undefined && hasOwn(data, "headerId"))) {
+  if (!("headerId" in data && hasOwn(data, "headerId"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/headerId" }]
     return false
   }
-  if (!(data.timestamp !== undefined && hasOwn(data, "timestamp"))) {
+  if (!("timestamp" in data && hasOwn(data, "timestamp"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/timestamp" }]
     return false
   }
-  if (!(data.version !== undefined && hasOwn(data, "version"))) {
+  if (!("version" in data && hasOwn(data, "version"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/version" }]
     return false
   }
-  if (!(data.manufacturer !== undefined && hasOwn(data, "manufacturer"))) {
+  if (!("manufacturer" in data && hasOwn(data, "manufacturer"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/manufacturer" }]
     return false
   }
-  if (!(data.serialNumber !== undefined && hasOwn(data, "serialNumber"))) {
+  if (!("serialNumber" in data && hasOwn(data, "serialNumber"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/serialNumber" }]
     return false
   }
@@ -1045,21 +1095,21 @@ const errorMerge = ({ keywordLocation, instanceLocation }, schemaBase, dataBase)
   keywordLocation: `${schemaBase}${keywordLocation.slice(1)}`,
   instanceLocation: `${dataBase}${instanceLocation.slice(1)}`,
 });
-const ref2 = function validate(data, recursive) {
+const ref2 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.x !== undefined && hasOwn(data, "x"))) {
+  if (!("x" in data && hasOwn(data, "x"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/x" }]
     return false
   }
-  if (!(data.y !== undefined && hasOwn(data, "y"))) {
+  if (!("y" in data && hasOwn(data, "y"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/y" }]
     return false
   }
-  if (!(data.mapId !== undefined && hasOwn(data, "mapId"))) {
+  if (!("mapId" in data && hasOwn(data, "mapId"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/mapId" }]
     return false
   }
@@ -1071,7 +1121,7 @@ const ref2 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/properties/y/type", instanceLocation: "#/y" }]
     return false
   }
-  if (data.theta !== undefined && hasOwn(data, "theta")) {
+  if ("theta" in data && hasOwn(data, "theta")) {
     if (!(typeof data.theta === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/theta/type", instanceLocation: "#/theta" }]
       return false
@@ -1085,7 +1135,7 @@ const ref2 = function validate(data, recursive) {
       return false
     }
   }
-  if (data.allowedDeviationXy !== undefined && hasOwn(data, "allowedDeviationXy")) {
+  if ("allowedDeviationXy" in data && hasOwn(data, "allowedDeviationXy")) {
     if (!(typeof data.allowedDeviationXy === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/allowedDeviationXy/type", instanceLocation: "#/allowedDeviationXy" }]
       return false
@@ -1095,7 +1145,7 @@ const ref2 = function validate(data, recursive) {
       return false
     }
   }
-  if (data.allowedDeviationTheta !== undefined && hasOwn(data, "allowedDeviationTheta")) {
+  if ("allowedDeviationTheta" in data && hasOwn(data, "allowedDeviationTheta")) {
     if (!(typeof data.allowedDeviationTheta === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/allowedDeviationTheta/type", instanceLocation: "#/allowedDeviationTheta" }]
       return false
@@ -1113,7 +1163,7 @@ const ref2 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/properties/mapId/type", instanceLocation: "#/mapId" }]
     return false
   }
-  if (data.mapDescription !== undefined && hasOwn(data, "mapDescription")) {
+  if ("mapDescription" in data && hasOwn(data, "mapDescription")) {
     if (!(typeof data.mapDescription === "string")) {
       validate.errors = [{ keywordLocation: "#/properties/mapDescription/type", instanceLocation: "#/mapDescription" }]
       return false
@@ -1121,21 +1171,21 @@ const ref2 = function validate(data, recursive) {
   }
   return true
 };
-const ref3 = function validate(data, recursive) {
+const ref3 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.degree !== undefined && hasOwn(data, "degree"))) {
+  if (!("degree" in data && hasOwn(data, "degree"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/degree" }]
     return false
   }
-  if (!(data.knotVector !== undefined && hasOwn(data, "knotVector"))) {
+  if (!("knotVector" in data && hasOwn(data, "knotVector"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/knotVector" }]
     return false
   }
-  if (!(data.controlPoints !== undefined && hasOwn(data, "controlPoints"))) {
+  if (!("controlPoints" in data && hasOwn(data, "controlPoints"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/controlPoints" }]
     return false
   }
@@ -1148,7 +1198,7 @@ const ref3 = function validate(data, recursive) {
     return false
   }
   for (let k = 0; k < data.knotVector.length; k++) {
-    if (data.knotVector[k] !== undefined && hasOwn(data.knotVector, k)) {
+    if (k in data.knotVector && hasOwn(data.knotVector, k)) {
       if (!(typeof data.knotVector[k] === "number")) {
         validate.errors = [{ keywordLocation: "#/properties/knotVector/items/type", instanceLocation: "#/knotVector/"+k }]
         return false
@@ -1168,20 +1218,20 @@ const ref3 = function validate(data, recursive) {
     return false
   }
   for (let l = 0; l < data.controlPoints.length; l++) {
-    if (data.controlPoints[l] !== undefined && hasOwn(data.controlPoints, l)) {
+    if (l in data.controlPoints && hasOwn(data.controlPoints, l)) {
       if (!(typeof data.controlPoints[l] === "object" && data.controlPoints[l] && !Array.isArray(data.controlPoints[l]))) {
         validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/type", instanceLocation: "#/controlPoints/"+l }]
         return false
       }
-      if (!(data.controlPoints[l].x !== undefined && hasOwn(data.controlPoints[l], "x"))) {
+      if (!("x" in data.controlPoints[l] && hasOwn(data.controlPoints[l], "x"))) {
         validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/required", instanceLocation: "#/controlPoints/"+l+"/x" }]
         return false
       }
-      if (!(data.controlPoints[l].y !== undefined && hasOwn(data.controlPoints[l], "y"))) {
+      if (!("y" in data.controlPoints[l] && hasOwn(data.controlPoints[l], "y"))) {
         validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/required", instanceLocation: "#/controlPoints/"+l+"/y" }]
         return false
       }
-      if (!(data.controlPoints[l].weight !== undefined && hasOwn(data.controlPoints[l], "weight"))) {
+      if (!("weight" in data.controlPoints[l] && hasOwn(data.controlPoints[l], "weight"))) {
         validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/required", instanceLocation: "#/controlPoints/"+l+"/weight" }]
         return false
       }
@@ -1197,7 +1247,7 @@ const ref3 = function validate(data, recursive) {
         validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/weight/type", instanceLocation: "#/controlPoints/"+l+"/weight" }]
         return false
       }
-      if (data.controlPoints[l].orientation !== undefined && hasOwn(data.controlPoints[l], "orientation")) {
+      if ("orientation" in data.controlPoints[l] && hasOwn(data.controlPoints[l], "orientation")) {
         if (!(typeof data.controlPoints[l].orientation === "number")) {
           validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/orientation/type", instanceLocation: "#/controlPoints/"+l+"/orientation" }]
           return false
@@ -1215,29 +1265,29 @@ const ref3 = function validate(data, recursive) {
   }
   return true
 };
-const ref4 = function validate(data, recursive) {
+const ref4 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.x !== undefined && hasOwn(data, "x"))) {
+  if (!("x" in data && hasOwn(data, "x"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/x" }]
     return false
   }
-  if (!(data.y !== undefined && hasOwn(data, "y"))) {
+  if (!("y" in data && hasOwn(data, "y"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/y" }]
     return false
   }
-  if (!(data.theta !== undefined && hasOwn(data, "theta"))) {
+  if (!("theta" in data && hasOwn(data, "theta"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/theta" }]
     return false
   }
-  if (!(data.mapId !== undefined && hasOwn(data, "mapId"))) {
+  if (!("mapId" in data && hasOwn(data, "mapId"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/mapId" }]
     return false
   }
-  if (!(data.positionInitialized !== undefined && hasOwn(data, "positionInitialized"))) {
+  if (!("positionInitialized" in data && hasOwn(data, "positionInitialized"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/positionInitialized" }]
     return false
   }
@@ -1257,7 +1307,7 @@ const ref4 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/properties/mapId/type", instanceLocation: "#/mapId" }]
     return false
   }
-  if (data.mapDescription !== undefined && hasOwn(data, "mapDescription")) {
+  if ("mapDescription" in data && hasOwn(data, "mapDescription")) {
     if (!(typeof data.mapDescription === "string")) {
       validate.errors = [{ keywordLocation: "#/properties/mapDescription/type", instanceLocation: "#/mapDescription" }]
       return false
@@ -1267,7 +1317,7 @@ const ref4 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/properties/positionInitialized/type", instanceLocation: "#/positionInitialized" }]
     return false
   }
-  if (data.localizationScore !== undefined && hasOwn(data, "localizationScore")) {
+  if ("localizationScore" in data && hasOwn(data, "localizationScore")) {
     if (!(typeof data.localizationScore === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/localizationScore/type", instanceLocation: "#/localizationScore" }]
       return false
@@ -1281,7 +1331,7 @@ const ref4 = function validate(data, recursive) {
       return false
     }
   }
-  if (data.deviationRange !== undefined && hasOwn(data, "deviationRange")) {
+  if ("deviationRange" in data && hasOwn(data, "deviationRange")) {
     if (!(typeof data.deviationRange === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/deviationRange/type", instanceLocation: "#/deviationRange" }]
       return false
@@ -1289,25 +1339,25 @@ const ref4 = function validate(data, recursive) {
   }
   return true
 };
-const ref5 = function validate(data, recursive) {
+const ref5 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (data.vx !== undefined && hasOwn(data, "vx")) {
+  if ("vx" in data && hasOwn(data, "vx")) {
     if (!(typeof data.vx === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/vx/type", instanceLocation: "#/vx" }]
       return false
     }
   }
-  if (data.vy !== undefined && hasOwn(data, "vy")) {
+  if ("vy" in data && hasOwn(data, "vy")) {
     if (!(typeof data.vy === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/vy/type", instanceLocation: "#/vy" }]
       return false
     }
   }
-  if (data.omega !== undefined && hasOwn(data, "omega")) {
+  if ("omega" in data && hasOwn(data, "omega")) {
     if (!(typeof data.omega === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/omega/type", instanceLocation: "#/omega" }]
       return false
@@ -1315,65 +1365,65 @@ const ref5 = function validate(data, recursive) {
   }
   return true
 };
-const ref0 = function validate(data, recursive) {
+const ref0 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
   const err0 = validate.errors
-  const res0 = ref1(data, recursive)
+  const res0 = ref1(data)
   const suberr0 = ref1.errors
   validate.errors = err0
   if (!res0) {
     validate.errors = [errorMerge(suberr0[0], "#/allOf/0/$ref", "#")]
     return false
   }
-  if (!(data.orderId !== undefined && hasOwn(data, "orderId"))) {
+  if (!("orderId" in data && hasOwn(data, "orderId"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/orderId" }]
     return false
   }
-  if (!(data.orderUpdateId !== undefined && hasOwn(data, "orderUpdateId"))) {
+  if (!("orderUpdateId" in data && hasOwn(data, "orderUpdateId"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/orderUpdateId" }]
     return false
   }
-  if (!(data.lastNodeId !== undefined && hasOwn(data, "lastNodeId"))) {
+  if (!("lastNodeId" in data && hasOwn(data, "lastNodeId"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/lastNodeId" }]
     return false
   }
-  if (!(data.lastNodeSequenceId !== undefined && hasOwn(data, "lastNodeSequenceId"))) {
+  if (!("lastNodeSequenceId" in data && hasOwn(data, "lastNodeSequenceId"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/lastNodeSequenceId" }]
     return false
   }
-  if (!(data.nodeStates !== undefined && hasOwn(data, "nodeStates"))) {
+  if (!("nodeStates" in data && hasOwn(data, "nodeStates"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/nodeStates" }]
     return false
   }
-  if (!(data.edgeStates !== undefined && hasOwn(data, "edgeStates"))) {
+  if (!("edgeStates" in data && hasOwn(data, "edgeStates"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/edgeStates" }]
     return false
   }
-  if (!(data.driving !== undefined && hasOwn(data, "driving"))) {
+  if (!("driving" in data && hasOwn(data, "driving"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/driving" }]
     return false
   }
-  if (!(data.actionStates !== undefined && hasOwn(data, "actionStates"))) {
+  if (!("actionStates" in data && hasOwn(data, "actionStates"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/actionStates" }]
     return false
   }
-  if (!(data.batteryState !== undefined && hasOwn(data, "batteryState"))) {
+  if (!("batteryState" in data && hasOwn(data, "batteryState"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/batteryState" }]
     return false
   }
-  if (!(data.operatingMode !== undefined && hasOwn(data, "operatingMode"))) {
+  if (!("operatingMode" in data && hasOwn(data, "operatingMode"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/operatingMode" }]
     return false
   }
-  if (!(data.errors !== undefined && hasOwn(data, "errors"))) {
+  if (!("errors" in data && hasOwn(data, "errors"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/errors" }]
     return false
   }
-  if (!(data.safetyState !== undefined && hasOwn(data, "safetyState"))) {
+  if (!("safetyState" in data && hasOwn(data, "safetyState"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/safetyState" }]
     return false
   }
@@ -1393,7 +1443,7 @@ const ref0 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/orderUpdateId/maximum", instanceLocation: "#/orderUpdateId" }]
     return false
   }
-  if (data.zoneSetId !== undefined && hasOwn(data, "zoneSetId")) {
+  if ("zoneSetId" in data && hasOwn(data, "zoneSetId")) {
     if (!(typeof data.zoneSetId === "string")) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/zoneSetId/type", instanceLocation: "#/zoneSetId" }]
       return false
@@ -1419,19 +1469,19 @@ const ref0 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/driving/type", instanceLocation: "#/driving" }]
     return false
   }
-  if (data.paused !== undefined && hasOwn(data, "paused")) {
+  if ("paused" in data && hasOwn(data, "paused")) {
     if (!(typeof data.paused === "boolean")) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/paused/type", instanceLocation: "#/paused" }]
       return false
     }
   }
-  if (data.newBaseRequest !== undefined && hasOwn(data, "newBaseRequest")) {
+  if ("newBaseRequest" in data && hasOwn(data, "newBaseRequest")) {
     if (!(typeof data.newBaseRequest === "boolean")) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/newBaseRequest/type", instanceLocation: "#/newBaseRequest" }]
       return false
     }
   }
-  if (data.distanceSinceLastNode !== undefined && hasOwn(data, "distanceSinceLastNode")) {
+  if ("distanceSinceLastNode" in data && hasOwn(data, "distanceSinceLastNode")) {
     if (!(typeof data.distanceSinceLastNode === "number")) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/distanceSinceLastNode/type", instanceLocation: "#/distanceSinceLastNode" }]
       return false
@@ -1450,20 +1500,20 @@ const ref0 = function validate(data, recursive) {
     return false
   }
   for (let i = 0; i < data.nodeStates.length; i++) {
-    if (data.nodeStates[i] !== undefined && hasOwn(data.nodeStates, i)) {
+    if (i in data.nodeStates && hasOwn(data.nodeStates, i)) {
       if (!(typeof data.nodeStates[i] === "object" && data.nodeStates[i] && !Array.isArray(data.nodeStates[i]))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/type", instanceLocation: "#/nodeStates/"+i }]
         return false
       }
-      if (!(data.nodeStates[i].nodeId !== undefined && hasOwn(data.nodeStates[i], "nodeId"))) {
+      if (!("nodeId" in data.nodeStates[i] && hasOwn(data.nodeStates[i], "nodeId"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/required", instanceLocation: "#/nodeStates/"+i+"/nodeId" }]
         return false
       }
-      if (!(data.nodeStates[i].released !== undefined && hasOwn(data.nodeStates[i], "released"))) {
+      if (!("released" in data.nodeStates[i] && hasOwn(data.nodeStates[i], "released"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/required", instanceLocation: "#/nodeStates/"+i+"/released" }]
         return false
       }
-      if (!(data.nodeStates[i].sequenceId !== undefined && hasOwn(data.nodeStates[i], "sequenceId"))) {
+      if (!("sequenceId" in data.nodeStates[i] && hasOwn(data.nodeStates[i], "sequenceId"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/required", instanceLocation: "#/nodeStates/"+i+"/sequenceId" }]
         return false
       }
@@ -1475,15 +1525,15 @@ const ref0 = function validate(data, recursive) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/properties/sequenceId/type", instanceLocation: "#/nodeStates/"+i+"/sequenceId" }]
         return false
       }
-      if (data.nodeStates[i].nodeDescription !== undefined && hasOwn(data.nodeStates[i], "nodeDescription")) {
+      if ("nodeDescription" in data.nodeStates[i] && hasOwn(data.nodeStates[i], "nodeDescription")) {
         if (!(typeof data.nodeStates[i].nodeDescription === "string")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/properties/nodeDescription/type", instanceLocation: "#/nodeStates/"+i+"/nodeDescription" }]
           return false
         }
       }
-      if (data.nodeStates[i].nodePosition !== undefined && hasOwn(data.nodeStates[i], "nodePosition")) {
+      if ("nodePosition" in data.nodeStates[i] && hasOwn(data.nodeStates[i], "nodePosition")) {
         const err1 = validate.errors
-        const res1 = ref2(data.nodeStates[i].nodePosition, recursive)
+        const res1 = ref2(data.nodeStates[i].nodePosition)
         const suberr1 = ref2.errors
         validate.errors = err1
         if (!res1) {
@@ -1502,20 +1552,20 @@ const ref0 = function validate(data, recursive) {
     return false
   }
   for (let j = 0; j < data.edgeStates.length; j++) {
-    if (data.edgeStates[j] !== undefined && hasOwn(data.edgeStates, j)) {
+    if (j in data.edgeStates && hasOwn(data.edgeStates, j)) {
       if (!(typeof data.edgeStates[j] === "object" && data.edgeStates[j] && !Array.isArray(data.edgeStates[j]))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/type", instanceLocation: "#/edgeStates/"+j }]
         return false
       }
-      if (!(data.edgeStates[j].edgeId !== undefined && hasOwn(data.edgeStates[j], "edgeId"))) {
+      if (!("edgeId" in data.edgeStates[j] && hasOwn(data.edgeStates[j], "edgeId"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/required", instanceLocation: "#/edgeStates/"+j+"/edgeId" }]
         return false
       }
-      if (!(data.edgeStates[j].sequenceId !== undefined && hasOwn(data.edgeStates[j], "sequenceId"))) {
+      if (!("sequenceId" in data.edgeStates[j] && hasOwn(data.edgeStates[j], "sequenceId"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/required", instanceLocation: "#/edgeStates/"+j+"/sequenceId" }]
         return false
       }
-      if (!(data.edgeStates[j].released !== undefined && hasOwn(data.edgeStates[j], "released"))) {
+      if (!("released" in data.edgeStates[j] && hasOwn(data.edgeStates[j], "released"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/required", instanceLocation: "#/edgeStates/"+j+"/released" }]
         return false
       }
@@ -1527,7 +1577,7 @@ const ref0 = function validate(data, recursive) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/properties/sequenceId/type", instanceLocation: "#/edgeStates/"+j+"/sequenceId" }]
         return false
       }
-      if (data.edgeStates[j].edgeDescription !== undefined && hasOwn(data.edgeStates[j], "edgeDescription")) {
+      if ("edgeDescription" in data.edgeStates[j] && hasOwn(data.edgeStates[j], "edgeDescription")) {
         if (!(typeof data.edgeStates[j].edgeDescription === "string")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/properties/edgeDescription/type", instanceLocation: "#/edgeStates/"+j+"/edgeDescription" }]
           return false
@@ -1537,9 +1587,9 @@ const ref0 = function validate(data, recursive) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/properties/released/type", instanceLocation: "#/edgeStates/"+j+"/released" }]
         return false
       }
-      if (data.edgeStates[j].trajectory !== undefined && hasOwn(data.edgeStates[j], "trajectory")) {
+      if ("trajectory" in data.edgeStates[j] && hasOwn(data.edgeStates[j], "trajectory")) {
         const err2 = validate.errors
-        const res2 = ref3(data.edgeStates[j].trajectory, recursive)
+        const res2 = ref3(data.edgeStates[j].trajectory)
         const suberr2 = ref3.errors
         validate.errors = err2
         if (!res2) {
@@ -1549,9 +1599,9 @@ const ref0 = function validate(data, recursive) {
       }
     }
   }
-  if (data.agvPosition !== undefined && hasOwn(data, "agvPosition")) {
+  if ("agvPosition" in data && hasOwn(data, "agvPosition")) {
     const err3 = validate.errors
-    const res3 = ref4(data.agvPosition, recursive)
+    const res3 = ref4(data.agvPosition)
     const suberr3 = ref4.errors
     validate.errors = err3
     if (!res3) {
@@ -1559,9 +1609,9 @@ const ref0 = function validate(data, recursive) {
       return false
     }
   }
-  if (data.velocity !== undefined && hasOwn(data, "velocity")) {
+  if ("velocity" in data && hasOwn(data, "velocity")) {
     const err4 = validate.errors
-    const res4 = ref5(data.velocity, recursive)
+    const res4 = ref5(data.velocity)
     const suberr4 = ref5.errors
     validate.errors = err4
     if (!res4) {
@@ -1569,49 +1619,49 @@ const ref0 = function validate(data, recursive) {
       return false
     }
   }
-  if (data.loads !== undefined && hasOwn(data, "loads")) {
+  if ("loads" in data && hasOwn(data, "loads")) {
     if (!Array.isArray(data.loads)) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/type", instanceLocation: "#/loads" }]
       return false
     }
     for (let m = 0; m < data.loads.length; m++) {
-      if (data.loads[m] !== undefined && hasOwn(data.loads, m)) {
+      if (m in data.loads && hasOwn(data.loads, m)) {
         if (!(typeof data.loads[m] === "object" && data.loads[m] && !Array.isArray(data.loads[m]))) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/type", instanceLocation: "#/loads/"+m }]
           return false
         }
-        if (data.loads[m].loadId !== undefined && hasOwn(data.loads[m], "loadId")) {
+        if ("loadId" in data.loads[m] && hasOwn(data.loads[m], "loadId")) {
           if (!(typeof data.loads[m].loadId === "string")) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadId/type", instanceLocation: "#/loads/"+m+"/loadId" }]
             return false
           }
         }
-        if (data.loads[m].loadType !== undefined && hasOwn(data.loads[m], "loadType")) {
+        if ("loadType" in data.loads[m] && hasOwn(data.loads[m], "loadType")) {
           if (!(typeof data.loads[m].loadType === "string")) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadType/type", instanceLocation: "#/loads/"+m+"/loadType" }]
             return false
           }
         }
-        if (data.loads[m].loadPosition !== undefined && hasOwn(data.loads[m], "loadPosition")) {
+        if ("loadPosition" in data.loads[m] && hasOwn(data.loads[m], "loadPosition")) {
           if (!(typeof data.loads[m].loadPosition === "string")) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadPosition/type", instanceLocation: "#/loads/"+m+"/loadPosition" }]
             return false
           }
         }
-        if (data.loads[m].boundingBoxReference !== undefined && hasOwn(data.loads[m], "boundingBoxReference")) {
+        if ("boundingBoxReference" in data.loads[m] && hasOwn(data.loads[m], "boundingBoxReference")) {
           if (!(typeof data.loads[m].boundingBoxReference === "object" && data.loads[m].boundingBoxReference && !Array.isArray(data.loads[m].boundingBoxReference))) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/type", instanceLocation: "#/loads/"+m+"/boundingBoxReference" }]
             return false
           }
-          if (!(data.loads[m].boundingBoxReference.x !== undefined && hasOwn(data.loads[m].boundingBoxReference, "x"))) {
+          if (!("x" in data.loads[m].boundingBoxReference && hasOwn(data.loads[m].boundingBoxReference, "x"))) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/required", instanceLocation: "#/loads/"+m+"/boundingBoxReference/x" }]
             return false
           }
-          if (!(data.loads[m].boundingBoxReference.y !== undefined && hasOwn(data.loads[m].boundingBoxReference, "y"))) {
+          if (!("y" in data.loads[m].boundingBoxReference && hasOwn(data.loads[m].boundingBoxReference, "y"))) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/required", instanceLocation: "#/loads/"+m+"/boundingBoxReference/y" }]
             return false
           }
-          if (!(data.loads[m].boundingBoxReference.z !== undefined && hasOwn(data.loads[m].boundingBoxReference, "z"))) {
+          if (!("z" in data.loads[m].boundingBoxReference && hasOwn(data.loads[m].boundingBoxReference, "z"))) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/required", instanceLocation: "#/loads/"+m+"/boundingBoxReference/z" }]
             return false
           }
@@ -1627,23 +1677,23 @@ const ref0 = function validate(data, recursive) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/properties/z/type", instanceLocation: "#/loads/"+m+"/boundingBoxReference/z" }]
             return false
           }
-          if (data.loads[m].boundingBoxReference.theta !== undefined && hasOwn(data.loads[m].boundingBoxReference, "theta")) {
+          if ("theta" in data.loads[m].boundingBoxReference && hasOwn(data.loads[m].boundingBoxReference, "theta")) {
             if (!(typeof data.loads[m].boundingBoxReference.theta === "number")) {
               validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/properties/theta/type", instanceLocation: "#/loads/"+m+"/boundingBoxReference/theta" }]
               return false
             }
           }
         }
-        if (data.loads[m].loadDimensions !== undefined && hasOwn(data.loads[m], "loadDimensions")) {
+        if ("loadDimensions" in data.loads[m] && hasOwn(data.loads[m], "loadDimensions")) {
           if (!(typeof data.loads[m].loadDimensions === "object" && data.loads[m].loadDimensions && !Array.isArray(data.loads[m].loadDimensions))) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/type", instanceLocation: "#/loads/"+m+"/loadDimensions" }]
             return false
           }
-          if (!(data.loads[m].loadDimensions.length !== undefined && hasOwn(data.loads[m].loadDimensions, "length"))) {
+          if (!("length" in data.loads[m].loadDimensions && hasOwn(data.loads[m].loadDimensions, "length"))) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/required", instanceLocation: "#/loads/"+m+"/loadDimensions/length" }]
             return false
           }
-          if (!(data.loads[m].loadDimensions.width !== undefined && hasOwn(data.loads[m].loadDimensions, "width"))) {
+          if (!("width" in data.loads[m].loadDimensions && hasOwn(data.loads[m].loadDimensions, "width"))) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/required", instanceLocation: "#/loads/"+m+"/loadDimensions/width" }]
             return false
           }
@@ -1655,14 +1705,14 @@ const ref0 = function validate(data, recursive) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/properties/width/type", instanceLocation: "#/loads/"+m+"/loadDimensions/width" }]
             return false
           }
-          if (data.loads[m].loadDimensions.height !== undefined && hasOwn(data.loads[m].loadDimensions, "height")) {
+          if ("height" in data.loads[m].loadDimensions && hasOwn(data.loads[m].loadDimensions, "height")) {
             if (!(typeof data.loads[m].loadDimensions.height === "number")) {
               validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/properties/height/type", instanceLocation: "#/loads/"+m+"/loadDimensions/height" }]
               return false
             }
           }
         }
-        if (data.loads[m].weight !== undefined && hasOwn(data.loads[m], "weight")) {
+        if ("weight" in data.loads[m] && hasOwn(data.loads[m], "weight")) {
           if (!(typeof data.loads[m].weight === "number")) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/weight/type", instanceLocation: "#/loads/"+m+"/weight" }]
             return false
@@ -1676,16 +1726,16 @@ const ref0 = function validate(data, recursive) {
     return false
   }
   for (let n = 0; n < data.actionStates.length; n++) {
-    if (data.actionStates[n] !== undefined && hasOwn(data.actionStates, n)) {
+    if (n in data.actionStates && hasOwn(data.actionStates, n)) {
       if (!(typeof data.actionStates[n] === "object" && data.actionStates[n] && !Array.isArray(data.actionStates[n]))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/type", instanceLocation: "#/actionStates/"+n }]
         return false
       }
-      if (!(data.actionStates[n].actionId !== undefined && hasOwn(data.actionStates[n], "actionId"))) {
+      if (!("actionId" in data.actionStates[n] && hasOwn(data.actionStates[n], "actionId"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/required", instanceLocation: "#/actionStates/"+n+"/actionId" }]
         return false
       }
-      if (!(data.actionStates[n].actionStatus !== undefined && hasOwn(data.actionStates[n], "actionStatus"))) {
+      if (!("actionStatus" in data.actionStates[n] && hasOwn(data.actionStates[n], "actionStatus"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/required", instanceLocation: "#/actionStates/"+n+"/actionStatus" }]
         return false
       }
@@ -1693,13 +1743,13 @@ const ref0 = function validate(data, recursive) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionId/type", instanceLocation: "#/actionStates/"+n+"/actionId" }]
         return false
       }
-      if (data.actionStates[n].actionType !== undefined && hasOwn(data.actionStates[n], "actionType")) {
+      if ("actionType" in data.actionStates[n] && hasOwn(data.actionStates[n], "actionType")) {
         if (!(typeof data.actionStates[n].actionType === "string")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionType/type", instanceLocation: "#/actionStates/"+n+"/actionType" }]
           return false
         }
       }
-      if (data.actionStates[n].actionDescription !== undefined && hasOwn(data.actionStates[n], "actionDescription")) {
+      if ("actionDescription" in data.actionStates[n] && hasOwn(data.actionStates[n], "actionDescription")) {
         if (!(typeof data.actionStates[n].actionDescription === "string")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionDescription/type", instanceLocation: "#/actionStates/"+n+"/actionDescription" }]
           return false
@@ -1713,7 +1763,7 @@ const ref0 = function validate(data, recursive) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionStatus/enum", instanceLocation: "#/actionStates/"+n+"/actionStatus" }]
         return false
       }
-      if (data.actionStates[n].resultDescription !== undefined && hasOwn(data.actionStates[n], "resultDescription")) {
+      if ("resultDescription" in data.actionStates[n] && hasOwn(data.actionStates[n], "resultDescription")) {
         if (!(typeof data.actionStates[n].resultDescription === "string")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/resultDescription/type", instanceLocation: "#/actionStates/"+n+"/resultDescription" }]
           return false
@@ -1725,11 +1775,11 @@ const ref0 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/batteryState/type", instanceLocation: "#/batteryState" }]
     return false
   }
-  if (!(data.batteryState.batteryCharge !== undefined && hasOwn(data.batteryState, "batteryCharge"))) {
+  if (!("batteryCharge" in data.batteryState && hasOwn(data.batteryState, "batteryCharge"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/batteryState/required", instanceLocation: "#/batteryState/batteryCharge" }]
     return false
   }
-  if (!(data.batteryState.charging !== undefined && hasOwn(data.batteryState, "charging"))) {
+  if (!("charging" in data.batteryState && hasOwn(data.batteryState, "charging"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/batteryState/required", instanceLocation: "#/batteryState/charging" }]
     return false
   }
@@ -1737,13 +1787,13 @@ const ref0 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/batteryState/properties/batteryCharge/type", instanceLocation: "#/batteryState/batteryCharge" }]
     return false
   }
-  if (data.batteryState.batteryVoltage !== undefined && hasOwn(data.batteryState, "batteryVoltage")) {
+  if ("batteryVoltage" in data.batteryState && hasOwn(data.batteryState, "batteryVoltage")) {
     if (!(typeof data.batteryState.batteryVoltage === "number")) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/batteryState/properties/batteryVoltage/type", instanceLocation: "#/batteryState/batteryVoltage" }]
       return false
     }
   }
-  if (data.batteryState.batteryHealth !== undefined && hasOwn(data.batteryState, "batteryHealth")) {
+  if ("batteryHealth" in data.batteryState && hasOwn(data.batteryState, "batteryHealth")) {
     if (!Number.isInteger(data.batteryState.batteryHealth)) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/batteryState/properties/batteryHealth/type", instanceLocation: "#/batteryState/batteryHealth" }]
       return false
@@ -1761,7 +1811,7 @@ const ref0 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/batteryState/properties/charging/type", instanceLocation: "#/batteryState/charging" }]
     return false
   }
-  if (data.batteryState.reach !== undefined && hasOwn(data.batteryState, "reach")) {
+  if ("reach" in data.batteryState && hasOwn(data.batteryState, "reach")) {
     if (!Number.isInteger(data.batteryState.reach)) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/batteryState/properties/reach/type", instanceLocation: "#/batteryState/reach" }]
       return false
@@ -1780,16 +1830,16 @@ const ref0 = function validate(data, recursive) {
     return false
   }
   for (let o = 0; o < data.errors.length; o++) {
-    if (data.errors[o] !== undefined && hasOwn(data.errors, o)) {
+    if (o in data.errors && hasOwn(data.errors, o)) {
       if (!(typeof data.errors[o] === "object" && data.errors[o] && !Array.isArray(data.errors[o]))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/type", instanceLocation: "#/errors/"+o }]
         return false
       }
-      if (!(data.errors[o].errorType !== undefined && hasOwn(data.errors[o], "errorType"))) {
+      if (!("errorType" in data.errors[o] && hasOwn(data.errors[o], "errorType"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/required", instanceLocation: "#/errors/"+o+"/errorType" }]
         return false
       }
-      if (!(data.errors[o].errorLevel !== undefined && hasOwn(data.errors[o], "errorLevel"))) {
+      if (!("errorLevel" in data.errors[o] && hasOwn(data.errors[o], "errorLevel"))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/required", instanceLocation: "#/errors/"+o+"/errorLevel" }]
         return false
       }
@@ -1797,22 +1847,22 @@ const ref0 = function validate(data, recursive) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorType/type", instanceLocation: "#/errors/"+o+"/errorType" }]
         return false
       }
-      if (data.errors[o].errorReferences !== undefined && hasOwn(data.errors[o], "errorReferences")) {
+      if ("errorReferences" in data.errors[o] && hasOwn(data.errors[o], "errorReferences")) {
         if (!(Array.isArray(data.errors[o].errorReferences))) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/type", instanceLocation: "#/errors/"+o+"/errorReferences" }]
           return false
         }
         for (let p = 0; p < data.errors[o].errorReferences.length; p++) {
-          if (data.errors[o].errorReferences[p] !== undefined && hasOwn(data.errors[o].errorReferences, p)) {
+          if (p in data.errors[o].errorReferences && hasOwn(data.errors[o].errorReferences, p)) {
             if (!(typeof data.errors[o].errorReferences[p] === "object" && data.errors[o].errorReferences[p] && !Array.isArray(data.errors[o].errorReferences[p]))) {
               validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/type", instanceLocation: "#/errors/"+o+"errorReferences/"+p }]
               return false
             }
-            if (!(data.errors[o].errorReferences[p].referenceKey !== undefined && hasOwn(data.errors[o].errorReferences[p], "referenceKey"))) {
+            if (!("referenceKey" in data.errors[o].errorReferences[p] && hasOwn(data.errors[o].errorReferences[p], "referenceKey"))) {
               validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/required", instanceLocation: "#/errors/"+o+"errorReferences/"+p+"/referenceKey" }]
               return false
             }
-            if (!(data.errors[o].errorReferences[p].referenceValue !== undefined && hasOwn(data.errors[o].errorReferences[p], "referenceValue"))) {
+            if (!("referenceValue" in data.errors[o].errorReferences[p] && hasOwn(data.errors[o].errorReferences[p], "referenceValue"))) {
               validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/required", instanceLocation: "#/errors/"+o+"errorReferences/"+p+"/referenceValue" }]
               return false
             }
@@ -1827,7 +1877,7 @@ const ref0 = function validate(data, recursive) {
           }
         }
       }
-      if (data.errors[o].errorDescription !== undefined && hasOwn(data.errors[o], "errorDescription")) {
+      if ("errorDescription" in data.errors[o] && hasOwn(data.errors[o], "errorDescription")) {
         if (!(typeof data.errors[o].errorDescription === "string")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorDescription/type", instanceLocation: "#/errors/"+o+"/errorDescription" }]
           return false
@@ -1843,22 +1893,22 @@ const ref0 = function validate(data, recursive) {
       }
     }
   }
-  if (data.information !== undefined && hasOwn(data, "information")) {
+  if ("information" in data && hasOwn(data, "information")) {
     if (!Array.isArray(data.information)) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/type", instanceLocation: "#/information" }]
       return false
     }
     for (let q = 0; q < data.information.length; q++) {
-      if (data.information[q] !== undefined && hasOwn(data.information, q)) {
+      if (q in data.information && hasOwn(data.information, q)) {
         if (!(typeof data.information[q] === "object" && data.information[q] && !Array.isArray(data.information[q]))) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/type", instanceLocation: "#/information/"+q }]
           return false
         }
-        if (!(data.information[q].infoType !== undefined && hasOwn(data.information[q], "infoType"))) {
+        if (!("infoType" in data.information[q] && hasOwn(data.information[q], "infoType"))) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/required", instanceLocation: "#/information/"+q+"/infoType" }]
           return false
         }
-        if (!(data.information[q].infoLevel !== undefined && hasOwn(data.information[q], "infoLevel"))) {
+        if (!("infoLevel" in data.information[q] && hasOwn(data.information[q], "infoLevel"))) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/required", instanceLocation: "#/information/"+q+"/infoLevel" }]
           return false
         }
@@ -1866,22 +1916,22 @@ const ref0 = function validate(data, recursive) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoType/type", instanceLocation: "#/information/"+q+"/infoType" }]
           return false
         }
-        if (data.information[q].infoReferences !== undefined && hasOwn(data.information[q], "infoReferences")) {
+        if ("infoReferences" in data.information[q] && hasOwn(data.information[q], "infoReferences")) {
           if (!(Array.isArray(data.information[q].infoReferences))) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/type", instanceLocation: "#/information/"+q+"/infoReferences" }]
             return false
           }
           for (let r = 0; r < data.information[q].infoReferences.length; r++) {
-            if (data.information[q].infoReferences[r] !== undefined && hasOwn(data.information[q].infoReferences, r)) {
+            if (r in data.information[q].infoReferences && hasOwn(data.information[q].infoReferences, r)) {
               if (!(typeof data.information[q].infoReferences[r] === "object" && data.information[q].infoReferences[r] && !Array.isArray(data.information[q].infoReferences[r]))) {
                 validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/type", instanceLocation: "#/information/"+q+"infoReferences/"+r }]
                 return false
               }
-              if (!(data.information[q].infoReferences[r].referenceKey !== undefined && hasOwn(data.information[q].infoReferences[r], "referenceKey"))) {
+              if (!("referenceKey" in data.information[q].infoReferences[r] && hasOwn(data.information[q].infoReferences[r], "referenceKey"))) {
                 validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/required", instanceLocation: "#/information/"+q+"infoReferences/"+r+"/referenceKey" }]
                 return false
               }
-              if (!(data.information[q].infoReferences[r].referenceValue !== undefined && hasOwn(data.information[q].infoReferences[r], "referenceValue"))) {
+              if (!("referenceValue" in data.information[q].infoReferences[r] && hasOwn(data.information[q].infoReferences[r], "referenceValue"))) {
                 validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/required", instanceLocation: "#/information/"+q+"infoReferences/"+r+"/referenceValue" }]
                 return false
               }
@@ -1896,7 +1946,7 @@ const ref0 = function validate(data, recursive) {
             }
           }
         }
-        if (data.information[q].infoDescription !== undefined && hasOwn(data.information[q], "infoDescription")) {
+        if ("infoDescription" in data.information[q] && hasOwn(data.information[q], "infoDescription")) {
           if (!(typeof data.information[q].infoDescription === "string")) {
             validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoDescription/type", instanceLocation: "#/information/"+q+"/infoDescription" }]
             return false
@@ -1917,11 +1967,11 @@ const ref0 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/safetyState/type", instanceLocation: "#/safetyState" }]
     return false
   }
-  if (!(data.safetyState.eStop !== undefined && hasOwn(data.safetyState, "eStop"))) {
+  if (!("eStop" in data.safetyState && hasOwn(data.safetyState, "eStop"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/safetyState/required", instanceLocation: "#/safetyState/eStop" }]
     return false
   }
-  if (!(data.safetyState.fieldViolation !== undefined && hasOwn(data.safetyState, "fieldViolation"))) {
+  if (!("fieldViolation" in data.safetyState && hasOwn(data.safetyState, "fieldViolation"))) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/safetyState/required", instanceLocation: "#/safetyState/fieldViolation" }]
     return false
   }
@@ -1946,39 +1996,49 @@ const validateVisualization = (function() {
 const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 const format0 = (input) => {
     if (input.length > 10 + 1 + 9 + 12 + 6) return false
-    const full = /^\d{4}-(0[1-9]|1[0-2])-[0-3]\d[t\s]([0-2]\d:[0-5]\d:[0-5]\d|23:59:60)(\.\d+)?(z|[+-]\d\d(:?\d\d)?)$/i
-    if (!full.test(input)) return false
-    if (/^\d\d\d\d-(0[13-9]|1[012])-([012][1-9]|[123]0)/.test(input)) return true
-    if (/^\d\d\d\d-02-([012][1-8]|[12]0|[01]9)/.test(input)) return true
-    if (/^\d\d\d\d-(0[13578]|1[02])-31/.test(input)) return true
-    const matches = input.match(/^(\d\d\d\d)-02-29/)
-    if (!matches) return false
-    const year = matches[1] | 0
-    return year % 16 === 0 || (year % 4 === 0 && year % 25 !== 0)
+    const full = /^\d\d\d\d-(?:0[1-9]|1[0-2])-(?:[0-2]\d|3[01])[t\s](?:2[0-3]|[0-1]\d):[0-5]\d:(?:[0-5]\d|60)(?:\.\d+)?(?:z|[+-](?:2[0-3]|[0-1]\d)(?::?[0-5]\d)?)$/i
+    const feb = input[5] === '0' && input[6] === '2'
+    if ((feb && input[8] === '3') || !full.test(input)) return false
+    if (input[17] === '6') {
+      const p = input.slice(11).match(/([0-9.]+|[^0-9.])/g)
+      let hm = Number(p[0]) * 60 + Number(p[2])
+      if (p[5] === '+') hm += 24 * 60 - Number(p[6] || 0) * 60 - Number(p[8] || 0)
+      else if (p[5] === '-') hm += Number(p[6] || 0) * 60 + Number(p[8] || 0)
+      if (hm % (24 * 60) !== 23 * 60 + 59) return false
+    }
+    if (feb) {
+      if (/^\d\d\d\d-02-(?:[012][1-8]|[12]0|[01]9)/.test(input)) return true
+      const matches = input.match(/^(\d\d\d\d)-02-29/)
+      if (!matches) return false
+      const year = matches[1] | 0
+      return year % 16 === 0 || (year % 4 === 0 && year % 25 !== 0)
+    }
+    if (input[8] === '3' && input[9] === '1') return /^\d\d\d\d-(?:0[13578]|1[02])-31/.test(input)
+    return /^\d\d\d\d-(?:0[13-9]|1[012])-(?:[012][1-9]|[123]0)/.test(input)
   };
-const ref1 = function validate(data, recursive) {
+const ref1 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.headerId !== undefined && hasOwn(data, "headerId"))) {
+  if (!("headerId" in data && hasOwn(data, "headerId"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/headerId" }]
     return false
   }
-  if (!(data.timestamp !== undefined && hasOwn(data, "timestamp"))) {
+  if (!("timestamp" in data && hasOwn(data, "timestamp"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/timestamp" }]
     return false
   }
-  if (!(data.version !== undefined && hasOwn(data, "version"))) {
+  if (!("version" in data && hasOwn(data, "version"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/version" }]
     return false
   }
-  if (!(data.manufacturer !== undefined && hasOwn(data, "manufacturer"))) {
+  if (!("manufacturer" in data && hasOwn(data, "manufacturer"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/manufacturer" }]
     return false
   }
-  if (!(data.serialNumber !== undefined && hasOwn(data, "serialNumber"))) {
+  if (!("serialNumber" in data && hasOwn(data, "serialNumber"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/serialNumber" }]
     return false
   }
@@ -2012,29 +2072,29 @@ const errorMerge = ({ keywordLocation, instanceLocation }, schemaBase, dataBase)
   keywordLocation: `${schemaBase}${keywordLocation.slice(1)}`,
   instanceLocation: `${dataBase}${instanceLocation.slice(1)}`,
 });
-const ref2 = function validate(data, recursive) {
+const ref2 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (!(data.x !== undefined && hasOwn(data, "x"))) {
+  if (!("x" in data && hasOwn(data, "x"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/x" }]
     return false
   }
-  if (!(data.y !== undefined && hasOwn(data, "y"))) {
+  if (!("y" in data && hasOwn(data, "y"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/y" }]
     return false
   }
-  if (!(data.theta !== undefined && hasOwn(data, "theta"))) {
+  if (!("theta" in data && hasOwn(data, "theta"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/theta" }]
     return false
   }
-  if (!(data.mapId !== undefined && hasOwn(data, "mapId"))) {
+  if (!("mapId" in data && hasOwn(data, "mapId"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/mapId" }]
     return false
   }
-  if (!(data.positionInitialized !== undefined && hasOwn(data, "positionInitialized"))) {
+  if (!("positionInitialized" in data && hasOwn(data, "positionInitialized"))) {
     validate.errors = [{ keywordLocation: "#/required", instanceLocation: "#/positionInitialized" }]
     return false
   }
@@ -2054,7 +2114,7 @@ const ref2 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/properties/mapId/type", instanceLocation: "#/mapId" }]
     return false
   }
-  if (data.mapDescription !== undefined && hasOwn(data, "mapDescription")) {
+  if ("mapDescription" in data && hasOwn(data, "mapDescription")) {
     if (!(typeof data.mapDescription === "string")) {
       validate.errors = [{ keywordLocation: "#/properties/mapDescription/type", instanceLocation: "#/mapDescription" }]
       return false
@@ -2064,7 +2124,7 @@ const ref2 = function validate(data, recursive) {
     validate.errors = [{ keywordLocation: "#/properties/positionInitialized/type", instanceLocation: "#/positionInitialized" }]
     return false
   }
-  if (data.localizationScore !== undefined && hasOwn(data, "localizationScore")) {
+  if ("localizationScore" in data && hasOwn(data, "localizationScore")) {
     if (!(typeof data.localizationScore === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/localizationScore/type", instanceLocation: "#/localizationScore" }]
       return false
@@ -2078,7 +2138,7 @@ const ref2 = function validate(data, recursive) {
       return false
     }
   }
-  if (data.deviationRange !== undefined && hasOwn(data, "deviationRange")) {
+  if ("deviationRange" in data && hasOwn(data, "deviationRange")) {
     if (!(typeof data.deviationRange === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/deviationRange/type", instanceLocation: "#/deviationRange" }]
       return false
@@ -2086,25 +2146,25 @@ const ref2 = function validate(data, recursive) {
   }
   return true
 };
-const ref3 = function validate(data, recursive) {
+const ref3 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
-  if (data.vx !== undefined && hasOwn(data, "vx")) {
+  if ("vx" in data && hasOwn(data, "vx")) {
     if (!(typeof data.vx === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/vx/type", instanceLocation: "#/vx" }]
       return false
     }
   }
-  if (data.vy !== undefined && hasOwn(data, "vy")) {
+  if ("vy" in data && hasOwn(data, "vy")) {
     if (!(typeof data.vy === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/vy/type", instanceLocation: "#/vy" }]
       return false
     }
   }
-  if (data.omega !== undefined && hasOwn(data, "omega")) {
+  if ("omega" in data && hasOwn(data, "omega")) {
     if (!(typeof data.omega === "number")) {
       validate.errors = [{ keywordLocation: "#/properties/omega/type", instanceLocation: "#/omega" }]
       return false
@@ -2112,23 +2172,23 @@ const ref3 = function validate(data, recursive) {
   }
   return true
 };
-const ref0 = function validate(data, recursive) {
+const ref0 = function validate(data) {
   validate.errors = null
   if (!(typeof data === "object" && data && !Array.isArray(data))) {
     validate.errors = [{ keywordLocation: "#/type", instanceLocation: "#" }]
     return false
   }
   const err0 = validate.errors
-  const res0 = ref1(data, recursive)
+  const res0 = ref1(data)
   const suberr0 = ref1.errors
   validate.errors = err0
   if (!res0) {
     validate.errors = [errorMerge(suberr0[0], "#/allOf/0/$ref", "#")]
     return false
   }
-  if (data.agvPosition !== undefined && hasOwn(data, "agvPosition")) {
+  if ("agvPosition" in data && hasOwn(data, "agvPosition")) {
     const err1 = validate.errors
-    const res1 = ref2(data.agvPosition, recursive)
+    const res1 = ref2(data.agvPosition)
     const suberr1 = ref2.errors
     validate.errors = err1
     if (!res1) {
@@ -2136,9 +2196,9 @@ const ref0 = function validate(data, recursive) {
       return false
     }
   }
-  if (data.velocity !== undefined && hasOwn(data, "velocity")) {
+  if ("velocity" in data && hasOwn(data, "velocity")) {
     const err2 = validate.errors
-    const res2 = ref3(data.velocity, recursive)
+    const res2 = ref3(data.velocity)
     const suberr2 = ref3.errors
     validate.errors = err2
     if (!res2) {
