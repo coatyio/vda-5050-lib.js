@@ -86,8 +86,6 @@ function awaitBrokerStarted(brokerUrls, resolve) {
     const client = mqtt.connect(brokerUrls[0]);
     client.once("connect", () => {
         client.end(true, () => {
-            // Defer removal of event listeners to ensure proper clean up.
-            setTimeout(() => client.removeAllListeners(), 0);
             resolve(brokerUrls);
         });
     });

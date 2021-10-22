@@ -25,7 +25,7 @@ import { validateConnection, validateInstantActions, validateOrder, validateStat
  * edges, actions, etc.
  *
  * @returns a unique Version 4 UUID
- * 
+ *
  * @category Common
  */
 export function createUuid() {
@@ -35,7 +35,7 @@ export function createUuid() {
 /**
  * Defines configuration options of a VDA 5050 client, including MQTT transport
  * options.
- * 
+ *
  * @category Client
  */
 export interface ClientOptions {
@@ -91,7 +91,7 @@ export interface ClientOptions {
 
 /**
  * Defines MQTT transport options for a VDA 5050 client.
- * 
+ *
  * @category Client
  */
 export interface MqttTransportOptions {
@@ -227,16 +227,16 @@ export interface MqttTransportOptions {
          */
         rejectUnauthorized?: boolean;
 
-        /**  
+        /**
          * Any other option supported by
          * [`tls.connect()`](https://nodejs.org/api/tls.html#tls_tls_createsecurecontext_options).
          */
         [option: string]: any;
     };
 
-    /** 
+    /**
      * WebSocket specific connection options (optional).
-     * 
+     *
      * Default is {}. Only used for WebSocket connections.
      *
      * For possible options have a look at:
@@ -257,7 +257,7 @@ export interface MqttTransportOptions {
 
 /**
  * Defines options for individual publications.
- * 
+ *
  * @category Client
  */
 export interface ClientPublishOptions {
@@ -379,7 +379,7 @@ export abstract class Client {
 
     /**
      * Creates an instance of a `Client` subclass.
-     * 
+     *
      * @param options configuration options for the client
      * @throws if options are invalid
      */
@@ -510,7 +510,7 @@ export abstract class Client {
 
             if (!this._mqtt.connected) {
                 this.debug("Unsubscribe on MQTT topic %s for id %s while offline", mqttTopic, subscriptionId);
-                // Do not mqtt.unsubscribe as resubscriptions are handled on reconnect. 
+                // Do not mqtt.unsubscribe as resubscriptions are handled on reconnect.
                 resolve();
                 return;
             }
@@ -569,7 +569,7 @@ export abstract class Client {
      * extension topic and the direction of the message (inbound, outbound).
      *
      * @remarks If the given topic is already registered, its registration will
-     * be overridden with the new parameters. 
+     * be overridden with the new parameters.
      *
      * @remarks Use the function `createValidators` in the `create-validators`
      * script provided by this package to generate JS validation functions for
@@ -605,7 +605,7 @@ export abstract class Client {
 
     /**
      * Determines whether the client has been started.
-     * 
+     *
      * @returns true if client has been started; false otherwise
      */
     protected get isStarted() {
@@ -728,7 +728,7 @@ export abstract class Client {
                     if (err) {
                         // A synchronous error is dispatched immediately if client is disconnecting
                         // (i.e. after mqtt.end function has been invoked). Also, a publication
-                        // error occurs if sending the MQTT packet fails for some reason. 
+                        // error occurs if sending the MQTT packet fails for some reason.
                         this.debug("Publish on MQTT topic %s failed: %s", mqttTopic, err);
                         reject(err);
                     } else {
@@ -894,7 +894,7 @@ export abstract class Client {
     /**
      * Performs a runtime validation check of a VDA 5050 core or extension
      * object with respect to a given VDA 5050 topic.
-     * 
+     *
      * @param topic a VDA 5050 communication topic
      * @param object a VDA 5050 core or extension object without header
      * properties
@@ -933,7 +933,7 @@ export abstract class Client {
             default:
                 // Note that registration of extension topic has already been
                 // performed by _validateTopic method. For incoming messages, it
-                // must have been successfully registered and subscribed. 
+                // must have been successfully registered and subscribed.
                 const [, , validator] = this._extensionTopics.get(topic);
                 validator(topic, object);
                 break;
@@ -1005,8 +1005,6 @@ export abstract class Client {
             const onceFailureListener = error => {
                 this._mqtt = undefined;
                 mqtt.end(true, () => {
-                    // Defer removal of event listeners to ensure proper clean up.
-                    setTimeout(() => mqtt.removeAllListeners(), 0);
                     reject(error);
                 });
             };
@@ -1091,8 +1089,6 @@ export abstract class Client {
             // call.
             mqtt.end(this._isWebSocketConnection, () => {
                 this.reset();
-                // Defer removal of event listeners to ensure proper clean up.
-                setTimeout(() => mqtt.removeAllListeners(), 0);
                 resolve();
             });
         });
