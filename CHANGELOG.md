@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.2](https://github.com/coatyio/vda-5050-lib.js/compare/v1.1.1...v1.1.2) (2021-10-22)
+
+This patch release fixes an issue where a disconnected VDA 5050 client
+keeps the Node.js process from terminating.
+
+### Bug Fixes
+
+* **client:** on disconnect do not remove all event handlers to prevent dangling asynchronous I/O operations which keep Node.js event loop from exiting ([3160ddc](https://github.com/coatyio/vda-5050-lib.js/commit/3160ddc02693bb7706fd29da6ec76fa444b5dd1f))
+* **master-controller:** fix handling of validation errors for instant actions ([d146f81](https://github.com/coatyio/vda-5050-lib.js/commit/d146f819b03380af73224bba091409c1ced8b20b))
+
 ## [1.1.1](https://github.com/coatyio/vda-5050-lib.js/compare/v1.1.0...v1.1.1) (2021-10-01)
 
 This patch release fixes an issue regarding handling of lastNodeId/lastNodeSequenceId 
