@@ -126,7 +126,7 @@ tap.test("Master Control Client - AGV Client", async t => {
                 await agvClient.stop();
                 // Wait some time before stopping control client so that connection
                 // state change by AgvClient can be received.
-                await new Promise(resolve => setTimeout(resolve, 500));
+                await new Promise(resolve => setTimeout(resolve, 1000));
             });
 
             await tap.test("unsubscribe state on Master Control and stop", async () => {
