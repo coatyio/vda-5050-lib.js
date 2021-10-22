@@ -30,12 +30,13 @@ import {
     Topic,
     Trajectory,
     Velocity,
+    Visualization,
 } from "..";
 
 /**
  * Represents context information needed to perform initializations on an AGV
  * adapter when it is attached.
- * 
+ *
  * @category AGV Controller
  */
 export interface AttachContext {
@@ -44,8 +45,8 @@ export interface AttachContext {
      * Callback to be invoked by the AGV adapter when initialization has
      * completed and the adapter is ready to process any of the other handler
      * functions defined in the `AgvAdapter` interface.
-     * 
-     * @param initialState initial partial state to be reported on attachment 
+     *
+     * @param initialState initial partial state to be reported on attachment
      */
     attached(initialState: Partial<Headerless<State>>): void;
 }
@@ -53,7 +54,7 @@ export interface AttachContext {
 /**
  * Represents context information needed to perform deinitializations on an AGV
  * adapter when it is detached.
- * 
+ *
  * @category AGV Controller
  */
 export interface DetachContext {
@@ -61,7 +62,7 @@ export interface DetachContext {
     /**
      * Callback to be invoked by the AGV adapter when deinitialization has
      * completed and the adapter has terminated its operations.
-     * 
+     *
      * @param detachState partial state to be reported on detachment
      */
     detached(detachState: Partial<Headerless<State>>): void;
@@ -70,7 +71,7 @@ export interface DetachContext {
 /**
  * Represents change information about action status, including result
  * description, error description, and linked state (if applicable).
- * 
+ *
  * @category AGV Controller
  */
 export interface ActionStatusChangeInfo {
@@ -100,7 +101,7 @@ export interface ActionStatusChangeInfo {
 
 /**
  * Defines the scope of an action, either `"instant"`, `"node"`, or `"edge"`.
- * 
+ *
  * @category AGV Controller
  */
 export type ActionScope = "instant" | "node" | "edge";
@@ -109,7 +110,7 @@ export type ActionScope = "instant" | "node" | "edge";
  * Represents context information of a node, edge, or instant action to be
  * processed by an `executeAction`, `finishEdgeAction`, or `cancelAction`
  * handler.
- * 
+ *
  * @category AGV Controller
  */
 export interface ActionContext {
@@ -190,7 +191,7 @@ export interface ActionContext {
 /**
  * Represents context information to check whether a route can be traversed by
  * the AGV.
- * 
+ *
  * @category AGV Controller
  */
 export interface RouteTraversableContext {
@@ -208,7 +209,7 @@ export interface RouteTraversableContext {
 
 /**
  * Represents context information of a `stopTraverse` operation handler.
- * 
+ *
  * @category AGV Controller
  */
 export interface StopTraverseContext {
@@ -241,7 +242,7 @@ export interface StopTraverseContext {
 
 /**
  * Represents context information of an edge traversal.
- * 
+ *
  * @category AGV Controller
  */
 export interface TraverseEdgeContext {
@@ -280,7 +281,7 @@ export interface TraverseEdgeContext {
 /**
  * Represents context information of a trajectory, including its edge, and its
  * edge's start and end nodes.
- * 
+ *
  * @category AGV Controller
  */
 export interface TrajectoryContext {
@@ -320,7 +321,7 @@ export interface TrajectoryContext {
  * is passed as a configuration option to the AGV controller (see
  * `AgvControllerOptions.agvAdapterType`) which creates an instance of the
  * adapter class with appropriate constructor parameters.
- * 
+ *
  * @category AGV Controller
  */
 export interface AgvAdapter {
@@ -550,7 +551,7 @@ export interface AgvAdapter {
      *
      * When the given edge has been traversed completely, the callback
      * `context.edgeTraversed` must be invoked. Until this callback has been
-     * called it is guaranteed that no other invocation of this handler occurs. 
+     * called it is guaranteed that no other invocation of this handler occurs.
      *
      * @remarks While traversing an edge the AGV adapter must handle activation
      * and deactivation of pause mode (triggered either by instant actions
@@ -609,9 +610,9 @@ export interface AgvAdapter {
      * the given edges order in series. Do not specify a handler function if the
      * AGV should determine the route on the fly when an edge is being traversed
      * by invoking the `traverse` handler.
-     * 
+     *
      * @param context context information of a trajectory
-     * @returns the calculated trajectory object 
+     * @returns the calculated trajectory object
      */
     trajectory?(context: TrajectoryContext): Trajectory;
 }
@@ -621,7 +622,7 @@ export interface AgvAdapter {
  *
  * This base interface may be extended by concrete adapter implementations to
  * provide adapter specific options.
- * 
+ *
  * @category AGV Controller
  */
 // tslint:disable-next-line: no-empty-interface
@@ -635,7 +636,7 @@ export interface AgvAdapterOptions {
  * is a formatter string with printf-style formatting supporting the
  * following directives: `%O` (object multi-line), `%o` (object
  * single-line), `%s` (string), `%d` (number), `%j` (JSON), `%%` (escape).
- * 
+ *
  * @category AGV Controller
  */
 export type AgvAdapterDebugger = (formatter: any, ...args: any[]) => void;
@@ -643,7 +644,7 @@ export type AgvAdapterDebugger = (formatter: any, ...args: any[]) => void;
 /**
  * Defines the constructor signature for classes that implement the interface
  * `AgvAdapter`.
- * 
+ *
  * @category AGV Controller
  */
 export type AgvAdapterConstructor = new (
@@ -653,7 +654,7 @@ export type AgvAdapterConstructor = new (
 
 /**
  * Defines configuration options of an AGV controller.
- * 
+ *
  * @category AGV Controller
  */
 export interface AgvControllerOptions {
@@ -695,7 +696,7 @@ export interface AgvControllerOptions {
      *
      * This feature is important to ensure that a published State object is not
      * cluttered with outdated instant action states. The VDA 5050 specification
-     * itself doesn't specify when to clean up these action states. 
+     * itself doesn't specify when to clean up these action states.
      *
      * If not specified, the value defaults to 5. If value is less than 1
      * exactly one State message is published.
@@ -791,7 +792,7 @@ export class AgvController extends AgvClient {
 
     /**
      * Creates an instance of `AgvController`, a subclass of `AgvClient`.
-     * 
+     *
      * @param agvId the identity of the AGV this controller represents
      * @param clientOptions configuration options for the `AgvClient`
      * @param controllerOptions configuration options for the `AgvController`
@@ -883,7 +884,7 @@ export class AgvController extends AgvClient {
      * has not yet terminated, i.e. not finished or failed.
      *
      * @returns true if the `currentOrder` is defined and active; false if the
-     * latest order has been completed or no order has been received yet. 
+     * latest order has been completed or no order has been received yet.
      */
     get hasActiveOrder() {
         return this._currentState.nodeStates.length > 0 ||
@@ -1176,12 +1177,14 @@ export class AgvController extends AgvClient {
 
     private async _publishVisualization() {
         try {
-            await this.publish(Topic.Visualization,
-                {
-                    agvPosition: this._currentState.agvPosition,
-                    velocity: this._currentState.velocity,
-                },
-                { dropIfOffline: true });
+            const vis: Headerless<Visualization> = {};
+            if (this._currentState.agvPosition !== undefined) {
+                vis.agvPosition = this._currentState.agvPosition;
+            }
+            if (this._currentState.velocity !== undefined) {
+                vis.velocity = this._currentState.velocity;
+            }
+            await this.publish(Topic.Visualization, vis, { dropIfOffline: true });
         } catch (error) {
             this.debug("Couldn't publish visualization: %s", error);
         }
@@ -1213,7 +1216,7 @@ export class AgvController extends AgvClient {
             }
         }
 
-        if (!("timestamp" in newPartialState)) {
+        if (!newPartialState.timestamp) {
             // Use publish date if timestamp is not given.
             delete this._currentState.timestamp;
         }
@@ -1247,7 +1250,7 @@ export class AgvController extends AgvClient {
 
     /**
      * Process order according to VDA 5050 specification.
-     * 
+     *
      * @param order an incoming order
      */
     private _processOrder(order: Order) {
@@ -1283,7 +1286,7 @@ export class AgvController extends AgvClient {
 
         // Check whether important vehicle state currently prohibits order execution. In
         // these cases, it is better to reject the order immediately so that the master
-        // control can reschedule the order at a later time or on another AGV. 
+        // control can reschedule the order at a later time or on another AGV.
 
         if (this._currentState.batteryState.charging) {
             const error = this._createOrderError(order, ErrorType.Order, "order is not executable while charging",
@@ -1774,14 +1777,20 @@ export class AgvController extends AgvClient {
 
     private _getNodeStates(order: Order, excludeFirstNode = false): NodeState[] {
         return (excludeFirstNode ? order.nodes.slice(1) : order.nodes)
-            .map(n =>
-            ({
-                nodeDescription: n.nodeDescription,
-                nodeId: n.nodeId,
-                nodePosition: n.nodePosition,
-                released: n.released,
-                sequenceId: n.sequenceId,
-            }));
+            .map(n => {
+                const state: NodeState = {
+                    nodeId: n.nodeId,
+                    released: n.released,
+                    sequenceId: n.sequenceId,
+                };
+                if (n.nodeDescription !== undefined) {
+                    state.nodeDescription = n.nodeDescription;
+                }
+                if (n.nodePosition !== undefined) {
+                    state.nodePosition = n.nodePosition;
+                }
+                return state;
+            });
     }
 
     private _getEdgeStates(order: Order): EdgeState[] {
@@ -1799,33 +1808,39 @@ export class AgvController extends AgvClient {
                     });
                     this.debug("Invoking trajectory calculation handler on edge %o with result %o", e, trajectory);
                 }
-                return {
-                    edgeDescription: e.edgeDescription,
+                const state: EdgeState = {
                     edgeId: e.edgeId,
                     released: e.released,
                     sequenceId: e.sequenceId,
-                    trajectory,
                 };
+                if (e.edgeDescription !== undefined) {
+                    state.edgeDescription = e.edgeDescription;
+                }
+                if (trajectory !== undefined) {
+                    state.trajectory = trajectory;
+                }
+                return state;
             });
     }
 
     private _getActionStates(order: Order, excludeFirstNode = false): ActionState[] {
-        return (excludeFirstNode ? order.nodes.slice(1) : order.nodes)
-            .filter(n => n.released)
-            .flatMap(n => n.actions.map(a => ({
-                actionDescription: a.actionDescription,
+        const actionStateFrom = (a: Action) => {
+            const s: ActionState = {
                 actionId: a.actionId,
                 actionStatus: ActionStatus.Waiting,
                 actionType: a.actionType,
-            })))
+            };
+            if (a.actionDescription !== undefined) {
+                s.actionDescription = a.actionDescription;
+            }
+            return s;
+        };
+        return (excludeFirstNode ? order.nodes.slice(1) : order.nodes)
+            .filter(n => n.released)
+            .flatMap(n => n.actions.map(a => actionStateFrom(a)))
             .concat(order.edges
                 .filter(e => e.released)
-                .flatMap(e => e.actions.map(a => ({
-                    actionDescription: a.actionDescription,
-                    actionId: a.actionId,
-                    actionStatus: ActionStatus.Waiting,
-                    actionType: a.actionType,
-                }))));
+                .flatMap(e => e.actions.map(a => actionStateFrom(a))));
     }
 
     private _getInstantActionStates() {
@@ -2043,12 +2058,16 @@ export class AgvController extends AgvClient {
 
         // Update action state.
         const newActionState: ActionState = {
-            actionDescription: action.actionDescription,
             actionId: action.actionId,
             actionStatus: actionStatus,
             actionType: action.actionType,
-            resultDescription: resultDescription,
         };
+        if (action.actionDescription !== undefined) {
+            newActionState.actionDescription = action.actionDescription;
+        }
+        if (resultDescription !== undefined) {
+            newActionState.resultDescription = resultDescription;
+        }
         const newActionStates = [...this._currentState.actionStates];
         const i = this._currentState.actionStates.findIndex(s => s.actionId === action.actionId);
         if (i === -1) {

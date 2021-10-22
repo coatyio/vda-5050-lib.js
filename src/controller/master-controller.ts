@@ -23,7 +23,7 @@ import {
 
 /**
  * Represents context information of an order event.
- * 
+ *
  * @category Master Controller
  */
 export interface OrderContext {
@@ -44,7 +44,7 @@ export interface OrderContext {
     readonly state: State;
 }
 
-/** 
+/**
  * A subset of `State` properties for which changes are reported while an edge
  * is being traversed (used by callback `OrderEventHandler.edgeTraversing`).
  */
@@ -59,7 +59,7 @@ export type EdgeStateChanges = Partial<Pick<State,
 /**
  * Defines distinct callback functions invoked by the master controller whenever
  * the state of an assigned order changes.
- * 
+ *
  * @category Master Controller
  */
 export interface OrderEventHandler {
@@ -184,7 +184,7 @@ export interface OrderEventHandler {
 /**
  * Defines distinct callback functions invoked by the master controller whenever
  * the state of an initiated instant action changes.
- * 
+ *
  * @category Master Controller
  */
 export interface InstantActionEventHandler {
@@ -221,7 +221,7 @@ export interface InstantActionEventHandler {
 
 /**
  * Defines configuration options of a master controller.
- * 
+ *
  * @category Master Controller
  */
 export interface MasterControllerOptions {
@@ -414,18 +414,20 @@ export class MasterController extends MasterControlClient {
             let orderUpdateId: number;
             let hasActionIdRef = false;
             let cache: OrderStateCache;
-            for (const errorRef of error.errorReferences) {
-                if (errorRef.referenceKey === "actionId") {
-                    hasActionIdRef = true;
-                }
-                if (errorRef.referenceKey === "topic") {
-                    topic = errorRef.referenceValue;
-                }
-                if (errorRef.referenceKey === "orderId") {
-                    orderId = errorRef.referenceValue;
-                }
-                if (errorRef.referenceKey === "orderUpdateId") {
-                    orderUpdateId = parseInt(errorRef.referenceValue, 10);
+            if (error.errorReferences !== undefined) {
+                for (const errorRef of error.errorReferences) {
+                    if (errorRef.referenceKey === "actionId") {
+                        hasActionIdRef = true;
+                    }
+                    if (errorRef.referenceKey === "topic") {
+                        topic = errorRef.referenceValue;
+                    }
+                    if (errorRef.referenceKey === "orderId") {
+                        orderId = errorRef.referenceValue;
+                    }
+                    if (errorRef.referenceKey === "orderUpdateId") {
+                        orderUpdateId = parseInt(errorRef.referenceValue, 10);
+                    }
                 }
             }
             if (topic !== undefined && topic !== Topic.Order) {
@@ -557,7 +559,7 @@ export class MasterController extends MasterControlClient {
             }
         }
 
-        // Check if next node has been traversed/reached. 
+        // Check if next node has been traversed/reached.
         let nextNode: Node;
         if (cache.lastNodeTraversed === undefined) {
             const firstNode = cache.order.nodes[0];
@@ -872,13 +874,15 @@ export class MasterController extends MasterControlClient {
         // controller issued the actions which caused a validation error. This
         // can cause validation errors to be erroneously reported to unaffected
         // controllers.
-        const validationErrors = errors.filter(error =>
+        const validationErrors = errors.filter(error => {
             // We must check topic reference to distinguish between order and instant action
             // validation errors as both have the same value.
-            error.errorType === ErrorType.InstantActionValidation &&
-            error.errorReferences.some(r => r.referenceKey === "topic" && r.referenceValue === Topic.InstantActions) &&
-            !error.errorReferences.some(r => r.referenceKey === "orderId") &&
-            !error.errorReferences.some(r => r.referenceKey === "actionId"));
+            const refs = error.errorReferences ?? [];
+            return error.errorType === ErrorType.InstantActionValidation &&
+                refs.some(r => r.referenceKey === "topic" && r.referenceValue === Topic.InstantActions) &&
+                !refs.some(r => r.referenceKey === "orderId") &&
+                !refs.some(r => r.referenceKey === "actionId");
+        });
         const delta = validationErrors.length - this._currentInstantActionsValidationErrors.length;
         if (delta > 0) {
             this._currentInstantActionsValidationErrors.push(
@@ -890,10 +894,12 @@ export class MasterController extends MasterControlClient {
     }
 
     private _getActionError(errors: Error[], actionId: string, asInstantAction: boolean) {
-        return errors.find(e =>
-            e.errorReferences.some(r => r.referenceKey === "actionId" && r.referenceValue === actionId) &&
-            e.errorReferences.some(r => r.referenceKey === "topic" &&
-                r.referenceValue === (asInstantAction ? Topic.InstantActions : Topic.Order)));
+        return errors.find(e => {
+            const refs = e.errorReferences ?? [];
+            return refs.some(r => r.referenceKey === "actionId" && r.referenceValue === actionId) &&
+                refs.some(r => r.referenceKey === "topic" &&
+                    r.referenceValue === (asInstantAction ? Topic.InstantActions : Topic.Order));
+        });
     }
 }
 
