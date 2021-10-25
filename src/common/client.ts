@@ -895,8 +895,7 @@ export abstract class Client {
      * object with respect to a given VDA 5050 topic.
      *
      * @param topic a VDA 5050 communication topic
-     * @param object a VDA 5050 core or extension object without header
-     * properties
+     * @param object a VDA 5050 core or extension object with header properties
      * @throws a `TypeError` if validation check fails
      */
     protected validateTopicObject(topic: string, object: Vda5050Object) {
