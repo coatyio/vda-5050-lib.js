@@ -368,7 +368,6 @@ export abstract class Client {
     private _mqtt: Mqtt;
     private _isStarted: boolean;
     private _isStopping: boolean;
-    private _isWebSocketConnection: boolean;
     private _connectionState: "online" | "offline" | "broken";
     private _connectionStateChangeCallback: ConnectionStateChangeCallback;
     private readonly _clientOptions: ClientOptions;
@@ -995,10 +994,6 @@ export abstract class Client {
             connectionUrl = connectionUrl.replace(/^mqtt/, "ws");
         }
 
-        this._isWebSocketConnection = connectionUrl.startsWith("ws") ||
-            connectionUrl.startsWith("wx") ||
-            connectionUrl.startsWith("ali");
-
         return new Promise<void>((resolve, reject) => {
             this.debug("Connecting to %s", connectionUrl);
             const mqtt = this._mqtt = connect(connectionUrl, mqttOpts);
@@ -1081,13 +1076,7 @@ export abstract class Client {
         const mqtt = this._mqtt;
         this._mqtt = undefined;
         return new Promise<void>(resolve => {
-            // A bug in mqtt.js doesn't end the mqtt client completely on a
-            // WebSocket connection, so that a node-tap test remains unfinished.
-            // The workaround is to enforce disconnection with the consequence
-            // that volatile queued subscription callbacks will be invoked with
-            // a "Connection closed" error, resulting in a rejected subscribe
-            // call.
-            mqtt.end(this._isWebSocketConnection, () => {
+            mqtt.end(false, () => {
                 this.reset();
                 resolve();
             });
