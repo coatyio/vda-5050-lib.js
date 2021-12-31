@@ -23,7 +23,8 @@
 
 This package provides a universal library for implementing systems based on VDA
 5050 in TypeScript/JavaScript running in Node.js and modern browsers. The
-library implements the [VDA 5050](https://www.vda.de/dam/VDA5050_EN_V1.1.pdf)
+library implements the [VDA
+5050](https://en.vda.de/en/services/Publications/vda-5050-v-1.1.-agv-communication-interface.html)
 specification version 1.1 _"Interface for the communication between automated
 guided vehicles (AGV) and a master control"_.
 
