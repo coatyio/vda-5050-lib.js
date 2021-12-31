@@ -37,7 +37,7 @@ import {
 
 /**
  * Represents the internal vehicle state of a virtual AGV.
- * 
+ *
  * @category AGV Adapter
  */
 export interface VirtualAgvState {
@@ -54,7 +54,7 @@ export interface VirtualAgvState {
 /**
  * Defines all possible states and state transitions of a node, edge, or
  * instant action supported by a virtual AGV.
- * 
+ *
  * @category AGV Adapter
  */
 export interface VirtualActionDefinition {
@@ -114,7 +114,7 @@ export interface VirtualActionDefinition {
  *
  * @remarks The action state PAUSED is not part of the format. State transitions
  * from/to this state are handled internally by the adapter.
- * 
+ *
  * @category AGV Adapter
  */
 export type VirtualActionTransitions = {
@@ -252,7 +252,7 @@ export type VirtualActionTransitions = {
 
 /**
  * Defines configuration options of the `VirtualAgvAdapter`.
- * 
+ *
  * @category AGV Adapter
  */
 export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
@@ -422,7 +422,7 @@ export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
  * environments where real AGVs are not available or must be mocked.
  *
  * The following actions are supported:
- * - pick/drop [node], 
+ * - pick/drop [node],
  * - initPosition [instant, node]
  * - startPause/stopPause [instant]
  * - startCharging/stopCharging [instant, node]
@@ -805,7 +805,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
                     ON_INIT: { next: ActionStatus.Finished },
                     ON_CANCEL: {},
 
-                    // Resets (overrides) the pose of the AGV with the given paramaters. 
+                    // Resets (overrides) the pose of the AGV with the given paramaters.
                     [ActionStatus.Finished]: {
                         resultDescription: () => "Position initialized",
                         linkedState: context => this._initPosition(context.action),
@@ -818,7 +818,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
             },
             {
                 // Activates the pause mode. No more AGV driving movements - reaching next
-                // node is not necessary. Actions can continue lateron. Order is resumable. 
+                // node is not necessary. Actions can continue lateron. Order is resumable.
                 actionType: "startPause",
                 actionScopes: "instant",
                 actionExecutable: () => this._vehicleState.isPaused ? "already paused" : "",
@@ -839,7 +839,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
             },
             {
                 // Deactivates the pause mode. Movement and all other actions will be
-                // resumed (if any). 
+                // resumed (if any).
                 actionType: "stopPause",
                 actionScopes: "instant",
                 actionExecutable: () => this._vehicleState.isPaused ? "" : "not yet paused",
@@ -871,7 +871,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
                     ON_INIT: { next: ActionStatus.Running },
                     ON_CANCEL: {},
 
-                    // Activation of the charging process is in progress (communication with charger is running). 
+                    // Activation of the charging process is in progress (communication with charger is running).
                     [ActionStatus.Running]: { durationTime: 5, next: ActionStatus.Finished },
 
                     // The charging process is started. The AGV reports active charging state.
@@ -888,7 +888,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
             {
                 // Deactivates the charging process to send a new order. The charging process is
                 // automatically stopped when the battery is full. Battery charging state is
-                // only allowed to be "false" when AGV is ready to receive orders. 
+                // only allowed to be "false" when AGV is ready to receive orders.
                 actionType: "stopCharging",
                 actionScopes: ["instant", "node"],
                 actionExecutable: () => this._vehicleState.batteryState.charging ? "" : "charging not in progress",
@@ -896,7 +896,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
                     ON_INIT: { next: ActionStatus.Running },
                     ON_CANCEL: {},
 
-                    // Deactivation of the charging process is in progress (communication with charger is running). 
+                    // Deactivation of the charging process is in progress (communication with charger is running).
                     [ActionStatus.Running]: { durationTime: 5, next: ActionStatus.Finished },
 
                     // The charging process is stopped. The AGV reports inactive charging state.
@@ -952,7 +952,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
 
     /**
      * Vehicle stops driving.
-     * 
+     *
      * @param reportImmediately true if velocity update should be reported
      * immediately; false otherwise
      */
@@ -967,7 +967,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
 
     /**
      * Gets duration of given action in seconds.
-     * 
+     *
      * @param action an order action
      * @returns duration of action (in seconds)
      */
@@ -1059,7 +1059,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
 
     /**
      * Gets battery reach of vehicle for the given state of charge.
-     * 
+     *
      * @param charge battery state of charge (in percent)
      * @returns battery reach according to given state of charge
      */
@@ -1136,7 +1136,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
             const dx = this._vehicleState.velocity.vx * realInterval;
             const dy = this._vehicleState.velocity.vy * realInterval;
 
-            if (Math.abs(tx) - Math.abs(dx) <= 0 || Math.abs(ty) - Math.abs(dy) <= 0) {
+            if (Math.abs(tx) <= Math.abs(dx) && Math.abs(ty) <= Math.abs(dy)) {
                 this._vehicleState.position.x = endNodePosition.x;
                 this._vehicleState.position.y = endNodePosition.y;
                 this._vehicleState.position.theta = endNodePosition.theta ?? this._vehicleState.position.theta;
@@ -1470,7 +1470,7 @@ class VirtualActionStateMachine {
     /**
      * Terminate the action of the state machine on the next tick, transitioning
      * to either action status FINISHED or FAILED.
-     * 
+     *
      * @remarks Only required and invoked on edge actions.
      */
     terminate() {
