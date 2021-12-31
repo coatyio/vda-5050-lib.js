@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.3](https://github.com/coatyio/vda-5050-lib.js/compare/v1.1.2...v1.1.3) (2021-12-31)
+
+This patch release fixes a traversal issue where a virtual AGV
+directly jumps to next goal when moving parallel to x-axis or y-axis.
+
+### Bug Fixes
+
+* **virtual-agv-adapter:** fix traversal issue where AGV directly jumps to next goal when moving parallel to x-axis or y-axis ([ac4d6e4](https://github.com/coatyio/vda-5050-lib.js/commit/ac4d6e43aed6b9040afab860ecd45db346c1c653))
+
 ## [1.1.2](https://github.com/coatyio/vda-5050-lib.js/compare/v1.1.1...v1.1.2) (2021-10-22)
 
 This patch release fixes an issue where a disconnected VDA 5050 client
