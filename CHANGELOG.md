@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.4](https://github.com/coatyio/vda-5050-lib.js/compare/v1.1.3...v1.1.4) (2022-01-28)
+
+This patch release fixes processing of stitching orders
+by master control and vehicle plane.
+
+### Bug Fixes
+
+* **agv-controller:** always add orderUpdateId as error reference of order-related errors ([b219cdb](https://github.com/coatyio/vda-5050-lib.js/commit/b219cdb2ee98e1ff8c6ffa4133e75e2b1a4566da))
+* **agv-controller:** for stitching orders ensure actions of first new base node are appended to current base end node ([0b1328a](https://github.com/coatyio/vda-5050-lib.js/commit/0b1328abe4f85f0f9a8a471c4d343f4e6dc58010))
+* **master-controller:** fix handling of order-related events for stitching orders ([3b59d1b](https://github.com/coatyio/vda-5050-lib.js/commit/3b59d1b8243e4bd0e746236b2d630095d1d9a891))
+
 ## [1.1.3](https://github.com/coatyio/vda-5050-lib.js/compare/v1.1.2...v1.1.3) (2021-12-31)
 
 This patch release fixes a traversal issue where a virtual AGV
