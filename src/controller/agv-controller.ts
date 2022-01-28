@@ -2443,13 +2443,13 @@ export class AgvController extends AgvClient {
             r.referenceKey === AgvController.REF_KEY_ERROR_DESCRIPTION_DETAIL)?.referenceValue;
         const errorReferences: ErrorReference[] = [];
         errorReferences.push({ referenceKey: "topic", referenceValue: Topic.Order });
-        if (order?.headerId) {
+        if (order?.headerId !== undefined) {
             errorReferences.push({ referenceKey: "headerId", referenceValue: order.headerId.toString() });
         }
-        if (order?.orderId) {
+        if (order?.orderId !== undefined) {
             errorReferences.push({ referenceKey: "orderId", referenceValue: order.orderId });
         }
-        if (errorType === ErrorType.OrderUpdate) {
+        if (order?.orderUpdateId !== undefined) {
             errorReferences.push({ referenceKey: "orderUpdateId", referenceValue: order.orderUpdateId.toString() });
         }
         errorReferences.push(...errorRefs.filter(r => r.referenceKey !== AgvController.REF_KEY_ERROR_DESCRIPTION_DETAIL));
@@ -2491,7 +2491,7 @@ export class AgvController extends AgvClient {
             instantActions = undefined;
         }
         const errorReferences: ErrorReference[] = [{ referenceKey: "topic", referenceValue: Topic.InstantActions }];
-        if (instantActions?.headerId) {
+        if (instantActions?.headerId !== undefined) {
             errorReferences.push({ referenceKey: "headerId", referenceValue: instantActions.headerId.toString() });
         }
         return {
