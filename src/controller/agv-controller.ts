@@ -1328,8 +1328,9 @@ export class AgvController extends AgvClient {
                 this.debug("Order update rejected as orderUpdateId is invalid: %j", error);
                 this._rejectOrder(error);
             } else if (order.orderUpdateId === this.currentOrder.orderUpdateId) {
-                // Discard order update.
+                // Discard order update and publish current state again immediately.
                 this.debug("Order update discarded as orderUpdateId is already assigned");
+                this._updateState({}, true);
             } else {
                 if (this.hasActiveOrder) {
                     if (!this._isOrderBaseStitching(order)) {
@@ -1443,6 +1444,7 @@ export class AgvController extends AgvClient {
         const currentHorizonStartIndex = this.currentOrder.nodes.findIndex(n => !n.released);
         const currentBaseEnd = this.currentOrder.nodes[currentHorizonStartIndex === -1 ?
             this.currentOrder.nodes.length - 1 : currentHorizonStartIndex - 1];
+        // Order is validated to contain at least one base node.
         const newBaseStart = order.nodes[0];
         return currentBaseEnd.nodeId === newBaseStart.nodeId &&
             currentBaseEnd.sequenceId === newBaseStart.sequenceId;
@@ -1504,8 +1506,9 @@ export class AgvController extends AgvClient {
                 this.currentOrder.orderUpdateId = order.orderUpdateId;
                 this.currentOrder.zoneSetId = order.zoneSetId;
 
-                // Clear current horizon nodes, append new base and horizon nodes, keeping end
-                // node of current base (might be processing currently).
+                // Clear current horizon nodes, append new base and horizon nodes, keeping
+                // end node of current base (might be processing currently). Actions of
+                // first new base node are appended to end node of current base.
                 let currentHorizonStartIndex = this.currentOrder.nodes.findIndex(n => !n.released);
                 const currentBaseEnd = this.currentOrder.nodes[currentHorizonStartIndex === -1 ?
                     this.currentOrder.nodes.length - 1 : currentHorizonStartIndex - 1];
@@ -1513,22 +1516,30 @@ export class AgvController extends AgvClient {
                     .slice(0, currentHorizonStartIndex === -1 ? undefined : currentHorizonStartIndex)
                     .concat(order.nodes.slice(1));
 
+                // Append actions of first new base node to current base end node.
+                currentBaseEnd.actions = currentBaseEnd.actions.concat(order.nodes[0].actions);
+
                 // Clear current horizon edges, append new base and horizon edges.
                 currentHorizonStartIndex = this.currentOrder.edges.findIndex(n => !n.released);
                 this.currentOrder.edges = this.currentOrder.edges
                     .slice(0, currentHorizonStartIndex === -1 ? undefined : currentHorizonStartIndex)
                     .concat(order.edges);
 
+                // Even if the previous order is currently active all its actions (if
+                // any) may have completed already so in this case we need to trigger
+                // processing of the first stitched edge explicitly.
                 const isLastBaseNodeProcessed = !this._currentState.nodeStates.some(s =>
                     s.nodeId === currentBaseEnd.nodeId && s.sequenceId === currentBaseEnd.sequenceId);
                 const allLastBaseNodeActionsEnded = currentBaseEnd.actions.every(a => this._isActionEnded(a));
+
                 this._updateState({
                     orderId: order.orderId,
                     orderUpdateId: order.orderUpdateId,
                     errors: this._getNonOrderRejectionErrors(true),
                     nodeStates: this._currentState.nodeStates.filter(s => s.released).concat(this._getNodeStates(order, true)),
                     edgeStates: this._currentState.edgeStates.filter(s => s.released).concat(this._getEdgeStates(order)),
-                    actionStates: this._currentState.actionStates.concat(this._getActionStates(order, true)),
+                    // Also include action states of first new base node.
+                    actionStates: this._currentState.actionStates.concat(this._getActionStates(order, false)),
                 }, true);
 
                 if (isLastBaseNodeProcessed && allLastBaseNodeActionsEnded) {
