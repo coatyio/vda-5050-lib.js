@@ -25,16 +25,6 @@ import {
 import { initTestContext, testClientOptions } from "../test-context";
 import { createAgvId } from "../test-objects";
 
-function getHeaderlessOrder(order: Order): Headerless<Order> {
-    const shallowCopy = { ...order };
-    delete shallowCopy.headerId;
-    delete shallowCopy.manufacturer;
-    delete shallowCopy.serialNumber;
-    delete shallowCopy.version;
-    delete shallowCopy.timestamp;
-    return shallowCopy;
-}
-
 function createHeaderlessOrder(nodeActions = [[createPickDropAction("pick")], [createPickDropAction("drop")]]): Headerless<Order> {
     return {
         orderId: createUuid(),
@@ -85,8 +75,15 @@ async function testOrderError(
     agvId: AgvId,
     order: Headerless<Order>,
     withStateChange: { ac: AgvController, keyChain: string, newValue: any },
+    timeoutAfter: number,
     ...expectedErrorRefs: Array<{ referenceKey: string, referenceValue: string }>) {
     await test.test(testName, ts => new Promise(async resolve => {
+        if (timeoutAfter !== undefined) {
+            setTimeout(() => {
+                ts.pass("test timed out as expected after " + timeoutAfter + "ms");
+                resolve();
+            }, timeoutAfter);
+        }
 
         let currentState: any;
         if (withStateChange) {
@@ -112,7 +109,7 @@ async function testOrderError(
                 ts.equal(withError.errorLevel, ErrorLevel.Warning);
                 ts.equal(withError.errorType, errorType);
                 ts.ok(withError.errorReferences.some(r => r.referenceKey === "orderId" && r.referenceValue === order.orderId));
-                ts.ok(!withError.errorReferences.some(r => r.referenceKey === "orderUpdateId"));
+                ts.ok(withError.errorReferences.some(r => r.referenceKey === "orderUpdateId"));
                 ts.ok(!withError.errorReferences.some(r => r.referenceKey === "topic") ||
                     withError.errorReferences.some(r => r.referenceKey === "topic" && r.referenceValue === Topic.Order));
                 ts.ok(!withError.errorReferences.some(r => r.referenceKey === "headerId") ||
@@ -121,7 +118,7 @@ async function testOrderError(
                 ts.ok(expectedErrorRefs.every(er => withError.errorReferences.some(r =>
                     r.referenceKey === er.referenceKey && r.referenceValue === er.referenceValue)));
                 ts.strictSame(context.agvId, agvId);
-                ts.equal(context.order, headeredOrder);
+                ts.equal(context.order, order);
 
                 if (withStateChange) {
                     withStateChange.ac.updatePartialState(currentState);
@@ -140,12 +137,15 @@ async function testOrder(
     order: Headerless<Order>,
     expectedChanges: {
         // true if order is completely processed, i.e. without outstanding horizon nodes/edges;
-        // false if order is processed but still active because of horizin nodes/edges.
+        // false if order is processed but still active because of horizon nodes/edges.
         completes: boolean,
+        isStitching?: boolean,
         canceled?: boolean,
-        discarded?: boolean,
+        discardedByMc?: boolean,
         errorRefs?: Array<{ referenceKey: string, referenceValue: string }>,
         actionErrorRefs?: Array<{ referenceKey: string, referenceValue: string }>,
+        triggerOnEdgeTraversing?: (test: typeof tap.Test.prototype, edgeId: string, resolve: () => void) => void,
+        triggerOnActionInitializing?: (test: typeof tap.Test.prototype, action: Action, resolve: () => void) => void,
     },
     failAfter?: number) {
     await test.test(testName, ts => new Promise(async resolve => {
@@ -160,6 +160,8 @@ async function testOrder(
         let nodeTraversedIndex = -1;
         let edgeTraversedIndex = -1;
         let edgeTraversingCount = 0;
+        let triggeredOnEdgeTraversing = false;
+        let triggeredOnActionInitializing = false;
         const headeredOrder = await mc.assignOrder(agvId, order, {
             onOrderProcessed: (withError, byCancelation, active, context) => {
                 if (failAfter !== undefined) {
@@ -167,8 +169,8 @@ async function testOrder(
                     resolve();
                     return;
                 }
-                if (expectedChanges.discarded) {
-                    ts.fail("onOrderProcessed should not be called as order should be discarded");
+                if (expectedChanges.discardedByMc) {
+                    ts.fail("onOrderProcessed should not be called as order should be discarded by mc");
                     resolve();
                     return;
                 }
@@ -181,7 +183,7 @@ async function testOrder(
                 processedInvocations++;
                 ts.equal(processedInvocations, 1);
                 ts.strictSame(context.agvId, agvId);
-                ts.equal(context.order, headeredOrder);
+                ts.equal(context.order, order);
 
                 if (expectedChanges.errorRefs?.length > 0) {
                     ts.not(withError, undefined);
@@ -200,14 +202,17 @@ async function testOrder(
                     return;
                 }
                 nodeTraversedIndex++;
-                ts.equal(edgeTraversingCount, 0);
-                ts.equal(nodeTraversedIndex, edgeTraversedIndex + 1);
-                ts.equal(node, context.order.nodes[nodeTraversedIndex]);
-                ts.equal(nextEdge, context.order.edges[nodeTraversedIndex]);
-                ts.equal(nextNode, context.order.nodes[nodeTraversedIndex + 1]);
+                if (!expectedChanges.isStitching) {
+                    // For stitching orders, the node may refer to the order context of the previous order.
+                    ts.equal(edgeTraversingCount, 0);
+                    ts.equal(nodeTraversedIndex, edgeTraversedIndex + 1);
+                    ts.equal(node, context.order.nodes[nodeTraversedIndex]);
+                    ts.equal(nextEdge, context.order.edges[nodeTraversedIndex]);
+                    ts.equal(nextNode, context.order.nodes[nodeTraversedIndex + 1]);
+                }
                 ts.strictSame(context.agvId, agvId);
-                ts.equal(context.order, headeredOrder);
-                ts.strictSame(getHeaderlessOrder(context.order), order);
+                ts.equal(context.order, order);
+                ts.strictSame(context.order, order);
                 if (node.nodePosition) {
                     ts.equal(context.state.agvPosition.positionInitialized, true);
                     ts.equal(context.state.agvPosition.mapId, node.nodePosition.mapId);
@@ -230,13 +235,16 @@ async function testOrder(
                 }
                 edgeTraversingCount = 0;
                 edgeTraversedIndex++;
-                ts.equal(nodeTraversedIndex, edgeTraversedIndex);
-                ts.equal(edge, context.order.edges[edgeTraversedIndex]);
-                ts.equal(startNode, context.order.nodes[edgeTraversedIndex]);
-                ts.equal(endNode, context.order.nodes[edgeTraversedIndex + 1]);
+                if (!expectedChanges.isStitching) {
+                    // For stitching orders, the edge may refer to the order context of the previous order.
+                    ts.equal(nodeTraversedIndex, edgeTraversedIndex);
+                    ts.equal(edge, context.order.edges[edgeTraversedIndex]);
+                    ts.equal(startNode, context.order.nodes[edgeTraversedIndex]);
+                    ts.equal(endNode, context.order.nodes[edgeTraversedIndex + 1]);
+                }
                 ts.strictSame(context.agvId, agvId);
-                ts.equal(context.order, headeredOrder);
-                ts.strictSame(getHeaderlessOrder(context.order), order);
+                ts.equal(context.order, order);
+                ts.strictSame(context.order, order);
             },
             onEdgeTraversing: (edge, startNode, endNode, stateChanges, invocationCount, context) => {
                 if (failAfter !== undefined) {
@@ -245,30 +253,37 @@ async function testOrder(
                     return;
                 }
                 edgeTraversingCount++;
-                ts.equal(edgeTraversingCount, invocationCount);
-                ts.equal(nodeTraversedIndex, edgeTraversedIndex + 1);
-                ts.equal(edge, context.order.edges[edgeTraversedIndex + 1]);
-                ts.equal(startNode, context.order.nodes[edgeTraversedIndex + 1]);
-                ts.equal(endNode, context.order.nodes[edgeTraversedIndex + 2]);
                 ts.strictSame(context.agvId, agvId);
-                ts.equal(context.order, headeredOrder);
-                ts.strictSame(getHeaderlessOrder(context.order), order);
-                if (edgeTraversingCount === 1) {
-                    ts.equal(stateChanges.distanceSinceLastNode, undefined);
-                    // ts.equal(stateChanges.driving, false);
-                    ts.equal(stateChanges.newBaseRequest, undefined);
-                    ts.equal(stateChanges.operatingMode, OperatingMode.Automatic);
-                    // @todo make parameterizable for startPause/stopPause tests
-                    // ts.equal(stateChanges.paused, false);
-                    ts.equal(stateChanges.safetyState.eStop, EStop.None);
-                    ts.equal(stateChanges.safetyState.fieldViolation, false);
-                } else {
-                    ts.equal("distanceSinceLastNode" in stateChanges, false);
-                    ts.equal("newBaseRequest" in stateChanges, false);
-                    ts.equal("operatingMode" in stateChanges, false);
-                    // @todo make parameterizable for startPause/stopPause tests
-                    // ts.equal("paused" in stateChanges, false);
-                    ts.equal("safetyState" in stateChanges, false);
+                ts.equal(context.order, order);
+                ts.strictSame(context.order, order);
+                if (!expectedChanges.isStitching) {
+                    // For stitching orders, the edge may refer to the order context of the previous order.
+                    ts.equal(edgeTraversingCount, invocationCount);
+                    ts.equal(edge, context.order.edges[edgeTraversedIndex + 1]);
+                    ts.equal(nodeTraversedIndex, edgeTraversedIndex + 1);
+                    ts.equal(startNode, context.order.nodes[edgeTraversedIndex + 1]);
+                    ts.equal(endNode, context.order.nodes[edgeTraversedIndex + 2]);
+                    if (edgeTraversingCount === 1) {
+                        ts.equal(stateChanges.distanceSinceLastNode, undefined);
+                        // ts.equal(stateChanges.driving, false);
+                        ts.equal(stateChanges.newBaseRequest, undefined);
+                        ts.equal(stateChanges.operatingMode, OperatingMode.Automatic);
+                        // @todo make parameterizable for startPause/stopPause tests
+                        // ts.equal(stateChanges.paused, false);
+                        ts.equal(stateChanges.safetyState.eStop, EStop.None);
+                        ts.equal(stateChanges.safetyState.fieldViolation, false);
+                    } else {
+                        ts.equal("distanceSinceLastNode" in stateChanges, false);
+                        ts.equal("newBaseRequest" in stateChanges, false);
+                        ts.equal("operatingMode" in stateChanges, false);
+                        // @todo make parameterizable for startPause/stopPause tests
+                        // ts.equal("paused" in stateChanges, false);
+                        ts.equal("safetyState" in stateChanges, false);
+                    }
+                }
+                if (expectedChanges.triggerOnEdgeTraversing && !triggeredOnEdgeTraversing) {
+                    triggeredOnEdgeTraversing = true;
+                    expectedChanges.triggerOnEdgeTraversing(ts, edge.edgeId, resolve);
                 }
             },
             onActionStateChanged: (actionState, withError, action, target, context) => {
@@ -292,11 +307,18 @@ async function testOrder(
                 } else {
                     ts.equal(withError, undefined);
                 }
+
+                if (!triggeredOnActionInitializing &&
+                    actionState.actionStatus === ActionStatus.Initializing &&
+                    expectedChanges.triggerOnActionInitializing) {
+                    triggeredOnActionInitializing = true;
+                    expectedChanges.triggerOnActionInitializing(ts, action, resolve);
+                }
             },
         });
 
         if (headeredOrder === undefined) {
-            if (expectedChanges.discarded) {
+            if (expectedChanges.discardedByMc) {
                 ts.pass("Assigned order has been discarded by mc");
             } else {
                 ts.fail("Assigned order has been discarded by mc");
@@ -309,7 +331,7 @@ async function testOrder(
 initTestContext(tap);
 
 // Adjust test timeout on top level to complete all subtests in time.
-tap.setTimeout(30000);
+tap.setTimeout(100000);
 
 tap.test("Master Controller - AGV Controller", async t => {
     const agvId1 = createAgvId("RobotCompany", "001");
@@ -695,7 +717,7 @@ tap.test("Master Controller - AGV Controller", async t => {
 
     /* Order tests with rejection errors  */
 
-    await testOrderError(t, "order invalid - not well-formed",
+    await testOrderError(t, "order invalid - not well-formed orderUpdateId",
         ErrorType.OrderValidation,
         mcControllerWithoutValidation,
         agvId3,
@@ -706,8 +728,12 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [],
         } as unknown as Headerless<Order>,
         undefined,
+        // Test should time out as order state cache for error cannot be
+        // retrieved (parsed orderUpdateId is NaN, so cache lookup fails)
+        500,
         { referenceKey: "topic", referenceValue: Topic.Order },
         { referenceKey: "orderId", referenceValue: "o42" },
+        { referenceKey: "orderUpdateId", referenceValue: "foo" },
     );
 
     await testOrderError(t, "order invalid - nodes empty",
@@ -721,8 +747,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [],
         },
         undefined,
+        undefined,
         { referenceKey: "topic", referenceValue: Topic.Order },
         { referenceKey: "orderId", referenceValue: "o42" },
+        { referenceKey: "orderUpdateId", referenceValue: "0" },
     );
 
     await testOrderError(t, "order invalid - invalid node sequenceId",
@@ -731,13 +759,15 @@ tap.test("Master Controller - AGV Controller", async t => {
         agvId3,
         {
             orderId: "o42",
-            orderUpdateId: 0,
+            orderUpdateId: 1,
             nodes: [{ nodeId: "n1", sequenceId: 1, released: true, actions: [] }],
             edges: [],
         },
         undefined,
+        undefined,
         { referenceKey: "topic", referenceValue: Topic.Order },
         { referenceKey: "orderId", referenceValue: "o42" },
+        { referenceKey: "orderUpdateId", referenceValue: "1" },
     );
 
     await testOrderError(t, "order invalid - invalid node horizon",
@@ -746,7 +776,7 @@ tap.test("Master Controller - AGV Controller", async t => {
         agvId3,
         {
             orderId: "o42",
-            orderUpdateId: 0,
+            orderUpdateId: 2,
             nodes: [
                 { nodeId: "n1", sequenceId: 0, released: false, actions: [] },
                 { nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
@@ -754,8 +784,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [{ edgeId: "e12", sequenceId: 1, startNodeId: "n1", endNodeId: "n2", released: true, actions: [] }],
         },
         undefined,
+        undefined,
         { referenceKey: "topic", referenceValue: Topic.Order },
         { referenceKey: "orderId", referenceValue: "o42" },
+        { referenceKey: "orderUpdateId", referenceValue: "2" },
     );
 
     await testOrderError(t, "order invalid - invalid number of edges",
@@ -764,7 +796,7 @@ tap.test("Master Controller - AGV Controller", async t => {
         agvId3,
         {
             orderId: "o42",
-            orderUpdateId: 0,
+            orderUpdateId: 3,
             nodes: [
                 { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
                 { nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
@@ -772,8 +804,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [],
         },
         undefined,
+        undefined,
         { referenceKey: "topic", referenceValue: Topic.Order },
         { referenceKey: "orderId", referenceValue: "o42" },
+        { referenceKey: "orderUpdateId", referenceValue: "3" },
     );
 
     await testOrderError(t, "order invalid - invalid edge sequenceId",
@@ -782,7 +816,7 @@ tap.test("Master Controller - AGV Controller", async t => {
         agvId3,
         {
             orderId: "o42",
-            orderUpdateId: 0,
+            orderUpdateId: 4,
             nodes: [
                 { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
                 { nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
@@ -790,8 +824,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [{ edgeId: "e12", sequenceId: 2, startNodeId: "n1", endNodeId: "n2", released: true, actions: [] }],
         },
         undefined,
+        undefined,
         { referenceKey: "topic", referenceValue: Topic.Order },
         { referenceKey: "orderId", referenceValue: "o42" },
+        { referenceKey: "orderUpdateId", referenceValue: "4" },
     );
 
     await testOrderError(t, "order invalid - invalid edge horizon",
@@ -800,7 +836,7 @@ tap.test("Master Controller - AGV Controller", async t => {
         agvId3,
         {
             orderId: "o42",
-            orderUpdateId: 0,
+            orderUpdateId: 5,
             nodes: [
                 { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
                 { nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
@@ -808,8 +844,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [{ edgeId: "e12", sequenceId: 1, startNodeId: "n1", endNodeId: "n2", released: false, actions: [] }],
         },
         undefined,
+        undefined,
         { referenceKey: "topic", referenceValue: Topic.Order },
         { referenceKey: "orderId", referenceValue: "o42" },
+        { referenceKey: "orderUpdateId", referenceValue: "5" },
     );
 
     await testOrderError(t, "order invalid - invalid edge start end nodes",
@@ -818,7 +856,7 @@ tap.test("Master Controller - AGV Controller", async t => {
         agvId3,
         {
             orderId: "o42",
-            orderUpdateId: 0,
+            orderUpdateId: 6,
             nodes: [
                 { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
                 { nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
@@ -826,8 +864,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [{ edgeId: "e12", sequenceId: 1, startNodeId: "n2", endNodeId: "n1", released: true, actions: [] }],
         },
         undefined,
+        undefined,
         { referenceKey: "topic", referenceValue: Topic.Order },
         { referenceKey: "orderId", referenceValue: "o42" },
+        { referenceKey: "orderUpdateId", referenceValue: "6" },
     );
 
     await testOrderError(t, "order invalid - incorrect mapId",
@@ -841,8 +881,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [],
         },
         undefined,
+        undefined,
         { referenceKey: "nodeId", referenceValue: "n1" },
         { referenceKey: "nodePosition.mapId", referenceValue: "local" },
+        { referenceKey: "orderUpdateId", referenceValue: "0" },
     );
 
     await testOrderError(t, "order invalid - nodePosition missing",
@@ -861,8 +903,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             ],
         },
         undefined,
+        undefined,
         { referenceKey: "nodeId", referenceValue: "n2" },
         { referenceKey: "nodePosition", referenceValue: "undefined" },
+        { referenceKey: "orderUpdateId", referenceValue: "0" },
     );
 
     await testOrderError(t, "order invalid - first node not within deviation range",
@@ -876,8 +920,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [],
         },
         undefined,
+        undefined,
         { referenceKey: "nodeId", referenceValue: "n1" },
         { referenceKey: "nodePosition.allowedDeviationXy", referenceValue: "0.5" },
+        { referenceKey: "orderUpdateId", referenceValue: "0" },
     );
 
     await testOrderError(t, "order invalid - node action not supported",
@@ -895,8 +941,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [],
         },
         undefined,
+        undefined,
         { referenceKey: "actionId", referenceValue: "a001" },
         { referenceKey: "actionType", referenceValue: "puck" },
+        { referenceKey: "orderUpdateId", referenceValue: "0" },
     );
 
     await testOrderError(t, "order invalid - edge action not supported",
@@ -918,8 +966,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             ],
         },
         undefined,
+        undefined,
         { referenceKey: "actionId", referenceValue: "a001" },
         { referenceKey: "actionType", referenceValue: "puck" },
+        { referenceKey: "orderUpdateId", referenceValue: "0" },
     );
 
     await testOrderError(t, "order invalid - missing action parameter",
@@ -937,9 +987,11 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [],
         },
         undefined,
+        undefined,
         { referenceKey: "actionId", referenceValue: "a001" },
         { referenceKey: "actionType", referenceValue: "pick" },
         { referenceKey: "actionParameter", referenceValue: "stationType" },
+        { referenceKey: "orderUpdateId", referenceValue: "0" },
     );
 
     await testOrderError(t, "order invalid - invalid action parameter",
@@ -963,9 +1015,11 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [],
         },
         undefined,
+        undefined,
         { referenceKey: "actionId", referenceValue: "a001" },
         { referenceKey: "actionType", referenceValue: "drop" },
         { referenceKey: "actionParameter", referenceValue: "stationType" },
+        { referenceKey: "orderUpdateId", referenceValue: "0" },
     );
 
     await testOrderError(t, "order not executable while charging",
@@ -979,7 +1033,9 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [],
         },
         { ac: agvController3, keyChain: "batteryState.charging", newValue: true },
+        undefined,
         { referenceKey: "batteryState.charging", referenceValue: "true" },
+        { referenceKey: "orderUpdateId", referenceValue: "0" },
     );
 
     await testOrderError(t, "order not executable as emergency stop is active",
@@ -993,7 +1049,9 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [],
         },
         { ac: agvController3, keyChain: "safetyState.eStop", newValue: "MANUAL" },
+        undefined,
         { referenceKey: "safetyState.eStop", referenceValue: "MANUAL" },
+        { referenceKey: "orderUpdateId", referenceValue: "0" },
     );
 
     await testOrderError(t, "order not executable due to protective field violation",
@@ -1007,7 +1065,9 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [],
         },
         { ac: agvController3, keyChain: "safetyState.fieldViolation", newValue: true },
+        undefined,
         { referenceKey: "safetyState.fieldViolation", referenceValue: "true" },
+        { referenceKey: "orderUpdateId", referenceValue: "0" },
     );
 
     await testOrderError(t, "order not executable due to operating mode",
@@ -1021,9 +1081,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             edges: [],
         },
         { ac: agvController3, keyChain: "operatingMode", newValue: "SERVICE" },
+        undefined,
         { referenceKey: "operatingMode", referenceValue: "SERVICE" },
+        { referenceKey: "orderUpdateId", referenceValue: "0" },
     );
-
 
     /* Order execution tests */
 
@@ -1091,6 +1152,8 @@ tap.test("Master Controller - AGV Controller", async t => {
                 { edgeId: "e12", sequenceId: 1, startNodeId: "n1", endNodeId: "n2", released: false, actions: [] },
             ],
         },
+        // Note: order is still active after being processed up until node n1 as
+        // a horizon node exists.
         { completes: false },
     );
 
@@ -1110,6 +1173,7 @@ tap.test("Master Controller - AGV Controller", async t => {
         },
         {
             completes: true,
+            isStitching: true,
             errorRefs: [
                 { referenceKey: "topic", referenceValue: Topic.Order },
                 { referenceKey: "orderId", referenceValue: lastOrderId },
@@ -1118,15 +1182,15 @@ tap.test("Master Controller - AGV Controller", async t => {
         },
     );
 
-    await testOrder(t, "execute stitching order with one more base node and one horizon node",
+    await testOrder(t, "execute stitching order with one more base node and one horizon node, then stitch invalid order",
         mcController,
         agvId1,
         {
             orderId: lastOrderId,
-            orderUpdateId: 1,
+            orderUpdateId: 2,
             nodes: [
                 { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
-                { nodeId: "n3", sequenceId: 2, released: true, nodePosition: { x: 20, y: 20, mapId: "local" }, actions: [] },
+                { nodeId: "n3", sequenceId: 2, released: true, nodePosition: { x: 40, y: 40, mapId: "local" }, actions: [] },
                 { nodeId: "n4", sequenceId: 4, released: false, nodePosition: { x: 30, y: 30, mapId: "local" }, actions: [] },
             ],
             edges: [
@@ -1134,21 +1198,66 @@ tap.test("Master Controller - AGV Controller", async t => {
                 { edgeId: "e34", sequenceId: 3, startNodeId: "n3", endNodeId: "n4", released: false, actions: [] },
             ],
         },
-        { completes: false },
+        {
+            completes: false,
+            isStitching: true,
+            triggerOnEdgeTraversing: async (ts, edgeId, resolve) => {
+                // Trigger an order with the same orderId and orderUpdateId when
+                // the current order starts traversing the first edge "e13".
+                // Triggered order should be rejected by mc immediately.
+                if (edgeId !== "e13") {
+                    return;
+                }
+                const result = await mcController.assignOrder(
+                    agvId1,
+                    {
+                        orderId: lastOrderId,
+                        orderUpdateId: 2,
+                        nodes: [
+                            { nodeId: "n4", sequenceId: 0, released: true, nodePosition: { x: 30, y: 30, mapId: "local" }, actions: [] },
+                        ],
+                        edges: [],
+                    },
+                    {
+                        onOrderProcessed: () => {
+                            ts.fail("onOrderProcessed should not be invoked on order discarded by mc");
+                        },
+                        onActionStateChanged: () => {
+                            ts.fail("onActionStateChanged should not be invoked on order discarded by mc");
+                        },
+                        onEdgeTraversed: () => {
+                            ts.fail("onEdgeTraversed should not be invoked on order discarded by mc");
+                        },
+                        onEdgeTraversing: () => {
+                            ts.fail("onEdgeTraversing should not be invoked on order discarded by mc");
+                        },
+                        onNodeTraversed: () => {
+                            ts.fail("onNodeTraversed should not be invoked on order discarded by mc");
+                        },
+                    });
+                ts.equal(result, undefined, "order discarded by mc");
+                resolve();
+            },
+        },
     );
 
-    await testOrder(t, "order discarded by mc - same orderId and orderUpdateId as active order",
+    await testOrder(t, "order rejected by AGV - same orderId as active order and invalid orderUpdateId",
         mcController,
         agvId1,
         {
             orderId: lastOrderId,
-            orderUpdateId: 1,
+            orderUpdateId: 0,
             nodes: [{ nodeId: "n1", sequenceId: 0, released: true, actions: [] }],
             edges: [],
         },
         {
-            discarded: true,
-            completes: false,
+            completes: true,
+            isStitching: true,
+            errorRefs: [
+                { referenceKey: "topic", referenceValue: Topic.Order },
+                { referenceKey: "orderId", referenceValue: lastOrderId },
+                { referenceKey: "orderUpdateId", referenceValue: "0" },
+            ],
         });
 
     lastOrderId = createUuid();
@@ -1160,14 +1269,17 @@ tap.test("Master Controller - AGV Controller", async t => {
             orderId: lastOrderId,
             orderUpdateId: 0,
             nodes: [
-                { nodeId: "n3", sequenceId: 2, released: true, nodePosition: { x: 20, y: 20, mapId: "local" }, actions: [] },
+                { nodeId: "n3", sequenceId: 2, released: true, nodePosition: { x: 40, y: 40, mapId: "local" }, actions: [] },
                 { nodeId: "n5", sequenceId: 4, released: true, nodePosition: { x: 30, y: 30, mapId: "local" }, actions: [] },
             ],
             edges: [
                 { edgeId: "e35", sequenceId: 3, startNodeId: "n3", endNodeId: "n5", released: true, actions: [] },
             ],
         },
-        { completes: true },
+        {
+            completes: true,
+            isStitching: true,
+        },
     );
 
     await testOrder(t, "reject order update not matching last base node",
@@ -1201,16 +1313,151 @@ tap.test("Master Controller - AGV Controller", async t => {
         {
             // Use same orderId and greater orderUpdateId.
             orderId: lastOrderId,
-            orderUpdateId: 1,
+            orderUpdateId: 2,
             nodes: [
                 { nodeId: "n5", sequenceId: 4, released: true, nodePosition: { x: 30, y: 30, mapId: "local" }, actions: [] },
-                { nodeId: "n6", sequenceId: 6, released: true, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
+                { nodeId: "n1", sequenceId: 6, released: true, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
             ],
             edges: [
-                { edgeId: "e56", sequenceId: 5, startNodeId: "n5", endNodeId: "n6", released: true, actions: [] },
+                { edgeId: "e56", sequenceId: 5, startNodeId: "n5", endNodeId: "n1", released: true, actions: [] },
             ],
         },
         { completes: true },
+    );
+
+    lastOrderId = createUuid();
+    await testOrder(t, "execute new order with two base nodes, then stitch with additional action while traversing edge",
+        mcController,
+        agvId1,
+        {
+            orderId: lastOrderId,
+            orderUpdateId: 0,
+            nodes: [
+                { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
+                {
+                    nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: 10, y: 10, mapId: "local" },
+                    actions: [createPickDropAction("pick")],
+                },
+            ],
+            edges: [
+                { edgeId: "e12", sequenceId: 1, startNodeId: "n1", endNodeId: "n2", released: true, actions: [] },
+            ],
+        },
+        {
+            completes: true,
+            triggerOnEdgeTraversing: async (ts, edgeId) => {
+                // Trigger a stitching order with one more base node and an
+                // additional action "drop" when AGV starts traversing the edge "e12".
+                if (edgeId !== "e12") {
+                    return;
+                }
+                const result = await mcController.assignOrder(
+                    agvId1,
+                    {
+                        // Use different orderId for stitching.
+                        orderId: createUuid(),
+                        orderUpdateId: 0,
+                        nodes: [
+                            { nodeId: "n2", sequenceId: 2, released: true, actions: [createPickDropAction("drop")] },
+                            { nodeId: "n3", sequenceId: 4, released: true, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
+                        ],
+                        edges: [
+                            { edgeId: "e23", sequenceId: 3, startNodeId: "n2", endNodeId: "n3", released: true, actions: [] },
+                        ],
+                    },
+                    {
+                        onOrderProcessed: () => {
+                            ts.pass("onOrderProcessed invoked on stitching order");
+                            ts.endAll();
+                        },
+                        onActionStateChanged: () => {
+                            ts.pass("onActionStateChanged invoked on stitching order");
+                        },
+                        onEdgeTraversed: () => {
+                            ts.pass("onEdgeTraversed invoked on stitching order");
+                        },
+                        onEdgeTraversing: () => {
+                            ts.pass("onEdgeTraversing invoked on stitching order");
+                        },
+                        onNodeTraversed: node => {
+                            ts.pass("onNodeTraversed invoked on stitching order");
+                            if (node.nodeId === "n2" && node.sequenceId === 2) {
+                                ts.equal(node.actions.length, 2);
+                                ts.equal(node.actions[0].actionType, "pick");
+                                ts.equal(node.actions[1].actionType, "drop");
+                            }
+                        },
+                    });
+                ts.not(result, undefined, "stitching order assigned by mc");
+            },
+        },
+    );
+
+    await testOrder(t, "execute new order with two base nodes, then stitch with additional action while executing last order action",
+        mcController,
+        agvId1,
+        {
+            orderId: createUuid(),
+            orderUpdateId: 0,
+            nodes: [
+                { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
+                {
+                    nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: 10, y: 10, mapId: "local" },
+                    actions: [createPickDropAction("pick")],
+                },
+            ],
+            edges: [
+                { edgeId: "e12", sequenceId: 1, startNodeId: "n1", endNodeId: "n2", released: true, actions: [] },
+            ],
+        },
+        {
+            completes: true,
+            triggerOnActionInitializing: async (ts, action) => {
+                // Trigger a stitching order with one more base node and an additional
+                // action "drop" when action "pick" on node "n2" is initializing.
+                if (action.actionType !== "pick") {
+                    return;
+                }
+                const result = await mcController.assignOrder(
+                    agvId1,
+                    {
+                        // Use different orderId for stitching.
+                        orderId: createUuid(),
+                        orderUpdateId: 0,
+                        nodes: [
+                            { nodeId: "n2", sequenceId: 2, released: true, actions: [createPickDropAction("drop")] },
+                            { nodeId: "n3", sequenceId: 4, released: true, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
+                        ],
+                        edges: [
+                            { edgeId: "e23", sequenceId: 3, startNodeId: "n2", endNodeId: "n3", released: true, actions: [] },
+                        ],
+                    },
+                    {
+                        onOrderProcessed: () => {
+                            ts.pass("onOrderProcessed invoked on stitching order");
+                            ts.endAll();
+                        },
+                        onActionStateChanged: () => {
+                            ts.pass("onActionStateChanged invoked on stitching order");
+                        },
+                        onEdgeTraversed: () => {
+                            ts.pass("onEdgeTraversed invoked on stitching order");
+                        },
+                        onEdgeTraversing: () => {
+                            ts.pass("onEdgeTraversing invoked on stitching order");
+                        },
+                        onNodeTraversed: node => {
+                            ts.pass("onNodeTraversed invoked on stitching order");
+                            if (node.nodeId === "n2" && node.sequenceId === 2) {
+                                ts.equal(node.actions.length, 2);
+                                ts.equal(node.actions[0].actionType, "pick");
+                                ts.equal(node.actions[1].actionType, "drop");
+                            }
+                        },
+                    });
+                ts.not(result, undefined, "stitching order assigned by mc");
+            },
+        },
     );
 
     lastOrderId = createUuid();
@@ -1271,7 +1518,7 @@ tap.test("Master Controller - AGV Controller", async t => {
         { completes: true },
     );
 
-    await testOrder(t, "execute new order with one base node and one horizon node to be canceled afterwards",
+    await testOrder(t, "execute order with one base node and one horizon node to be canceled afterwards",
         mcController,
         agvId1,
         {

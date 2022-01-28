@@ -29,9 +29,9 @@ import {
 export interface OrderContext {
 
     /**
-     * The assigned order.
+     * The originally assigned order (without header information).
      */
-    readonly order: Order;
+    readonly order: Headerless<Order>;
 
     /**
      * Identifies the AGV this state originates from.
@@ -125,12 +125,17 @@ export interface OrderEventHandler {
      * edgeTraversing event. On the first event, the current values of all State
      * properties as defined above are reported.
      *
+     * @remarks The first invocation of this event handler is triggered as soon
+     * as the AGV is ready to traverse the edge. In this case, the driving state
+     * can still be false.
+     *
      * @param edge the traversing edge
      * @param startNode the start node of the traversing edge
      * @param endNode the end node of the traversing edge
      * @param stateChanges edge-related State properties that have changed
-     * @param invocationCount the number of invocations of this callback for the
-     * current traversing edge (starts with 1 for the first invocation)
+     * @param invocationCount the one-based number of invocations of this
+     * callback for the current traversing edge (starts with 1 for the first
+     * invocation)
      * @param context context information of the order event
      */
     onEdgeTraversing?(
@@ -263,7 +268,6 @@ export class MasterController extends MasterControlClient {
 
     // Order state caches mapped by agvId, orderId, orderUpdateId.
     private readonly _currentOrders: AgvIdMap<Map<string, Map<number, OrderStateCache>>> = new AgvIdMap();
-    private _lastAssignedOrderCache: OrderStateCache;
 
     // Instant action state caches mapped by agvId, actionId.
     private readonly _currentInstantActions: AgvIdMap<Map<string, InstantActionStateCache>> = new AgvIdMap();
@@ -313,18 +317,20 @@ export class MasterController extends MasterControlClient {
      *   orderUpdateId.
      *
      * @remarks If a stitching order is assigned, the event handler callbacks of
-     * the previously assigned order are no longer invoked. Instead, any
-     * order-related events are emitted on the callbacks of the newly assigned
-     * stitching order.
+     * the previously assigned order are just triggered for State events still
+     * emitted on the previous order. Any State events triggered on the new
+     * order are emitted on the event handler callbacks of the newly assigned
+     * stitching order. Note that Node, Edge, and Action objects passed by these
+     * event handlers may refer to the order context of the previous order.
      *
      * @remarks Any order that has the same AGV target and the same orderId and
      * orderUpdateId as a currently active order will be discarded, resolving
      * `undefined`. The given event handler callbacks will never be invoked.
      * Instead, the previously registered callbacks continue to be invoked.
      *
-     * @remarks All Node, Edge, Action, and Order objects passed to order event
-     * handler callbacks are guaranteed to be reference equal to the original
-     * objects passed to this method. However, AgvId objects passed are never
+     * @remarks Any Node, Edge, Action, and Order object passed to order event
+     * handler callbacks is guaranteed to be reference equal to the original
+     * object passed to this method. However, AgvId objects passed are never
      * reference equal, but value equal.
      *
      * @param agvId identifies the target AGV
@@ -336,54 +342,73 @@ export class MasterController extends MasterControlClient {
      */
     async assignOrder(agvId: AgvId, order: Headerless<Order>, eventHandler: OrderEventHandler) {
         this.debug("Assigning order %o to AGV %o", order, agvId);
-        const cache = this._getOrderStateCache(agvId, order.orderId, order.orderUpdateId);
+        let cache = this._getOrderStateCache(agvId, order.orderId, order.orderUpdateId);
         if (cache !== undefined) {
-            this.debug("Discarded order %o for agvId %o", order, agvId);
+            this.debug("Discarded order %o for AGV %o", order, agvId);
             return undefined;
         }
-        const orderWithHeader = await this.publish(Topic.Order, agvId, order);
-        if (this._lastAssignedOrderCache) {
-            this._removeOrderStateCache(this._lastAssignedOrderCache);
+
+        // Note that any assigned order with same orderId and orderUpdateId as
+        // the previously completed order is discarded by the vehicle plane
+        // (without rejection error). State events emitted for the previously
+        // completed order with same orderid/orderUpdateId are dispatched to the
+        // new order's event handlers. Thus, the new order will also complete
+        // eventually.
+        cache = this._addOrderStateCache(agvId, order, eventHandler);
+
+        try {
+            const orderWithHeader = await this.publish(Topic.Order, agvId, order);
+            this.debug("Assigned order with header %o to AGV %o", orderWithHeader, agvId);
+            return orderWithHeader;
+        } catch (error) {
+            this.debug("Error assigning order %o to AGV %o: %s", order, agvId, error.message ?? error);
+            this._removeOrderStateCache(cache);
+            throw error;
         }
-        this._lastAssignedOrderCache = this._addOrderStateCache({ agvId, order: orderWithHeader, eventHandler });
-        this.debug("Assigned order with header %o to agvId %o", orderWithHeader, agvId);
-        return orderWithHeader;
     }
 
     /**
      * Initiate instant actions to be executed by an AGV and report back changes
-     * in the actions' execution state.
+     * on the execution state of the actions.
      *
-     * @remarks All Action and AgvId objects passed to instant action event
-     * handler callbacks are guaranteed to be reference equal to the original
-     * objects passed to this method.
+     * @remarks Any Action and AgvId object passed to instant action event
+     * handler callbacks is guaranteed to be reference equal to the original
+     * object passed to this method.
      *
      * @param agvId identifies the target AGV
      * @param instantActions a headerless instant actions object
      * @param eventHandler callback that reports instant action related events
-     * @returns a promise that resolves the instant actions object with header
-     * when published successfully and rejects if instant actions object is not
-     * valid or controller has not been started
+     * @returns a promise that resolves an instant actions object with header
+     * when published successfully and rejects if given instant actions object
+     * is not valid or controller has not been started
      */
     async initiateInstantActions(
         agvId: AgvId,
         instantActions: Headerless<InstantActions>,
         eventHandler: InstantActionEventHandler) {
         this.debug("Initiating instant actions %o on AGV %o", instantActions, agvId);
-        const actionsWithHeader = await this.publish(Topic.InstantActions, agvId, instantActions);
+
         let actionStateCaches = this._currentInstantActions.get(agvId);
         if (!actionStateCaches) {
             this._currentInstantActions.set(agvId, actionStateCaches = new Map());
         }
-        if (this._currentInstantActionsRef === undefined) {
-            this._currentInstantActionsRef = 1;
-        } else {
-            this._currentInstantActionsRef++;
+        const newInstantActionsRef = this._currentInstantActionsRef === undefined ? 1 : this._currentInstantActionsRef + 1;
+        instantActions.instantActions.forEach(action => actionStateCaches.set(action.actionId,
+            { agvId, action, eventHandler, instantActionsRef: newInstantActionsRef }));
+
+        try {
+            const actionsWithHeader = await this.publish(Topic.InstantActions, agvId, instantActions);
+            this._currentInstantActionsRef = newInstantActionsRef;
+            this.debug("Initiated instant actions %o on AGV %o", actionsWithHeader, agvId);
+            return actionsWithHeader;
+        } catch (error) {
+            this.debug("Error initiating instant actions %o on AGV %o: %s", instantActions, agvId, error.message ?? error);
+            instantActions.instantActions.forEach(action => actionStateCaches.delete(action.actionId));
+            if (actionStateCaches.size === 0) {
+                this._currentInstantActions.delete(agvId);
+            }
+            throw error;
         }
-        actionsWithHeader.instantActions.forEach(action => actionStateCaches.set(action.actionId,
-            { agvId, action, eventHandler, instantActionsRef: this._currentInstantActionsRef }));
-        this.debug("Initiated instant actions %o on AGV %o", actionsWithHeader, agvId);
-        return actionsWithHeader;
     }
 
     /**
@@ -438,24 +463,25 @@ export class MasterController extends MasterControlClient {
                 // action (with ErrorType.OrderAction).
                 continue;
             }
-            if (orderId !== undefined) {
-                if (orderUpdateId !== undefined) {
-                    cache = this._getOrderStateCache(agvId, orderId, orderUpdateId);
-                } else {
-                    cache = this._getLastOrderStateCache(agvId, orderId);
-                }
+            if (orderId !== undefined && orderUpdateId !== undefined) {
+                cache = this._getOrderStateCache(agvId, orderId, orderUpdateId);
             } else if (topic === Topic.Order && error.errorType === ErrorType.OrderValidation) {
-                // We must check topic reference to distinguish between order and
-                // instant action validation errors as both have the same value. If
-                // no reference on orderId is given, assume the error refers to the
-                // lastest assigned order for the given agvId.
-                cache = this._getLastOrderStateCache(agvId);
+                // In case a validation error occurs where no orderId and
+                // orderUpdateId can be extracted from the invalid order object
+                // we cannot reliably determine the corresponding order assigned
+                // by the master controller. Note that in case of stitching
+                // orders it might not be always the order assigned most
+                // recently for the given agvId.
+                //
+                // To prevent such cases, it is recommended to always validate
+                // outbound topic objects with master controller client option
+                // "topicObjectValidation" (default is true).
             }
             if (cache !== undefined) {
-                // Clear cache entry to support follow-up assignment of an order with
-                // same orderId and orderUpdateId.
+                // Clear cache entry to support follow-up assignment of an order
+                // with same orderId and orderUpdateId. Keep lastCache to
+                // support stitching orders after rejected stitching orders.
                 this._removeOrderStateCache(cache);
-                this._lastAssignedOrderCache = undefined;
                 this.debug("onOrderProcessed with error %o for cache %o with state %j", error, cache, state);
                 cache.eventHandler.onOrderProcessed(error, false, false, { order: cache.order, agvId, state });
             }
@@ -465,7 +491,7 @@ export class MasterController extends MasterControlClient {
         // dispatching instant action states so that instant action state related to
         // this order is still present (cp. cancelOrder).
         const orderStateCache = this._getOrderStateCache(agvId, state.orderId, state.orderUpdateId);
-        if (orderStateCache && !orderStateCache.orderProcessed) {
+        if (orderStateCache) {
             this._dispatchOrderState(state, orderStateCache);
         }
 
@@ -499,7 +525,63 @@ export class MasterController extends MasterControlClient {
     /* Order processing */
 
     private _dispatchOrderState(state: State, cache: OrderStateCache) {
-        this.debug("Dispatching order state for cache %o with state %j", cache, state);
+        this.debug("Dispatching order state %j \nfor cache %j", state, cache);
+
+        // If this order has been stitched onto the previous order which is still
+        // active (i.e. either with horizon nodes and completed actions or with
+        // uncompleted actions), take over state from previous order cache into this
+        // order cache so that state events on this order which are related to
+        // nodes/edges/actions of the previous order can be mapped onto order event
+        // handlers of this order. Note that if multiple orders have been stitched
+        // at least one state event is being emitted for each of them in the order
+        // they have been assigned.
+        if (cache.lastCache !== undefined) {
+            // Ensure lastCache refers to the most recent active base order (if present).
+            const lastCache = this._getLastActiveOrderStateCache(cache);
+            if (lastCache !== undefined) {
+                // Clear current horizon nodes, append new base and horizon nodes, keeping
+                // end node of current base (might be processing currently). Actions of
+                // first new base node are appended to end node of current base.
+                let lastHorizonStartIndex = lastCache.combinedOrder.nodes.findIndex(n => !n.released);
+                const lastBaseEnd = lastCache.combinedOrder.nodes[lastHorizonStartIndex === -1 ?
+                    lastCache.combinedOrder.nodes.length - 1 : lastHorizonStartIndex - 1];
+                const newFirstNodeActions = cache.combinedOrder.nodes[0].actions;
+                cache.combinedOrder.nodes = lastCache.combinedOrder.nodes
+                    .slice(0, lastHorizonStartIndex === -1 ? undefined : lastHorizonStartIndex)
+                    .concat(cache.combinedOrder.nodes.slice(1));
+
+                // Note that the current end node remains reference equal (for event
+                // handlers) but its actions also contain the stitched actions.
+                lastBaseEnd.actions = lastBaseEnd.actions.concat(newFirstNodeActions);
+
+                // Clear current horizon edges, append new base and horizon edges.
+                lastHorizonStartIndex = lastCache.combinedOrder.edges.findIndex(n => !n.released);
+                cache.combinedOrder.edges = lastCache.combinedOrder.edges
+                    .slice(0, lastHorizonStartIndex === -1 ? undefined : lastHorizonStartIndex)
+                    .concat(cache.combinedOrder.edges);
+
+                // Update reference to last traversed node as it could contain stitched
+                // actions if it is the end node of the current base.
+                cache.lastNodeTraversed = cache.combinedOrder.nodes.find(n =>
+                    n.nodeId === lastCache.lastNodeTraversed?.nodeId && n.sequenceId === lastCache.lastNodeTraversed?.sequenceId);
+                cache.lastEdgeStateChanges = lastCache.lastEdgeStateChanges;
+                cache.edgeStateChangeInvocations = lastCache.edgeStateChangeInvocations;
+
+                // Assume both orders have unique node/edge actionIds. Note that
+                // onActionChanged events on nodes/edges of old actions are reported
+                // with the old target (node/edge) reference, while events on
+                // nodes/edges of new actions (including first stitching base node) are
+                // reported on the new target (node/edge reference).
+                cache.mappedActions = new Map([...lastCache.mappedActions, ...cache.mappedActions]);
+                cache.lastActionStates = lastCache.lastActionStates;
+
+                this.debug("stitching current order onto active order with combined cache %j", cache);
+
+                // Cache of last order and previous orders can be removed as all
+                // subsequent state events are emitted on the stitched order.
+                this._removeOrderStateCache(lastCache, true);
+            }
+        }
 
         // Check if any node or edge action has changed its action status. Note that
         // order actions change state asynchronously, not necessarily in sync with
@@ -518,11 +600,10 @@ export class MasterController extends MasterControlClient {
                     // next State message is received (using a postponeCleanup flag).
                     const error = actionStatus === ActionStatus.Failed ? this._getActionError(state.errors, actionId, false) : undefined;
                     if (error) {
-                        this.debug("onActionStateChanged %o with error %o for action %s on target %o for cache %o with state %j",
-                            actionState, error, action, target, cache, state);
+                        this.debug("onActionStateChanged %o with error %o for action %s on target %o for cache %j",
+                            actionState, error, action, target, cache);
                     } else {
-                        this.debug("onActionStateChanged %o for action %s on target %o for cache %o with state %j",
-                            actionState, action, target, cache, state);
+                        this.debug("onActionStateChanged %o for action %s on target %o for cache %j", actionState, action, target, cache);
                     }
                     if (cache.eventHandler.onActionStateChanged) {
                         cache.eventHandler.onActionStateChanged(actionState, error, action, target,
@@ -535,23 +616,24 @@ export class MasterController extends MasterControlClient {
         // Check if trailing edge of last traversed node is being traversed or has been
         // traversed.
         if (cache.lastNodeTraversed) {
-            const nextEdge = this._getNextReleasedEdge(cache.order, cache.lastNodeTraversed);
+            const nextEdge = this._getNextReleasedEdge(cache.combinedOrder, cache.lastNodeTraversed);
             if (nextEdge) {
-                const startNode = this._getEdgeStartNode(cache.order, nextEdge);
-                const endNode = this._getEdgeEndNode(cache.order, nextEdge);
+                const startNode = this._getEdgeStartNode(cache.combinedOrder, nextEdge);
+                const endNode = this._getEdgeEndNode(cache.combinedOrder, nextEdge);
                 const edgeState = state.edgeStates.find(s => s.edgeId === nextEdge.edgeId && s.sequenceId === nextEdge.sequenceId);
                 if (!edgeState) {
                     this._updateEdgeStateChanges(nextEdge, startNode, endNode, cache, state);
                     cache.lastEdgeStateChanges = undefined;
                     cache.edgeStateChangeInvocations = 0;
 
-                    this.debug("onEdgeTraversed %o for cache %o with state %j", nextEdge, cache, state);
+                    this.debug("onEdgeTraversed %o for cache %j", nextEdge, cache);
                     if (cache.eventHandler.onEdgeTraversed) {
                         cache.eventHandler.onEdgeTraversed(nextEdge, startNode, endNode, { order: cache.order, agvId: cache.agvId, state });
                     }
                 } else {
-                    // Start reporting edge state changes not until all node's blocking
-                    // actions have ended so that the AGV can start driving on the edge.
+                    // Start reporting edge state changes on onEdgeTraversing handler
+                    // not until all node's blocking actions have ended so that the AGV
+                    // is ready to start driving on the edge.
                     if (cache.lastEdgeStateChanges !== undefined || this._areAllBlockingActionsEnded(cache.lastNodeTraversed, state)) {
                         this._updateEdgeStateChanges(nextEdge, startNode, endNode, cache, state);
                     }
@@ -562,20 +644,20 @@ export class MasterController extends MasterControlClient {
         // Check if next node has been traversed/reached.
         let nextNode: Node;
         if (cache.lastNodeTraversed === undefined) {
-            const firstNode = cache.order.nodes[0];
+            const firstNode = cache.combinedOrder.nodes[0];
             if (!state.nodeStates.find(n => n.nodeId === firstNode.nodeId && n.sequenceId === firstNode.sequenceId)) {
                 nextNode = firstNode;
             }
         } else {
             if (cache.lastNodeTraversed.nodeId !== state.lastNodeId || cache.lastNodeTraversed.sequenceId !== state.lastNodeSequenceId) {
-                nextNode = this._getNode(cache.order, state.lastNodeId, state.lastNodeSequenceId);
+                nextNode = this._getNode(cache.combinedOrder, state.lastNodeId, state.lastNodeSequenceId);
             }
         }
         if (nextNode !== undefined) {
             cache.lastNodeTraversed = nextNode;
-            const nextEdge = this._getNextEdge(cache.order, nextNode);
-            const edgeEndNode = nextEdge ? this._getEdgeEndNode(cache.order, nextEdge) : undefined;
-            this.debug("onNodeTraversed %o for cache %o with state %j", nextNode, cache, state);
+            const nextEdge = this._getNextEdge(cache.combinedOrder, nextNode);
+            const edgeEndNode = nextEdge ? this._getEdgeEndNode(cache.combinedOrder, nextEdge) : undefined;
+            this.debug("onNodeTraversed %o for cache %j", nextNode, cache);
             if (cache.eventHandler.onNodeTraversed) {
                 cache.eventHandler.onNodeTraversed(nextNode, nextEdge, edgeEndNode, { order: cache.order, agvId: cache.agvId, state });
             }
@@ -584,28 +666,46 @@ export class MasterController extends MasterControlClient {
         // Check if order has been processed successfully or has been canceled
         // by instant action "cancelOrder".
         const result = this._isOrderProcessed(cache, state);
-        if (result !== false) {
+        if (result !== false && !cache.isOrderProcessedHandlerInvoked) {
             const isActive = result === undefined;
             const byCancelation = this._isOrderCanceled(cache, state);
-            // Keep cache to support discarding new orders with same orderId and orderUpdateId
-            // but disable further lookup.
-            cache.orderProcessed = true;
             if (byCancelation) {
-                this.debug("onOrderProcessed by cancelation being active: %s for cache %o with state %j", isActive, cache, state);
+                this.debug("onOrderProcessed by cancelation in state active=%s", isActive);
             } else {
-                this.debug("onOrderProcessed being active: %s for cache %o with state %j", isActive, cache, state);
+                this.debug("onOrderProcessed in state active=%s", isActive);
             }
+            // Keep active order state cache for stitching orders. Cache will be
+            // removed on first state event on stitched order.
+            if (!isActive) {
+                this._removeOrderStateCache(cache, true);
+            }
+            cache.isOrderProcessedHandlerInvoked = true;
             cache.eventHandler.onOrderProcessed(undefined, byCancelation, isActive, { order: cache.order, agvId: cache.agvId, state });
             return;
         }
     }
 
-    private _addOrderStateCache(cache: OrderStateCache) {
+    private _addOrderStateCache(agvId: AgvId, order: Headerless<Order>, eventHandler: OrderEventHandler) {
+        const cache: OrderStateCache = {
+            agvId,
+            order: order,
+            eventHandler,
+            isOrderProcessedHandlerInvoked: false,
+            lastCache: this._getLastAssignedOrderStateCache(agvId),
+            combinedOrder: {
+                edges: [...order.edges],
+                nodes: [...order.nodes],
+                orderId: order.orderId,
+                orderUpdateId: order.orderUpdateId,
+                zoneSetId: order.zoneSetId,
+            },
+        };
         let orderIds = this._currentOrders.get(cache.agvId);
         if (!orderIds) {
             orderIds = new Map();
             this._currentOrders.set(cache.agvId, orderIds);
         }
+        orderIds["lastCache"] = cache;
         let orderUpdateIds = orderIds.get(cache.order.orderId);
         if (!orderUpdateIds) {
             orderUpdateIds = new Map();
@@ -616,7 +716,10 @@ export class MasterController extends MasterControlClient {
         return cache;
     }
 
-    private _removeOrderStateCache(cache: OrderStateCache) {
+    private _removeOrderStateCache(cache: OrderStateCache, deleteLastCache = false) {
+        if (deleteLastCache) {
+            cache.lastCache = undefined;
+        }
         const orderIds = this._currentOrders.get(cache.agvId);
         if (!orderIds) {
             return;
@@ -646,31 +749,27 @@ export class MasterController extends MasterControlClient {
         return orderUpdateIds.get(orderUpdateId);
     }
 
-    private _getLastOrderStateCache(agvId: AgvId, orderId?: string): OrderStateCache {
+    private _getLastAssignedOrderStateCache(agvId: AgvId): OrderStateCache {
         const orderIds = this._currentOrders.get(agvId);
         if (!orderIds) {
             return undefined;
         }
-        if (!orderId) {
-            let lastValue1: [string, Map<number, OrderStateCache>];
-            // tslint:disable-next-line: no-empty
-            for (lastValue1 of orderIds) { }
-            if (!lastValue1) {
-                return undefined;
+        return orderIds["lastCache"];
+    }
+
+    private _getLastActiveOrderStateCache(cache: OrderStateCache) {
+        let nextCache = cache.lastCache;
+        do {
+            // Skip previous orders that are completed or have been rejected and
+            // are no longer present in cached state.
+            const lastCache = this._getOrderStateCache(cache.agvId, nextCache.order.orderId, nextCache.order.orderUpdateId);
+            if (lastCache === nextCache) {
+                return lastCache;
             }
-            let lastValue2: [number, OrderStateCache];
-            // tslint:disable-next-line: no-empty
-            for (lastValue2 of lastValue1[1]) { }
-            return lastValue2?.[1];
-        }
-        const orderUpdateIds = orderIds.get(orderId);
-        if (!orderUpdateIds) {
-            return undefined;
-        }
-        let lastValue: [number, OrderStateCache];
-        // tslint:disable-next-line: no-empty
-        for (lastValue of orderUpdateIds) { }
-        return lastValue?.[1];
+            nextCache = nextCache.lastCache;
+        } while (nextCache !== undefined);
+
+        return nextCache;
     }
 
     private _initCachedActions(cache: OrderStateCache) {
@@ -702,10 +801,10 @@ export class MasterController extends MasterControlClient {
     private _isOrderProcessed(cache: OrderStateCache, state: State): boolean | undefined {
         let isProcessed = false;
         if (state.nodeStates.length === 0 && state.edgeStates.length === 0) {
-            // Order is processed and completed.
+            // Order is processed and completed (if all actions are completed).
             isProcessed = true;
         } else if (state.nodeStates.every(s => !s.released) && state.edgeStates.every(s => !s.released)) {
-            // Order is processed but still active.
+            // Order is processed but still active (if all actions are completed).
             isProcessed = undefined;
         } else {
             return false;
@@ -733,23 +832,23 @@ export class MasterController extends MasterControlClient {
         return false;
     }
 
-    private _getNode(order: Order, nodeId: string, sequenceId: number) {
+    private _getNode(order: Headerless<Order>, nodeId: string, sequenceId: number) {
         return order.nodes.find(n => n.nodeId === nodeId && n.sequenceId === sequenceId);
     }
 
-    private _getNextEdge(order: Order, node: Node) {
+    private _getNextEdge(order: Headerless<Order>, node: Node) {
         return order.edges.find(e => e.startNodeId === node.nodeId && e.sequenceId === node.sequenceId + 1);
     }
 
-    private _getNextReleasedEdge(order: Order, node: Node) {
+    private _getNextReleasedEdge(order: Headerless<Order>, node: Node) {
         return order.edges.find(e => e.released && e.startNodeId === node.nodeId && e.sequenceId === node.sequenceId + 1);
     }
 
-    private _getEdgeStartNode(order: Order, edge: Edge) {
+    private _getEdgeStartNode(order: Headerless<Order>, edge: Edge) {
         return order.nodes.find(n => n.nodeId === edge.startNodeId && n.sequenceId === edge.sequenceId - 1);
     }
 
-    private _getEdgeEndNode(order: Order, edge: Edge) {
+    private _getEdgeEndNode(order: Headerless<Order>, edge: Edge) {
         return order.nodes.find(n => n.nodeId === edge.endNodeId && n.sequenceId === edge.sequenceId + 1);
     }
 
@@ -763,12 +862,13 @@ export class MasterController extends MasterControlClient {
 
     private _updateEdgeStateChanges(edge: Edge, startNode: Node, endNode: Node, cache: OrderStateCache, state: State) {
         const reportChanges = (changes: EdgeStateChanges) => {
-            this.debug("onEdgeTraversing %o for cache %o with changes %o with state %j", edge, cache, changes, state);
+            if (cache.edgeStateChangeInvocations === undefined) {
+                cache.edgeStateChangeInvocations = 0;
+            }
+            cache.edgeStateChangeInvocations++;
+
+            this.debug("onEdgeTraversing %o with changes %o for cache %j", edge, changes, cache);
             if (cache.eventHandler.onEdgeTraversing) {
-                if (cache.edgeStateChangeInvocations === undefined) {
-                    cache.edgeStateChangeInvocations = 0;
-                }
-                cache.edgeStateChangeInvocations++;
                 cache.eventHandler.onEdgeTraversing(edge, startNode, endNode, changes, cache.edgeStateChangeInvocations,
                     { order: cache.order, agvId: cache.agvId, state });
             }
@@ -905,15 +1005,25 @@ export class MasterController extends MasterControlClient {
 
 interface OrderStateCache {
     readonly agvId: AgvId;
-    readonly order: Order;
     readonly eventHandler: OrderEventHandler;
+    readonly order: Headerless<Order>;
+
+    // Indicates whether onOrderProcessed event handler has been invoked.
+    isOrderProcessedHandlerInvoked: boolean;
+
+    // Latest order statze cache assigned for the given agvId or undefined (used
+    // for handling stitching orders).
+    lastCache: OrderStateCache;
+
+    // Current order with shallow copy of nodes/edges including all ancestor
+    // nodes/edges (in case of stitching orders).
+    combinedOrder: Headerless<Order>;
 
     lastNodeTraversed?: Node;
     lastEdgeStateChanges?: EdgeStateChanges;
     edgeStateChangeInvocations?: number;
     lastActionStates?: Map<string, ActionState>;
     mappedActions?: Map<string, [Action, Node | Edge]>;
-    orderProcessed?: boolean;
 }
 
 interface InstantActionStateCache {
