@@ -1187,7 +1187,7 @@ tap.test("Master Controller - AGV Controller", async t => {
         agvId1,
         {
             orderId: lastOrderId,
-            orderUpdateId: 2,
+            orderUpdateId: 1,
             nodes: [
                 { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
                 { nodeId: "n3", sequenceId: 2, released: true, nodePosition: { x: 40, y: 40, mapId: "local" }, actions: [] },
@@ -1212,7 +1212,7 @@ tap.test("Master Controller - AGV Controller", async t => {
                     agvId1,
                     {
                         orderId: lastOrderId,
-                        orderUpdateId: 2,
+                        orderUpdateId: 1,
                         nodes: [
                             { nodeId: "n4", sequenceId: 0, released: true, nodePosition: { x: 30, y: 30, mapId: "local" }, actions: [] },
                         ],

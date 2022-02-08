@@ -525,6 +525,35 @@ export class MasterController extends MasterControlClient {
     /* Order processing */
 
     private _dispatchOrderState(state: State, cache: OrderStateCache) {
+        const processEdgeEvents = () => {
+            const nextEdge = this._getNextReleasedEdge(cache.combinedOrder, cache.lastNodeTraversed);
+            if (nextEdge) {
+                const startNode = this._getEdgeStartNode(cache.combinedOrder, nextEdge);
+                const endNode = this._getEdgeEndNode(cache.combinedOrder, nextEdge);
+                const edgeState = state.edgeStates.find(s => s.edgeId === nextEdge.edgeId && s.sequenceId === nextEdge.sequenceId);
+                if (!edgeState) {
+                    if (cache.lastEdgeProcessed === nextEdge) {
+                        return;
+                    }
+                    this._updateEdgeStateChanges(nextEdge, startNode, endNode, cache, state);
+                    cache.lastEdgeStateChanges = undefined;
+                    cache.edgeStateChangeInvocations = 0;
+                    cache.lastEdgeProcessed = nextEdge;
+
+                    this.debug("onEdgeTraversed %o for cache %j", nextEdge, cache);
+                    if (cache.eventHandler.onEdgeTraversed) {
+                        cache.eventHandler.onEdgeTraversed(nextEdge, startNode, endNode, { order: cache.order, agvId: cache.agvId, state });
+                    }
+                } else {
+                    // Start reporting edge state changes on onEdgeTraversing handler
+                    // not until all node's blocking actions have ended so that the AGV
+                    // is ready to start driving on the edge.
+                    if (cache.lastEdgeStateChanges !== undefined || this._areAllBlockingActionsEnded(cache.lastNodeTraversed, state)) {
+                        this._updateEdgeStateChanges(nextEdge, startNode, endNode, cache, state);
+                    }
+                }
+            }
+        };
         this.debug("Dispatching order state %j \nfor cache %j", state, cache);
 
         // If this order has been stitched onto the previous order which is still
@@ -566,6 +595,7 @@ export class MasterController extends MasterControlClient {
                     n.nodeId === lastCache.lastNodeTraversed?.nodeId && n.sequenceId === lastCache.lastNodeTraversed?.sequenceId);
                 cache.lastEdgeStateChanges = lastCache.lastEdgeStateChanges;
                 cache.edgeStateChangeInvocations = lastCache.edgeStateChangeInvocations;
+                cache.lastEdgeProcessed = lastCache.lastEdgeProcessed;
 
                 // Assume both orders have unique node/edge actionIds. Note that
                 // onActionChanged events on nodes/edges of old actions are reported
@@ -613,32 +643,9 @@ export class MasterController extends MasterControlClient {
             }
         }
 
-        // Check if trailing edge of last traversed node is being traversed or has been
-        // traversed.
+        // Check if trailing edge of last traversed node is being traversed or has been traversed.
         if (cache.lastNodeTraversed) {
-            const nextEdge = this._getNextReleasedEdge(cache.combinedOrder, cache.lastNodeTraversed);
-            if (nextEdge) {
-                const startNode = this._getEdgeStartNode(cache.combinedOrder, nextEdge);
-                const endNode = this._getEdgeEndNode(cache.combinedOrder, nextEdge);
-                const edgeState = state.edgeStates.find(s => s.edgeId === nextEdge.edgeId && s.sequenceId === nextEdge.sequenceId);
-                if (!edgeState) {
-                    this._updateEdgeStateChanges(nextEdge, startNode, endNode, cache, state);
-                    cache.lastEdgeStateChanges = undefined;
-                    cache.edgeStateChangeInvocations = 0;
-
-                    this.debug("onEdgeTraversed %o for cache %j", nextEdge, cache);
-                    if (cache.eventHandler.onEdgeTraversed) {
-                        cache.eventHandler.onEdgeTraversed(nextEdge, startNode, endNode, { order: cache.order, agvId: cache.agvId, state });
-                    }
-                } else {
-                    // Start reporting edge state changes on onEdgeTraversing handler
-                    // not until all node's blocking actions have ended so that the AGV
-                    // is ready to start driving on the edge.
-                    if (cache.lastEdgeStateChanges !== undefined || this._areAllBlockingActionsEnded(cache.lastNodeTraversed, state)) {
-                        this._updateEdgeStateChanges(nextEdge, startNode, endNode, cache, state);
-                    }
-                }
-            }
+            processEdgeEvents();
         }
 
         // Check if next node has been traversed/reached.
@@ -661,6 +668,11 @@ export class MasterController extends MasterControlClient {
             if (cache.eventHandler.onNodeTraversed) {
                 cache.eventHandler.onNodeTraversed(nextNode, nextEdge, edgeEndNode, { order: cache.order, agvId: cache.agvId, state });
             }
+
+            // Immediately trigger initial edge event(s) for trailing released edge of traversed
+            // node as it may not be reported in a separate State event: an edge can be implicitly
+            // traversed by adjacent State events that change node states and edge states in one go.
+            processEdgeEvents();
         }
 
         // Check if order has been processed successfully or has been canceled
@@ -1020,8 +1032,11 @@ interface OrderStateCache {
     combinedOrder: Headerless<Order>;
 
     lastNodeTraversed?: Node;
+
     lastEdgeStateChanges?: EdgeStateChanges;
     edgeStateChangeInvocations?: number;
+    lastEdgeProcessed?: Edge;
+
     lastActionStates?: Map<string, ActionState>;
     mappedActions?: Map<string, [Action, Node | Edge]>;
 }
