@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.5](https://github.com/coatyio/vda-5050-lib.js/compare/v1.1.4...v1.1.5) (2022-02-09)
+
+This patch release fixes an issue regarding proper invocation of
+edge-related order events in the master controller.
+
+### Bug Fixes
+
+* **master-controller:** correct invocation of edge-related order events for state events that report node and edge changes in one go ([36ed862](https://github.com/coatyio/vda-5050-lib.js/commit/36ed8623c4c5af4ac7dbec78dc0f255d9549febd))
+
 ## [1.1.4](https://github.com/coatyio/vda-5050-lib.js/compare/v1.1.3...v1.1.4) (2022-01-28)
 
 This patch release fixes processing of stitching orders
