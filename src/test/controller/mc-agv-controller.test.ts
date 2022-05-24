@@ -25,7 +25,7 @@ import {
 import { initTestContext, testClientOptions } from "../test-context";
 import { createAgvId } from "../test-objects";
 
-function createHeaderlessOrder(nodeActions = [[createPickDropAction("pick")], [createPickDropAction("drop")]]): Headerless<Order> {
+function createHeaderlessOrder(nodeActions = [[createPickDropNoopAction("pick")], [createPickDropNoopAction("drop")]]): Headerless<Order> {
     return {
         orderId: createUuid(),
         orderUpdateId: 0,
@@ -58,7 +58,7 @@ function createHeaderlessOrder(nodeActions = [[createPickDropAction("pick")], [c
     };
 }
 
-function createPickDropAction(actionType: "pick" | "drop", blockingType = BlockingType.Hard): Action {
+function createPickDropNoopAction(actionType: "pick" | "drop" | "noop", blockingType = BlockingType.Hard): Action {
     return {
         actionId: createUuid(),
         actionType,
@@ -481,7 +481,7 @@ tap.test("Master Controller - AGV Controller", async t => {
 
         let errorInvocations = 0;
         const actions = await mcController.initiateInstantActions(agvId1, {
-            instantActions: [createPickDropAction("pick")],
+            instantActions: [createPickDropNoopAction("pick")],
         }, {
             onActionStateChanged: () => {
                 ts.fail("onActionStateChanged should never be called");
@@ -627,8 +627,49 @@ tap.test("Master Controller - AGV Controller", async t => {
                 ts.equal(actionState.actionId, actions.instantActions[0].actionId);
                 ts.equal(actionState.actionStatus, ActionStatus.Finished);
                 ts.equal(actionState.actionDescription, actions.instantActions[0].actionDescription);
-                // Pick & Drop times: 2 * (5+5)s; edge traversal time: 50s
-                ts.equal(parseFloat(actionState.resultDescription), 70);
+                // Pick & Drop times: 2 * (1+5)s; edge traversal time: 50s
+                ts.equal(parseFloat(actionState.resultDescription), 62);
+                resolve();
+            },
+            onActionError: () => {
+                ts.fail("onActionError should never be called");
+                resolve();
+            },
+        });
+    }));
+
+    await t.test("instant action orderExecutionTime with non-default durations", ts => new Promise(async resolve => {
+        let actionStateInvocations = 0;
+        const pickAction1 = createPickDropNoopAction("pick");
+        pickAction1.actionParameters.push({ key: "duration", value: 3 });
+        const dropAction1 = createPickDropNoopAction("drop");
+        dropAction1.actionParameters.push({ key: "duration", value: 2 });
+        const noopAction1 = createPickDropNoopAction("noop");
+        noopAction1.actionParameters.push({ key: "duration", value: 1 });
+        const noopAction2 = createPickDropNoopAction("noop");
+        noopAction2.actionParameters.push({ key: "duration", value: 1 });
+        const actions = await mcController.initiateInstantActions(agvId1, {
+            instantActions: [{
+                actionId: createUuid(),
+                actionType: "orderExecutionTime",
+                blockingType: BlockingType.None,
+                actionParameters: [
+                    {
+                        key: "orders",
+                        value: [createHeaderlessOrder([[pickAction1, noopAction1], [dropAction1, noopAction2]])],
+                    }],
+            }],
+        }, {
+            onActionStateChanged: (actionState, withError, action) => {
+                actionStateInvocations++;
+                ts.equal(actionStateInvocations, 1);
+                ts.strictSame(action, actions.instantActions[0]);
+                ts.equal(withError, undefined);
+                ts.equal(actionState.actionId, actions.instantActions[0].actionId);
+                ts.equal(actionState.actionStatus, ActionStatus.Finished);
+                ts.equal(actionState.actionDescription, actions.instantActions[0].actionDescription);
+                // Pick & Drop times with noops: (1+3+1)+(1+2+1)s; edge traversal time: 50s
+                ts.equal(parseFloat(actionState.resultDescription), 59);
                 resolve();
             },
             onActionError: () => {
@@ -1336,7 +1377,7 @@ tap.test("Master Controller - AGV Controller", async t => {
                 { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
                 {
                     nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: 10, y: 10, mapId: "local" },
-                    actions: [createPickDropAction("pick")],
+                    actions: [createPickDropNoopAction("pick")],
                 },
             ],
             edges: [
@@ -1358,7 +1399,7 @@ tap.test("Master Controller - AGV Controller", async t => {
                         orderId: createUuid(),
                         orderUpdateId: 0,
                         nodes: [
-                            { nodeId: "n2", sequenceId: 2, released: true, actions: [createPickDropAction("drop")] },
+                            { nodeId: "n2", sequenceId: 2, released: true, actions: [createPickDropNoopAction("drop")] },
                             { nodeId: "n3", sequenceId: 4, released: true, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
                         ],
                         edges: [
@@ -1403,7 +1444,7 @@ tap.test("Master Controller - AGV Controller", async t => {
                 { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
                 {
                     nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: 10, y: 10, mapId: "local" },
-                    actions: [createPickDropAction("pick")],
+                    actions: [createPickDropNoopAction("pick")],
                 },
             ],
             edges: [
@@ -1425,7 +1466,7 @@ tap.test("Master Controller - AGV Controller", async t => {
                         orderId: createUuid(),
                         orderUpdateId: 0,
                         nodes: [
-                            { nodeId: "n2", sequenceId: 2, released: true, actions: [createPickDropAction("drop")] },
+                            { nodeId: "n2", sequenceId: 2, released: true, actions: [createPickDropNoopAction("drop")] },
                             { nodeId: "n3", sequenceId: 4, released: true, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
                         ],
                         edges: [
@@ -1461,7 +1502,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     );
 
     lastOrderId = createUuid();
-    const dropAction = createPickDropAction("drop");
+    const dropAction = createPickDropNoopAction("drop");
     await testOrder(t, "execute new order with failing drop action - no load to drop",
         mcController,
         agvId1,
@@ -1488,7 +1529,7 @@ tap.test("Master Controller - AGV Controller", async t => {
             orderUpdateId: 1,
             nodes: [{
                 nodeId: "n1", sequenceId: 0, released: true,
-                actions: [createPickDropAction("pick"), createPickDropAction("drop")],
+                actions: [createPickDropNoopAction("pick"), createPickDropNoopAction("drop")],
             }],
             edges: [],
         },
@@ -1504,11 +1545,11 @@ tap.test("Master Controller - AGV Controller", async t => {
             nodes: [
                 {
                     nodeId: "n1", sequenceId: 0, released: true,
-                    actions: [createPickDropAction("pick")],
+                    actions: [createPickDropNoopAction("pick")],
                 },
                 {
                     nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: 10, y: 10, mapId: "local" },
-                    actions: [createPickDropAction("drop")],
+                    actions: [createPickDropNoopAction("drop")],
                 },
             ],
             edges: [

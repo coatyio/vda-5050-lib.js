@@ -174,8 +174,12 @@ export type VirtualActionTransitions = {
     [ActionStatus.Initializing]?: {
         /**
          * Time in seconds to stay in this status.
+         *
+         * Specify either a number of seconds or a tuple with the name of the
+         * action parameter whose numeric value should be taken and a default
+         * value to be taken if this action parameter is not existing.
          */
-        durationTime: number,
+        durationTime: number | [string, number],
 
         /**
          * The next status to transition to after the duration time elapses.
@@ -196,8 +200,12 @@ export type VirtualActionTransitions = {
     [ActionStatus.Running]?: {
         /**
          * Time in seconds to stay in this status.
+         *
+         * Specify either a number of seconds or a tuple with the name of the
+         * action parameter whose numeric value should be taken and a default
+         * value to be taken if this action parameter is not existing.
          */
-        durationTime: number,
+        durationTime: number | [string, number],
 
         /**
          * The next status to transition to after the duration time elapses.
@@ -422,6 +430,7 @@ export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
  * environments where real AGVs are not available or must be mocked.
  *
  * The following actions are supported:
+ * - noop [instant, node, edge]
  * - pick/drop [node],
  * - initPosition [instant, node]
  * - startPause/stopPause [instant]
@@ -429,6 +438,12 @@ export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
  * - cancelOrder [instant, supported by AgvController]
  * - stateRequest [instant, supported by AgvController]
  * - orderExecutionTime [instant (custom)]
+ *
+ * The actions noop, pick, drop, startCharging, and stopCharging accept an
+ * optional action parameter named "duration" that specifies the number of
+ * seconds to stay in action state RUNNING. If not specified all these actions
+ * stay running for 5 seconds. Note that pick and drop actions stay in status
+ * INITIALIZING for 1 additional second.
  *
  * @remarks To be executable by the virtual AGV an order must specify
  * `nodePosition` for all nodes except for the first one as VDA 5050 requires
@@ -724,6 +739,32 @@ export class VirtualAgvAdapter implements AgvAdapter {
     protected get actionDefinitions(): VirtualActionDefinition[] {
         return [
             {
+                // No-op action just waits the number of seconds given by
+                // optional action parameter "duration" (default 5 seconds),
+                // then finishes.
+                actionType: "noop",
+                actionScopes: ["instant", "node", "edge"],
+                actionParameterConstraints: {
+                    duration: (value: number) => value === undefined || typeof value === "number",
+                },
+                transitions: {
+                    ON_INIT: { next: ActionStatus.Running },
+                    ON_CANCEL: {},
+
+                    // Wait given number of seconds.
+                    [ActionStatus.Running]: { durationTime: ["duration", 5], next: ActionStatus.Finished },
+
+                    // Noop has finished.
+                    [ActionStatus.Finished]: {
+                        resultDescription: () => "noop action finished",
+                    },
+
+                    [ActionStatus.Failed]: {
+                        errorDescription: () => "noop action failed",
+                    },
+                },
+            },
+            {
                 actionType: "pick",
                 actionScopes: "node",
                 actionParameterConstraints: {
@@ -732,6 +773,8 @@ export class VirtualAgvAdapter implements AgvAdapter {
 
                     // Can only lift EUR/EPAL-pallets.
                     loadType: (value: string) => value === "EPAL",
+
+                    duration: (value: number) => value === undefined || typeof value === "number",
                 },
                 // AGV can only pick and carry one load at a time.
                 actionExecutable: () => this._vehicleState.currentLoad ? "load already picked" : "",
@@ -740,10 +783,10 @@ export class VirtualAgvAdapter implements AgvAdapter {
                     ON_CANCEL: {},
 
                     // Initializing of the pick process, e.g. outstanding lift operations.
-                    [ActionStatus.Initializing]: { durationTime: 5, next: ActionStatus.Running },
+                    [ActionStatus.Initializing]: { durationTime: 1, next: ActionStatus.Running },
 
                     // The pick process is running.
-                    [ActionStatus.Running]: { durationTime: 5, next: ActionStatus.Finished },
+                    [ActionStatus.Running]: { durationTime: ["duration", 5], next: ActionStatus.Finished },
 
                     // Pick is done. Load has entered the AGV and AGV reports new load state.
                     [ActionStatus.Finished]: {
@@ -765,6 +808,8 @@ export class VirtualAgvAdapter implements AgvAdapter {
 
                     // Can only lift EUR/EPAL-pallets.
                     loadType: (value: string) => value === "EPAL",
+
+                    duration: (value: number) => value === undefined || typeof value === "number",
                 },
                 actionExecutable: () => this._vehicleState.currentLoad ? "" : "no load to drop",
                 transitions: {
@@ -772,10 +817,10 @@ export class VirtualAgvAdapter implements AgvAdapter {
                     ON_CANCEL: {},
 
                     // Initializing of the drop process, e.g. outstanding lift operations.
-                    [ActionStatus.Initializing]: { durationTime: 5, next: ActionStatus.Running },
+                    [ActionStatus.Initializing]: { durationTime: 1, next: ActionStatus.Running },
 
                     // The drop process is running.
-                    [ActionStatus.Running]: { durationTime: 5, next: ActionStatus.Finished },
+                    [ActionStatus.Running]: { durationTime: ["duration", 5], next: ActionStatus.Finished },
 
                     // Drop is done. Load has left the AGV and AGV reports new load state.
                     [ActionStatus.Finished]: {
@@ -864,6 +909,9 @@ export class VirtualAgvAdapter implements AgvAdapter {
                 // against overcharging is handled by the vehicle.
                 actionType: "startCharging",
                 actionScopes: ["instant", "node"],
+                actionParameterConstraints: {
+                    duration: (value: number) => value === undefined || typeof value === "number",
+                },
                 actionExecutable: (action, scope, activeOrderId) => this._vehicleState.batteryState.charging ?
                     "charging already in progress" :
                     activeOrderId && scope === "instant" ? "charging denied as order is in progress" : "",
@@ -872,7 +920,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
                     ON_CANCEL: {},
 
                     // Activation of the charging process is in progress (communication with charger is running).
-                    [ActionStatus.Running]: { durationTime: 5, next: ActionStatus.Finished },
+                    [ActionStatus.Running]: { durationTime: ["duration", 5], next: ActionStatus.Finished },
 
                     // The charging process is started. The AGV reports active charging state.
                     [ActionStatus.Finished]: {
@@ -891,13 +939,16 @@ export class VirtualAgvAdapter implements AgvAdapter {
                 // only allowed to be "false" when AGV is ready to receive orders.
                 actionType: "stopCharging",
                 actionScopes: ["instant", "node"],
+                actionParameterConstraints: {
+                    duration: (value: number) => value === undefined || typeof value === "number",
+                },
                 actionExecutable: () => this._vehicleState.batteryState.charging ? "" : "charging not in progress",
                 transitions: {
                     ON_INIT: { next: ActionStatus.Running },
                     ON_CANCEL: {},
 
                     // Deactivation of the charging process is in progress (communication with charger is running).
-                    [ActionStatus.Running]: { durationTime: 5, next: ActionStatus.Finished },
+                    [ActionStatus.Running]: { durationTime: ["duration", 5], next: ActionStatus.Finished },
 
                     // The charging process is stopped. The AGV reports inactive charging state.
                     [ActionStatus.Finished]: {
@@ -977,8 +1028,9 @@ export class VirtualAgvAdapter implements AgvAdapter {
         let state = actionDef.transitions.ON_INIT.next as ActionStatus;
         while (state !== ActionStatus.Finished && state !== ActionStatus.Failed) {
             const transition = actionDef.transitions[state];
-            if ("durationTime" in transition) {
-                duration += transition.durationTime;
+            const transitionDuration = getTransitionDuration(transition, action);
+            if (transitionDuration !== undefined) {
+                duration += transitionDuration;
             }
             state = transition.next;
         }
@@ -1359,6 +1411,25 @@ export class VirtualAgvAdapter implements AgvAdapter {
     }
 }
 
+function getTransitionDuration(transition: any, action: Action) {
+    if ("durationTime" in transition) {
+        if (typeof transition.durationTime === "number") {
+            return transition.durationTime;
+        }
+        if (Array.isArray(transition.durationTime) &&
+            typeof transition.durationTime[0] === "string" &&
+            typeof transition.durationTime[1] === "number") {
+            const param = transition.durationTime[0];
+            const kv = action.actionParameters?.find(p => p.key === param);
+            if (kv !== undefined) {
+                return kv.value;
+            }
+            return transition.durationTime[1];
+        }
+    }
+    return undefined;
+}
+
 /**
  * Represents a tick-based state machine for a virtual action to be executed in
  * the context of the `VirtualAgvAdapter`.
@@ -1458,10 +1529,10 @@ class VirtualActionStateMachine {
         let duration = this._statusDurationTimes.get(this._actionStatus);
         duration += realInterval;
 
-        const { next, durationTime } = actionStatusDef as { next: ActionStatus, durationTime: number };
-        if (durationTime !== undefined && duration >= durationTime) {
+        const transitionDuration = getTransitionDuration(actionStatusDef, this.actionContext.action);
+        if (transitionDuration !== undefined && duration >= transitionDuration) {
             this._statusDurationTimes.set(this._actionStatus, 0);
-            this._transition({ actionStatus: next });
+            this._transition({ actionStatus: actionStatusDef.next });
         } else {
             this._statusDurationTimes.set(this._actionStatus, duration);
         }
