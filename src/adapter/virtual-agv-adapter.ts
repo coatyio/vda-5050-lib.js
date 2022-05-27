@@ -998,7 +998,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
         this._vehicleState.velocity.vy = vy;
         this.controller.updateDrivingState(true);
         this.controller.updateAgvPositionVelocity(undefined, this._vehicleState.velocity, reportImmediately);
-        this.debug("start driving");
+        this.debug("start driving vx=%d, vy=%d", vx, vy);
     }
 
     /**
@@ -1188,7 +1188,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
             const dx = this._vehicleState.velocity.vx * realInterval;
             const dy = this._vehicleState.velocity.vy * realInterval;
 
-            if (Math.abs(tx) <= Math.abs(dx) && Math.abs(ty) <= Math.abs(dy)) {
+            if (tx ** 2 + ty ** 2 <= dx ** 2 + dy ** 2) {
                 this._vehicleState.position.x = endNodePosition.x;
                 this._vehicleState.position.y = endNodePosition.y;
                 this._vehicleState.position.theta = endNodePosition.theta ?? this._vehicleState.position.theta;

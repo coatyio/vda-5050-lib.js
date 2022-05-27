@@ -1149,7 +1149,7 @@ tap.test("Master Controller - AGV Controller", async t => {
             orderUpdateId: 0,
             nodes: [
                 { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
-                { nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: 10, y: 10, mapId: "local" }, actions: [] },
+                { nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: -10, y: 0, mapId: "local" }, actions: [] },
             ],
             edges: [
                 { edgeId: "e12", sequenceId: 1, startNodeId: "n1", endNodeId: "n2", released: true, actions: [] },
