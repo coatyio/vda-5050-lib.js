@@ -1,5 +1,19 @@
 # Changelog
 
+# [1.2.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.1.5...v1.2.0) (2022-05-27)
+
+This feature release supports a new action 'noop' and a new action parameter 'duration'
+to control action execution of the Virtual AGV Adapter and fixes a traversal issue of this adapter.
+
+### Bug Fixes
+
+* **virtual-agv-adapter:** fix traversal issue where virtual AGV doesn't stop when goal is reached ([45cc428](https://github.com/coatyio/vda-5050-lib.js/commit/45cc4281c9bf2f6c80c574c489126a9fbd6043a0))
+
+
+### Features
+
+* **virtual-agv-adapter:** support new action 'noop' and an action parameter 'duration' for noop, pick/drop, start/stopCharging actions ([9a15186](https://github.com/coatyio/vda-5050-lib.js/commit/9a15186306ce38434de0a6807944d6dd32182d39))
+
 ## [1.1.5](https://github.com/coatyio/vda-5050-lib.js/compare/v1.1.4...v1.1.5) (2022-02-09)
 
 This patch release fixes an issue regarding proper invocation of
