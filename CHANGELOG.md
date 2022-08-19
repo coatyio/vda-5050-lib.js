@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.1](https://github.com/coatyio/vda-5050-lib.js/compare/v1.2.0...v1.2.1) (2022-08-19)
+
+This patch release fixes an issue with erroneous edge traversal
+events on canceled orders.
+
+### Bug Fixes
+
+* **master-controller:** suppress dispatching edge traversal events on canceled orders ([7ad6372](https://github.com/coatyio/vda-5050-lib.js/commit/7ad63729e94bf15c19d661038e25f8d77826ac65))
+
+
+### Performance Improvements
+
+* **agv-controller:** optimize cancelation detection ([a18164d](https://github.com/coatyio/vda-5050-lib.js/commit/a18164d92386f58dcba81bf604d351d0590b6a9c))
+
 # [1.2.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.1.5...v1.2.0) (2022-05-27)
 
 This feature release supports a new action 'noop' and a new action parameter 'duration'
