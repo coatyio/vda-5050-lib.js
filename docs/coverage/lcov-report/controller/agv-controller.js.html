@@ -23,23 +23,23 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">74.37% </span>
+                <span class="strong">74.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>505/679</span>
+                <span class='fraction'>504/678</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">64.54% </span>
+                <span class="strong">64.88% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>304/471</span>
+                <span class='fraction'>303/467</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">79.87% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>124/155</span>
+                <span class='fraction'>123/154</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -1287,10 +1287,7 @@
 <a name='L1228'></a><a href='#L1228'>1228</a>
 <a name='L1229'></a><a href='#L1229'>1229</a>
 <a name='L1230'></a><a href='#L1230'>1230</a>
-<a name='L1231'></a><a href='#L1231'>1231</a>
-<a name='L1232'></a><a href='#L1232'>1232</a>
-<a name='L1233'></a><a href='#L1233'>1233</a>
-<a name='L1234'></a><a href='#L1234'>1234</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L1231'></a><a href='#L1231'>1231</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
@@ -1347,9 +1344,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">50x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">58x</span>
@@ -1461,18 +1455,18 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">42x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">42x</span>
-<span class="cline-any cline-yes">42x</span>
-<span class="cline-any cline-yes">42x</span>
-<span class="cline-any cline-yes">42x</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">42x</span>
-<span class="cline-any cline-yes">42x</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">42x</span>
+<span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2579,10 +2573,7 @@ class AgvController extends __1.AgvClient {
                 s.actionStatus !== __1.ActionStatus.Finished);
     }
     get hasCancelingOrder() {
-        return this._currentState.actionStates.some(s =&gt; s.actionType === "cancelOrder" &amp;&amp;
-<span class="branch-1 cbranch-no" title="branch not covered" >            this.isInstantActionState(s) </span>&amp;&amp;
-<span class="branch-2 cbranch-no" title="branch not covered" >            s.actionStatus !== __1.ActionStatus.Failed </span>&amp;&amp;
-<span class="branch-3 cbranch-no" title="branch not covered" >            s.actionStatus !== __1.ActionStatus.Finished)</span>;
+        return this._cancelOrderContext !== undefined;
     }
     isInstantActionState(state) {
         return this._instantActionsEndedPublishCount.has(state.actionId);
@@ -3763,7 +3754,7 @@ AgvController.REF_KEY_ERROR_DESCRIPTION_DETAIL = "errorDescriptionDetail";
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri May 27 2022 13:35:41 GMT+0200 (GMT+02:00)
+                at Fri Aug 19 2022 15:43:53 GMT+0200 (Mitteleuropäische Sommerzeit)
             </div>
         </div>
         <script src="../prettify.js"></script>

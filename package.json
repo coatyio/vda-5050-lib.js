@@ -17,7 +17,7 @@
         "test": "tap",
         "test:detail": "tap --reporter=tap",
         "test:coverage": "npm-run-all -s -c _test:cov1 _test:cov2 _test:cov3",
-        "_test:cov1": "tap --coverage --check-coverage --branches=75 --functions=75 --lines=75 --statements=75",
+        "_test:cov1": "tap --coverage --check-coverage --branches=60 --functions=60 --lines=60 --statements=60",
         "_test:cov2": "node dist/test/test-after-coverage.js",
         "_test:cov3": "opener coverage/lcov-report/index.html",
         "test:debug": "cross-env DEBUG=\"vda-5050:*\" tap --reporter=tap",

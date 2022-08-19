@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.36% </span>
+                <span class="strong">92.89% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>307/336</span>
+                <span class='fraction'>314/338</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.46% </span>
+                <span class="strong">85.11% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>217/260</span>
+                <span class='fraction'>223/262</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.66% </span>
+                <span class="strong">98.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>58/60</span>
+                <span class='fraction'>59/60</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.42% </span>
+                <span class="strong">92.74% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>288/315</span>
+                <span class='fraction'>294/317</span>
             </div>
         
             
@@ -585,7 +585,10 @@
 <a name='L526'></a><a href='#L526'>526</a>
 <a name='L527'></a><a href='#L527'>527</a>
 <a name='L528'></a><a href='#L528'>528</a>
-<a name='L529'></a><a href='#L529'>529</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L529'></a><a href='#L529'>529</a>
+<a name='L530'></a><a href='#L530'>530</a>
+<a name='L531'></a><a href='#L531'>531</a>
+<a name='L532'></a><a href='#L532'>532</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
@@ -725,7 +728,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">89x</span>
 <span class="cline-any cline-yes">89x</span>
-<span class="cline-any cline-yes">89x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">87x</span>
+<span class="cline-any cline-yes">87x</span>
 <span class="cline-any cline-yes">61x</span>
 <span class="cline-any cline-yes">61x</span>
 <span class="cline-any cline-yes">61x</span>
@@ -962,25 +968,25 @@
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">99x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">110x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">108x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">88x</span>
@@ -1252,6 +1258,9 @@ class MasterController extends __1.MasterControlClient {
     }
     _dispatchOrderState(state, cache) {
         const processEdgeEvents = () =&gt; {
+            if (this._isOrderCanceling(cache, state, [__1.ActionStatus.Running, __1.ActionStatus.Finished])) {
+                return;
+            }
             const nextEdge = this._getNextReleasedEdge(cache.combinedOrder, cache.lastNodeTraversed);
             if (nextEdge) {
                 const startNode = this._getEdgeStartNode(cache.combinedOrder, nextEdge);
@@ -1352,7 +1361,7 @@ class MasterController extends __1.MasterControlClient {
         const result = this._isOrderProcessed(cache, state);
         if (result !== false &amp;&amp; !cache.isOrderProcessedHandlerInvoked) {
             const isActive = result === undefined;
-            const byCancelation = this._isOrderCanceled(cache, state);
+            const byCancelation = this._isOrderCanceling(cache, state, [__1.ActionStatus.Finished]);
             <span class="missing-if-branch" title="if path not taken" >I</span>if (byCancelation) {
 <span class="cstat-no" title="statement not covered" >                this.debug("onOrderProcessed by cancelation in state active=%s", isActive);</span>
             }
@@ -1489,13 +1498,13 @@ class MasterController extends __1.MasterControlClient {
         }
         return isProcessed;
     }
-    _isOrderCanceled(cache, state) {
+    _isOrderCanceling(cache, state, cancelStatus) {
         const actionStateCaches = this._currentInstantActions.get(cache.agvId);
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (actionStateCaches) {
-<span class="cstat-no" title="statement not covered" >            for (const [actionId, actionStateCache] of actionStateCaches) {</span>
-<span class="cstat-no" title="statement not covered" >                if (actionStateCache.action.actionType === "cancelOrder") {</span>
-                    const as = <span class="cstat-no" title="statement not covered" >state.actionStates.find(<span class="fstat-no" title="function not covered" >s </span>=&gt; <span class="cstat-no" title="statement not covered" >s.actionId === actionId)</span>;</span>
-<span class="cstat-no" title="statement not covered" >                    return as !== undefined &amp;&amp; as.actionStatus === __1.ActionStatus.Finished;</span>
+        if (actionStateCaches) {
+            for (const [actionId, actionStateCache] of actionStateCaches) {
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (actionStateCache.action.actionType === "cancelOrder") {
+                    const as = state.actionStates.find(s =&gt; s.actionId === actionId);
+                    return as !== undefined &amp;&amp; cancelStatus.includes(as.actionStatus);
                 }
             }
         }
@@ -1648,7 +1657,7 @@ exports.MasterController = MasterController;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri May 27 2022 13:35:41 GMT+0200 (GMT+02:00)
+                at Fri Aug 19 2022 15:43:53 GMT+0200 (Mitteleuropäische Sommerzeit)
             </div>
         </div>
         <script src="../prettify.js"></script>
