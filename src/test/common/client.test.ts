@@ -43,9 +43,6 @@ class TestClient extends Client {
 
 initTestContext(tap);
 
-// Increase test timeout on top level for subtest "connection refused on unreachable broker".
-tap.setTimeout(60000);
-
 tap.test("Client", async t => {
     const agvId = createAgvId("RobotCompany", "001");
     const clientOptions = testClientOptions(t);

@@ -330,9 +330,6 @@ async function testOrder(
 
 initTestContext(tap);
 
-// Adjust test timeout on top level to complete all subtests in time.
-tap.setTimeout(100000);
-
 tap.test("Master Controller - AGV Controller", async t => {
     const agvId1 = createAgvId("RobotCompany", "001");
     const agvId2 = createAgvId("RobotCompany", "002");
