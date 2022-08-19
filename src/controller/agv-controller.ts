@@ -576,9 +576,9 @@ export interface AgvAdapter {
      *
      * If the AGV is on a node or can stop if in between nodes, it should stop
      * gracefully; otherwise it should continue driving to the next node, and
-     * automatically stop on arrival. In this case the `traverse` handler's
-     * callback `context.edgeTraversed` should not be invoked any more (it is
-     * ignored by the AGV controller).
+     * automatically stop on arrival. In all these cases the `traverse`
+     * handler's callback `context.edgeTraversed` should not be invoked any more
+     * (even if you do invoke it, it is ignored by the AGV controller).
      *
      * The handler function must invoke the callback `context.stopped` once as
      * soon as the AGV has stopped driving, even if the vehicle is already
@@ -900,11 +900,7 @@ export class AgvController extends AgvClient {
      * order.
      */
     get hasCancelingOrder() {
-        return this._currentState.actionStates.some(s =>
-            s.actionType === "cancelOrder" &&
-            this.isInstantActionState(s) &&
-            s.actionStatus !== ActionStatus.Failed &&
-            s.actionStatus !== ActionStatus.Finished);
+        return this._cancelOrderContext !== undefined;
     }
 
     /**
@@ -917,7 +913,6 @@ export class AgvController extends AgvClient {
     isInstantActionState(state: ActionState) {
         return this._instantActionsEndedPublishCount.has(state.actionId);
     }
-
 
     /**
      * To be invoked by the AGV adapter whenever a new AGV position and/or
@@ -1576,7 +1571,7 @@ export class AgvController extends AgvClient {
 
         // All WAITING node and edge actions can be safely set to FAILED as no
         // executeAction handler has yet been invoked. Do not use
-        // updateActionStatus as not yet scheduled HARD blocking actions would
+        // _updateActionStatus as not yet scheduled HARD blocking actions would
         // be triggered.
         this._currentState.actionStates.forEach(s => {
             if (!this.isInstantActionState(s) && s.actionStatus === ActionStatus.Waiting) {
@@ -1646,7 +1641,7 @@ export class AgvController extends AgvClient {
     }
 
     private _areAllOrderActionsCanceled() {
-        // Asserted: this.hasCanceledOrder
+        // Asserted: this.hasCancelingOrder
         for (const node of this.currentOrder.nodes) {
             if (!node.released) {
                 break;
