@@ -526,6 +526,10 @@ export class MasterController extends MasterControlClient {
 
     private _dispatchOrderState(state: State, cache: OrderStateCache) {
         const processEdgeEvents = () => {
+            if (this._isOrderCanceling(cache, state, [ActionStatus.Running, ActionStatus.Finished])) {
+                // Skip dispatching edge traversal events if order is being canceled.
+                return;
+            }
             const nextEdge = this._getNextReleasedEdge(cache.combinedOrder, cache.lastNodeTraversed);
             if (nextEdge) {
                 const startNode = this._getEdgeStartNode(cache.combinedOrder, nextEdge);
@@ -680,7 +684,7 @@ export class MasterController extends MasterControlClient {
         const result = this._isOrderProcessed(cache, state);
         if (result !== false && !cache.isOrderProcessedHandlerInvoked) {
             const isActive = result === undefined;
-            const byCancelation = this._isOrderCanceled(cache, state);
+            const byCancelation = this._isOrderCanceling(cache, state, [ActionStatus.Finished]);
             if (byCancelation) {
                 this.debug("onOrderProcessed by cancelation in state active=%s", isActive);
             } else {
@@ -830,14 +834,14 @@ export class MasterController extends MasterControlClient {
         return isProcessed;
     }
 
-    private _isOrderCanceled(cache: OrderStateCache, state: State) {
+    private _isOrderCanceling(cache: OrderStateCache, state: State, cancelStatus: ActionStatus[]) {
         // Note: Do not perform look up by ActionState.actionType directly as it is optional.
         const actionStateCaches = this._currentInstantActions.get(cache.agvId);
         if (actionStateCaches) {
             for (const [actionId, actionStateCache] of actionStateCaches) {
                 if (actionStateCache.action.actionType === "cancelOrder") {
                     const as = state.actionStates.find(s => s.actionId === actionId);
-                    return as !== undefined && as.actionStatus === ActionStatus.Finished;
+                    return as !== undefined && cancelStatus.includes(as.actionStatus);
                 }
             }
         }
