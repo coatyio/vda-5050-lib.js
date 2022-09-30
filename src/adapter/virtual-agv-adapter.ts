@@ -354,15 +354,7 @@ export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
     vehicleTimeDistribution?: () => [number, number];
 
     /**
-     * Capacity of the AGV's battery measured in ampere hours (Ah) (optional).
-     *
-     * If not specified, value defaults to 100 Ah.
-     */
-    batteryCapacity?: number;
-
-    /**
-     * Maximum reach in meter of an AGV with a fully charged battery with the
-     * capacity specified by option `batteryCapacity` (optional).
+     * Maximum reach in meter of an AGV with a fully charged battery (optional).
      *
      * @remarks This option doesn't take the actual speed of the AGV into
      * account. To keep it simple it is just a rough approximation of the real
@@ -920,7 +912,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
                     ON_CANCEL: {},
 
                     // Activation of the charging process is in progress (communication with charger is running).
-                    [ActionStatus.Running]: { durationTime: ["duration", 5], next: ActionStatus.Finished },
+                    [ActionStatus.Running]: { durationTime: ["duration", 1], next: ActionStatus.Finished },
 
                     // The charging process is started. The AGV reports active charging state.
                     [ActionStatus.Finished]: {
@@ -948,7 +940,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
                     ON_CANCEL: {},
 
                     // Deactivation of the charging process is in progress (communication with charger is running).
-                    [ActionStatus.Running]: { durationTime: ["duration", 5], next: ActionStatus.Finished },
+                    [ActionStatus.Running]: { durationTime: ["duration", 1], next: ActionStatus.Finished },
 
                     // The charging process is stopped. The AGV reports inactive charging state.
                     [ActionStatus.Finished]: {
@@ -1130,7 +1122,6 @@ export class VirtualAgvAdapter implements AgvAdapter {
             vehicleSpeed: 2,
             vehicleSpeedDistribution: undefined,
             vehicleTimeDistribution: undefined,
-            batteryCapacity: 100,
             batteryMaxReach: 28800,
             initialBatteryCharge: 100,
             fullBatteryChargeTime: 1,
@@ -1236,11 +1227,13 @@ export class VirtualAgvAdapter implements AgvAdapter {
         const currentCharge = this._vehicleState.batteryState.batteryCharge;
         const deltaCharge = chargeRate * realInterval;
         const newCharge = Math.min(100, currentCharge + deltaCharge);
-        const isFullyCharged = newCharge > 99;
+        const isFullyCharged = newCharge === 100;
 
-        // Update charge and reach.
+        // Update charge and reach and propagate new battery state to AGV so
+        // that it is sent to master control on the next regular state emission.
         this._vehicleState.batteryState.batteryCharge = newCharge;
         this._vehicleState.batteryState.reach = this.getBatteryReach(newCharge);
+        this.controller.updateBatteryState(this._vehicleState.batteryState, false);
 
         // Remove batteryLowError from state as soon as charge is 10% above threshold.
         let batteryLowError: Error;
@@ -1249,7 +1242,8 @@ export class VirtualAgvAdapter implements AgvAdapter {
             this._batteryLowError = undefined;
         }
 
-        // Report state of charge updates with low frequency (in steps of 1%).
+        // Additionally report regular state of charge updates with low
+        // frequency (in steps of 1%).
         const updateTicks = Math.ceil(1000 / chargeRate / tickInterval);
         if (tick % updateTicks === 0) {
             batteryLowError && this.controller.updateErrors(batteryLowError, "remove");
