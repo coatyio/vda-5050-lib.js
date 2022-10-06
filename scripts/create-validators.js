@@ -47,9 +47,10 @@ async function createCoreValidators(vdaVersion, moduleFormat) {
  * each of the specified schemas that can be used without additional runtime
  * dependencies.
  *
- * @remarks Schemas referred to by `$ref` must be specified separately.
+ * @remarks
+ * Schemas referred to by `$ref` must be specified separately.
  *
- * @remarks The generated validation functions are named as follows:
+ * The generated validation functions are named as follows:
  * `validate<Capitalized schema title keyword>`.
  *
  * @param schemaFiles an array of paths to JSON schemas for which to create

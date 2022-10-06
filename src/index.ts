@@ -3,7 +3,7 @@
 /**
  * @module
  * @description
- * Export all public APIs.
+ * All public APIs.
  */
 
 export * from "./common/agvid-map";

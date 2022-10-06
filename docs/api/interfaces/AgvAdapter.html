@@ -1,72 +1,188 @@
-<!DOCTYPE html><html class="default"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>AgvAdapter | vda-5050-lib for VDA 5050 version 1.1 - v1.2.1</title><meta name="description" content="Documentation for vda-5050-lib for VDA 5050 version 1.1 - v1.2.1"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base=".."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">vda-5050-lib for VDA 5050 version 1.1 - v1.2.1</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label><input type="checkbox" id="tsd-filter-externals" checked/><label class="tsd-widget" for="tsd-filter-externals">Externals</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><ul class="tsd-breadcrumb"><li><a href="../index.html">vda-5050-lib for VDA 5050 version 1.1 - v1.2.1</a></li><li><a href="AgvAdapter.html">AgvAdapter</a></li></ul><h1>Interface AgvAdapter</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><section class="tsd-panel tsd-comment"><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Defines a plug-in commanding interface for performing AGV specific operations
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>AgvAdapter | vda-5050-lib for VDA 5050 version 1.1 - v1.2.1</title><meta name="description" content="Documentation for vda-5050-lib for VDA 5050 version 1.1 - v1.2.1"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><script async src="../assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base="..">
+<div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="../index.html" class="title">vda-5050-lib for VDA 5050 version 1.1 - v1.2.1</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-8 col-content">
+<div class="tsd-page-title">
+<ul class="tsd-breadcrumb">
+<li><a href="../index.html">vda-5050-lib for VDA 5050 version 1.1 - v1.2.1</a></li>
+<li><a href="AgvAdapter.html">AgvAdapter</a></li></ul>
+<h1>Interface AgvAdapter</h1></div>
+<section class="tsd-panel tsd-comment">
+<div class="tsd-comment tsd-typography"><p>Defines a plug-in commanding interface for performing AGV specific operations
 to be registered with an AGV controller.</p>
-</div><div><p>The adapter&#39;s functions provide an abstract interface that maps generic
+<p>The adapter&#39;s functions provide an abstract interface that maps generic
 operations to an AGV specific navigation and control interface. These
 operations include executing or canceling a node action, an edge action, or
 an instant action, traversing/navigating an edge, and calculating trajectory
 paths.</p>
 <p>Concrete implementations of AGV adapters are usually provided by an
 integrator or by the vendor designing the vehicle control interface.</p>
-</div><dl class="tsd-comment-tags"><dt>remarks</dt><dd><p>An AGV adapter and its logic is realized as a class that implements
+
+<h3>Remarks</h3><p>An AGV adapter and its logic is realized as a class that implements
 this interface. This class must provide a constructor that conforms to the
 interface <code>AgvAdapterConstructor</code>. Using dependeny injection, this class type
 is passed as a configuration option to the AGV controller (see
 <code>AgvControllerOptions.agvAdapterType</code>) which creates an instance of the
 adapter class with appropriate constructor parameters.</p>
-</dd></dl></div></section><section class="tsd-panel tsd-hierarchy"><h3>Hierarchy</h3><ul class="tsd-hierarchy"><li><span class="target">AgvAdapter</span></li></ul></section><section class="tsd-panel"><h3>Implemented by</h3><ul class="tsd-hierarchy"><li><a href="../classes/VirtualAgvAdapter.html" class="tsd-signature-type" data-tsd-kind="Class">VirtualAgvAdapter</a></li></ul></section><section class="tsd-panel-group tsd-index-group"><h2>Index</h2><section class="tsd-panel tsd-index-panel"><div class="tsd-index-content"><section class="tsd-index-section "><h3>Properties</h3><ul class="tsd-index-list"><li class="tsd-kind-property tsd-parent-kind-interface"><a href="AgvAdapter.html#apiVersion" class="tsd-kind-icon">api<wbr/>Version</a></li><li class="tsd-kind-property tsd-parent-kind-interface"><a href="AgvAdapter.html#controller" class="tsd-kind-icon">controller</a></li><li class="tsd-kind-property tsd-parent-kind-interface"><a href="AgvAdapter.html#name" class="tsd-kind-icon">name</a></li></ul></section><section class="tsd-index-section "><h3>Methods</h3><ul class="tsd-index-list"><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#attach" class="tsd-kind-icon">attach</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#cancelAction" class="tsd-kind-icon">cancel<wbr/>Action</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#detach" class="tsd-kind-icon">detach</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#executeAction" class="tsd-kind-icon">execute<wbr/>Action</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#finishEdgeAction" class="tsd-kind-icon">finish<wbr/>Edge<wbr/>Action</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#isActionExecutable" class="tsd-kind-icon">is<wbr/>Action<wbr/>Executable</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#isNodeWithinDeviationRange" class="tsd-kind-icon">is<wbr/>Node<wbr/>Within<wbr/>Deviation<wbr/>Range</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#isRouteTraversable" class="tsd-kind-icon">is<wbr/>Route<wbr/>Traversable</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#stopTraverse" class="tsd-kind-icon">stop<wbr/>Traverse</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#trajectory" class="tsd-kind-icon">trajectory</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#traverseEdge" class="tsd-kind-icon">traverse<wbr/>Edge</a></li></ul></section></div></section></section><section class="tsd-panel-group tsd-member-group "><h2>Properties</h2><section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="apiVersion" class="tsd-anchor"></a><h3><span class="tsd-flag ts-flagReadonly">Readonly</span> api<wbr/>Version</h3><div class="tsd-signature tsd-kind-icon">api<wbr/>Version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L351">controller/agv-controller.ts:351</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Defines the protocol version number of this adapter, a positive integer.</p>
-</div><div><p>Increment this version whenever you make changes to the adapter protocol.</p>
-</div><dl class="tsd-comment-tags"><dt>remarks</dt><dd><p>The API version of this adapter must match (i.e. equal) the API
+</div></section>
+<section class="tsd-panel tsd-hierarchy">
+<h4>Hierarchy</h4>
+<ul class="tsd-hierarchy">
+<li><span class="target">AgvAdapter</span></li></ul></section>
+<section class="tsd-panel">
+<h4>Implemented by</h4>
+<ul class="tsd-hierarchy">
+<li><a href="../classes/VirtualAgvAdapter.html" class="tsd-signature-type" data-tsd-kind="Class">VirtualAgvAdapter</a></li></ul></section><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L327">controller/agv-controller.ts:327</a></li></ul></aside>
+<section class="tsd-panel-group tsd-index-group">
+<section class="tsd-panel tsd-index-panel">
+<details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
+<h5 class="tsd-index-heading uppercase" role="button" aria-expanded="false" tabIndex=0><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1.5 5.50969L8 11.6609L14.5 5.50969L12.5466 3.66086L8 7.96494L3.45341 3.66086L1.5 5.50969Z" fill="var(--color-text)"></path></svg> Index</h5></summary>
+<div class="tsd-accordion-details">
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Properties</h3>
+<div class="tsd-index-list"><a href="AgvAdapter.html#apiVersion" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-1024-path"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)" id="icon-1024-text"></path></svg><span>api<wbr/>Version</span></a>
+<a href="AgvAdapter.html#controller" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>controller</span></a>
+<a href="AgvAdapter.html#name" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>name</span></a>
+</div></section>
+<section class="tsd-index-section">
+<h3 class="tsd-index-heading">Methods</h3>
+<div class="tsd-index-list"><a href="AgvAdapter.html#attach" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-2048-path"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)" id="icon-2048-text"></path></svg><span>attach</span></a>
+<a href="AgvAdapter.html#cancelAction" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>cancel<wbr/>Action</span></a>
+<a href="AgvAdapter.html#detach" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>detach</span></a>
+<a href="AgvAdapter.html#executeAction" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>execute<wbr/>Action</span></a>
+<a href="AgvAdapter.html#finishEdgeAction" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>finish<wbr/>Edge<wbr/>Action</span></a>
+<a href="AgvAdapter.html#isActionExecutable" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>is<wbr/>Action<wbr/>Executable</span></a>
+<a href="AgvAdapter.html#isNodeWithinDeviationRange" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>is<wbr/>Node<wbr/>Within<wbr/>Deviation<wbr/>Range</span></a>
+<a href="AgvAdapter.html#isRouteTraversable" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>is<wbr/>Route<wbr/>Traversable</span></a>
+<a href="AgvAdapter.html#stopTraverse" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>stop<wbr/>Traverse</span></a>
+<a href="AgvAdapter.html#trajectory" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>trajectory?</span></a>
+<a href="AgvAdapter.html#traverseEdge" class="tsd-index-link tsd-kind-method tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>traverse<wbr/>Edge</span></a>
+</div></section></div></details></section></section>
+<section class="tsd-panel-group tsd-member-group">
+<h2>Properties</h2>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="apiVersion" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>api<wbr/>Version</span><a href="#apiVersion" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
+<div class="tsd-signature">api<wbr/>Version<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+<div class="tsd-comment tsd-typography"><p>Defines the protocol version number of this adapter, a positive integer.</p>
+<p>Increment this version whenever you make changes to the adapter protocol.</p>
+
+<h3>Remarks</h3><p>The API version of this adapter must match (i.e. equal) the API
 version of the associated AGV controller. If both versions differ, an
 error is thrown when the adapter is instantiated.</p>
-</dd></dl></div></section><section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="controller" class="tsd-anchor"></a><h3><span class="tsd-flag ts-flagReadonly">Readonly</span> controller</h3><div class="tsd-signature tsd-kind-icon">controller<span class="tsd-signature-symbol">:</span> <a href="../classes/AgvController.html" class="tsd-signature-type" data-tsd-kind="Class">AgvController</a></div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L334">controller/agv-controller.ts:334</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>The AGV controller this adapter is associated with.</p>
-</div><div><p>Used to invoke state update methods defined by the AGV controller.</p>
-</div></div></section><section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="name" class="tsd-anchor"></a><h3><span class="tsd-flag ts-flagReadonly">Readonly</span> name</h3><div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L340">controller/agv-controller.ts:340</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Defines the name of this adapter used for identification and display
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L351">controller/agv-controller.ts:351</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="controller" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>controller</span><a href="#controller" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">controller<span class="tsd-signature-symbol">:</span> <a href="../classes/AgvController.html" class="tsd-signature-type" data-tsd-kind="Class">AgvController</a></div>
+<div class="tsd-comment tsd-typography"><p>The AGV controller this adapter is associated with.</p>
+<p>Used to invoke state update methods defined by the AGV controller.</p>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L334">controller/agv-controller.ts:334</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="name" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>name</span><a href="#name" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+<div class="tsd-comment tsd-typography"><p>Defines the name of this adapter used for identification and display
 purposes.</p>
-</div></div></section></section><section class="tsd-panel-group tsd-member-group "><h2>Methods</h2><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="attach" class="tsd-anchor"></a><h3>attach</h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">attach<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="AttachContext.html" class="tsd-signature-type" data-tsd-kind="Interface">AttachContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L366">controller/agv-controller.ts:366</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Registers a handler that is invoked once by the associated controller
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L340">controller/agv-controller.ts:340</a></li></ul></aside></section></section>
+<section class="tsd-panel-group tsd-member-group">
+<h2>Methods</h2>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="attach" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>attach</span><a href="#attach" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="attach.attach-1">attach<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="AttachContext.html" class="tsd-signature-type" data-tsd-kind="Interface">AttachContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#attach.attach-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Registers a handler that is invoked once by the associated controller
 when the adapter should perform initializations and connect to the AGV
 navigation &amp; control interface.</p>
-</div><div><p>The handler function should compute initial vehicles states and report
+<p>The handler function should compute initial vehicles states and report
 them back to the controller after initialization is complete through the
 callback <code>AttachContext.attached</code>. Until this callback is invoked, the
 controller won&#39;t invoke any of the other handler functions defined in
 this interface.</p>
-</div></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>context: <a href="AttachContext.html" class="tsd-signature-type" data-tsd-kind="Interface">AttachContext</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
-<p>context information for attachment</p>
-</div></div></li></ul><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></section><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="cancelAction" class="tsd-anchor"></a><h3>cancel<wbr/>Action</h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">cancel<wbr/>Action<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L477">controller/agv-controller.ts:477</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Registers a handler that is invoked by the associated controller whenever
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>context: <a href="AttachContext.html" class="tsd-signature-type" data-tsd-kind="Interface">AttachContext</a></h5>
+<div class="tsd-comment tsd-typography"><p>context information for attachment</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L366">controller/agv-controller.ts:366</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="cancelAction" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>cancel<wbr/>Action</span><a href="#cancelAction" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="cancelAction.cancelAction-1">cancel<wbr/>Action<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#cancelAction.cancelAction-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Registers a handler that is invoked by the associated controller whenever
 a not yet finished or failed node or edge action of an active order is to
 be canceled.</p>
-</div><div><p>If the action cannot be interrupted it should continue running until
+<p>If the action cannot be interrupted it should continue running until
 finished or failed. If the action can be interrupted it should be
 canceled and action status FAILED should be reported via
 <code>context.updateActionStatus</code>.</p>
-</div><dl class="tsd-comment-tags"><dt>remarks</dt><dd><p>This handler function is only invoked for node and edge actions
+
+<h3>Remarks</h3><p>This handler function is only invoked for node and edge actions
 previously scheduled by the <code>executeAction</code> handler and not yet finished
 or failed, i.e. for actions that are either in status INITIALIZING,
 RUNNING, or PAUSED.</p>
-</dd></dl></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>context: <a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
-<p>context information of a node or edge action to be
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>context: <a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a></h5>
+<div class="tsd-comment tsd-typography"><p>context information of a node or edge action to be
 canceled</p>
-</div></div></li></ul><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></section><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="detach" class="tsd-anchor"></a><h3>detach</h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">detach<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="DetachContext.html" class="tsd-signature-type" data-tsd-kind="Interface">DetachContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L381">controller/agv-controller.ts:381</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Registers a handler that is invoked once by the associated controller
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L479">controller/agv-controller.ts:479</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="detach" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>detach</span><a href="#detach" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="detach.detach-1">detach<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="DetachContext.html" class="tsd-signature-type" data-tsd-kind="Interface">DetachContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#detach.detach-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Registers a handler that is invoked once by the associated controller
 when the adapter should perform deinitializations and disconnect from the
 AGV navigation &amp; control interface.</p>
-</div><div><p>The handler function may compute final vehicles states and report them
+<p>The handler function may compute final vehicles states and report them
 back to the controller after deinitialization is complete through the
 callback <code>DetachContext.detached</code>. After this callback is invoked, the
 controller won&#39;t invoke any of the other handler functions defined in
 this interface.</p>
-</div></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>context: <a href="DetachContext.html" class="tsd-signature-type" data-tsd-kind="Interface">DetachContext</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
-<p>context information for detachment</p>
-</div></div></li></ul><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></section><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="executeAction" class="tsd-anchor"></a><h3>execute<wbr/>Action</h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">execute<wbr/>Action<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L457">controller/agv-controller.ts:457</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Registers a handler that is invoked by the associated controller whenever
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>context: <a href="DetachContext.html" class="tsd-signature-type" data-tsd-kind="Interface">DetachContext</a></h5>
+<div class="tsd-comment tsd-typography"><p>context information for detachment</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L381">controller/agv-controller.ts:381</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="executeAction" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>execute<wbr/>Action</span><a href="#executeAction" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="executeAction.executeAction-1">execute<wbr/>Action<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#executeAction.executeAction-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Registers a handler that is invoked by the associated controller whenever
 an instant, node, or edge action is to be executed.</p>
-</div><div><p>While the action is executed, the callback <code>context.updateActionStatus</code>
+<p>While the action is executed, the callback <code>context.updateActionStatus</code>
 must be invoked whenever the action transitions to a new status, passing
 in the new action status together with result description and linked
 partial state (if applicable).</p>
@@ -74,43 +190,71 @@ partial state (if applicable).</p>
 property the AGV must stop driving and eventually invoke
 <code>controller.updateDrivingState</code> before executing the action; otherwise
 the current driving state must be kept.</p>
-</div><dl class="tsd-comment-tags"><dt>remarks</dt><dd><p>For a node or edge action, the initial action status WAITING is
-already preset on the controller&#39;s current state. For an instant action,
-no action status is preset on the current state. In both cases, the
-action handler must initially transition to the action&#39;s initial state,
-either INITIALIZING or RUNNING (or PAUSED if pause mode is activated),
-FINISHED, or FAILED.</p>
-</dd><dt>remarks</dt><dd><p>If pause mode is active, the action to be executed should
-transition to PAUSED state (immediately or after initializing/running, if
-needed). If pause mode is deactivated, the action should transition to
-the previous status again.</p>
-</dd><dt>remarks</dt><dd><p>For instant actions &#39;startPause&#39; and &#39;stopPause&#39; this handler
-must pause/resume all other actions, and update their action status and
-linked state <code>paused</code> accordingly. Node processing of an active order is
+
+<h3>Remarks</h3><p>For a node or edge action, the initial action status WAITING is already
+preset on the controller&#39;s current state. For an instant action, no
+action status is preset on the current state. In both cases, the action
+handler must initially transition to the action&#39;s initial state, either
+INITIALIZING or RUNNING (or PAUSED if pause mode is activated), FINISHED,
+or FAILED.</p>
+<p>If pause mode is active, the action to be executed should transition to
+PAUSED state (immediately or after initializing/running, if needed). If
+pause mode is deactivated, the action should transition to the previous
+status again.</p>
+<p>For instant actions &#39;startPause&#39; and &#39;stopPause&#39; this handler must
+pause/resume all other actions, and update their action status and linked
+state <code>paused</code> accordingly. Node processing of an active order is
 suspended and resumed automatically by the AGV controller. Edge traversal
 must be suspended and resumed by the AGV adapter.</p>
-</dd><dt>remarks</dt><dd><p>Note that the instant actions &#39;stateRequest&#39; and &#39;cancelOrder&#39;
-are never dispatched to this handler as they are handled by the AGV
-controller itself.</p>
-</dd></dl></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>context: <a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
-<p>context information of a node, edge, or instant action to
+<p>Note that the instant actions &#39;stateRequest&#39; and &#39;cancelOrder&#39; are never
+dispatched to this handler as they are handled by the AGV controller
+itself.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>context: <a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a></h5>
+<div class="tsd-comment tsd-typography"><p>context information of a node, edge, or instant action to
 be executed</p>
-</div></div></li></ul><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></section><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="finishEdgeAction" class="tsd-anchor"></a><h3>finish<wbr/>Edge<wbr/>Action</h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">finish<wbr/>Edge<wbr/>Action<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L492">controller/agv-controller.ts:492</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Registers a handler that is invoked by the associated controller whenever
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L459">controller/agv-controller.ts:459</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="finishEdgeAction" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>finish<wbr/>Edge<wbr/>Action</span><a href="#finishEdgeAction" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="finishEdgeAction.finishEdgeAction-1">finish<wbr/>Edge<wbr/>Action<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#finishEdgeAction.finishEdgeAction-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Registers a handler that is invoked by the associated controller whenever
 an active edge action (i.e. one with status unequal FINISHED or FAILED)
 must be terminated.</p>
-</div><dl class="tsd-comment-tags"><dt>remarks</dt><dd><p>The registered handler is invoked whenever a node is traversed
+
+<h3>Remarks</h3><p>The registered handler is invoked whenever a node is traversed
 and any active actions on the edge leading up to that node must be
 terminated. The handler should finish or cancel the action and report an
 updated action status FINISHED or FAILED via
 <code>context.updateActionStatus</code>.</p>
-</dd></dl></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>context: <a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
-<p>context information of an edge action to be finished</p>
-</div></div></li></ul><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></section><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="isActionExecutable" class="tsd-anchor"></a><h3>is<wbr/>Action<wbr/>Executable</h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">is<wbr/>Action<wbr/>Executable<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ErrorReference.html" class="tsd-signature-type" data-tsd-kind="Interface">ErrorReference</a><span class="tsd-signature-symbol">[]</span></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L416">controller/agv-controller.ts:416</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Registers a handler that is invoked by the associated controller to check
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>context: <a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a></h5>
+<div class="tsd-comment tsd-typography"><p>context information of an edge action to be finished</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L494">controller/agv-controller.ts:494</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="isActionExecutable" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>is<wbr/>Action<wbr/>Executable</span><a href="#isActionExecutable" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="isActionExecutable.isActionExecutable-1">is<wbr/>Action<wbr/>Executable<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ErrorReference.html" class="tsd-signature-type" data-tsd-kind="Interface">ErrorReference</a><span class="tsd-signature-symbol">[]</span><a href="#isActionExecutable.isActionExecutable-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Registers a handler that is invoked by the associated controller to check
 synchronously whether a given node, edge, or instant action can be
 executed principally.</p>
-</div><div><p>The handler function should return a non-empty array of error references
+<p>The handler function should return a non-empty array of error references
 if the action cannot be executed and must be rejected. For example, if an
 action cannot be completed because of external factors (e.g. no load at
 expected position), or if an action conflicts with the AGV&#39;s currently
@@ -120,42 +264,72 @@ raise fork), or if the order contains actions the vehicle cannot perform
 actions although no stroke is installed).</p>
 <p>If the action can be executed, the handler should return an empty array
 or <code>undefined</code>.</p>
-</div><dl class="tsd-comment-tags"><dt>remarks</dt><dd><p>You should not include the <code>actionId</code> and the <code>actionType</code> as
-error references as these are added automatically by the controller. If
-the error was caused by erroneous action parameters, include a list of
+
+<h3>Remarks</h3><p>You should not include the <code>actionId</code> and the <code>actionType</code> as error
+references as these are added automatically by the controller. If the
+error was caused by erroneous action parameters, include a list of
 parameters in the reference.</p>
-</dd><dt>remarks</dt><dd><p>If an instant action is not executable in principle it will be
-rejected with an error by the AGV controller. If a node or edge action is
-not executable in principle, the order will be rejected by the AGV
+<p>If an instant action is not executable in principle it will be rejected
+with an error by the AGV controller. If a node or edge action is not
+executable in principle, the order will be rejected by the AGV
 controller. In the latter case all order node and edge actions are
 checked for executability <em>before</em> the order is carried out.</p>
-</dd></dl></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>context: <a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
-<p>context information of a node, edge, or instant action to
-be checked for execution</p>
-</div></div></li></ul><h4 class="tsd-returns-title">Returns <a href="ErrorReference.html" class="tsd-signature-type" data-tsd-kind="Interface">ErrorReference</a><span class="tsd-signature-symbol">[]</span></h4><div><p>an array of error references if action cannot be executed; an
+
+<h3>Returns</h3><p>an array of error references if action cannot be executed; an
 empty array or <code>undefined</code> if action can be executed</p>
-</div></li></ul></section><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="isNodeWithinDeviationRange" class="tsd-anchor"></a><h3>is<wbr/>Node<wbr/>Within<wbr/>Deviation<wbr/>Range</h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">is<wbr/>Node<wbr/>Within<wbr/>Deviation<wbr/>Range<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><a href="Node.html" class="tsd-signature-type" data-tsd-kind="Interface">Node</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ErrorReference.html" class="tsd-signature-type" data-tsd-kind="Interface">ErrorReference</a><span class="tsd-signature-symbol">[]</span></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L513">controller/agv-controller.ts:513</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Registers a handler that is invoked by the associated controller whenever
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>context: <a href="ActionContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ActionContext</a></h5>
+<div class="tsd-comment tsd-typography"><p>context information of a node, edge, or instant action to
+be checked for execution</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="ErrorReference.html" class="tsd-signature-type" data-tsd-kind="Interface">ErrorReference</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L417">controller/agv-controller.ts:417</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="isNodeWithinDeviationRange" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>is<wbr/>Node<wbr/>Within<wbr/>Deviation<wbr/>Range</span><a href="#isNodeWithinDeviationRange" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="isNodeWithinDeviationRange.isNodeWithinDeviationRange-1">is<wbr/>Node<wbr/>Within<wbr/>Deviation<wbr/>Range<span class="tsd-signature-symbol">(</span>node<span class="tsd-signature-symbol">: </span><a href="Node.html" class="tsd-signature-type" data-tsd-kind="Interface">Node</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ErrorReference.html" class="tsd-signature-type" data-tsd-kind="Interface">ErrorReference</a><span class="tsd-signature-symbol">[]</span><a href="#isNodeWithinDeviationRange.isNodeWithinDeviationRange-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Registers a handler that is invoked by the associated controller whenever
 it needs to check whether a given node&#39;s position is within the allowed
 deviation range of the current AGV position.</p>
-</div><div><p>The handler function should return an array of error references if the
+<p>The handler function should return an array of error references if the
 node is not within the deviation range by checking the node properties x,
 y, theta, mapId, allowedDeviationTheta, and allowedDeviationXy against
 the current AGV position. Otherwise, the handler should return an empty
 array or <code>undefined</code>.</p>
-</div><dl class="tsd-comment-tags"><dt>remarks</dt><dd><p>You should not include the <code>nodeId</code> as error reference as it is
+
+<h3>Remarks</h3><p>You should not include the <code>nodeId</code> as error reference as it is
 added automatically by the controller. Instead, include all node
 property-value pairs that fail the check.</p>
-</dd></dl></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>node: <a href="Node.html" class="tsd-signature-type" data-tsd-kind="Interface">Node</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
-<p>a Node object</p>
-</div></div></li></ul><h4 class="tsd-returns-title">Returns <a href="ErrorReference.html" class="tsd-signature-type" data-tsd-kind="Interface">ErrorReference</a><span class="tsd-signature-symbol">[]</span></h4><div><p>an array of error references if node is not within deviation
+
+<h3>Returns</h3><p>an array of error references if node is not within deviation
 range; an empty array or <code>undefined</code> otherwise</p>
-</div></li></ul></section><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="isRouteTraversable" class="tsd-anchor"></a><h3>is<wbr/>Route<wbr/>Traversable</h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">is<wbr/>Route<wbr/>Traversable<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="RouteTraversableContext.html" class="tsd-signature-type" data-tsd-kind="Interface">RouteTraversableContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ErrorReference.html" class="tsd-signature-type" data-tsd-kind="Interface">ErrorReference</a><span class="tsd-signature-symbol">[]</span></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L539">controller/agv-controller.ts:539</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Registers a handler that is invoked by the associated controller to check
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>node: <a href="Node.html" class="tsd-signature-type" data-tsd-kind="Interface">Node</a></h5>
+<div class="tsd-comment tsd-typography"><p>a Node object</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="ErrorReference.html" class="tsd-signature-type" data-tsd-kind="Interface">ErrorReference</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L515">controller/agv-controller.ts:515</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="isRouteTraversable" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>is<wbr/>Route<wbr/>Traversable</span><a href="#isRouteTraversable" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="isRouteTraversable.isRouteTraversable-1">is<wbr/>Route<wbr/>Traversable<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="RouteTraversableContext.html" class="tsd-signature-type" data-tsd-kind="Interface">RouteTraversableContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ErrorReference.html" class="tsd-signature-type" data-tsd-kind="Interface">ErrorReference</a><span class="tsd-signature-symbol">[]</span><a href="#isRouteTraversable.isRouteTraversable-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Registers a handler that is invoked by the associated controller to check
 synchronously whether AGV can traverse a given route with regard to
 vehicle-specific constraints on node/edge properties that must be
 validated by the AGV adapter as the AGV controller is not aware of them.</p>
-</div><div><p>The nodes and edges passed to this handler are guaranteed to be
+<p>The nodes and edges passed to this handler are guaranteed to be
 well-formed and valid with respect to the proper sequence of base/horizon
 nodes and edges.</p>
 <p>Node and edge actions must not be checked by this handler; they are
@@ -166,15 +340,29 @@ vehicle cannot use (e.g. trajectory) or misses fields it requires (e.g.
 nodePosition with mapId for free navigation) or fields it doesn&#39;t support
 (e.g. rotationAllowed). Otherwise, the handler should return an empty
 array or <code>undefined</code>.</p>
-</div></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>context: <a href="RouteTraversableContext.html" class="tsd-signature-type" data-tsd-kind="Interface">RouteTraversableContext</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
-<p>context information with the route</p>
-</div></div></li></ul><h4 class="tsd-returns-title">Returns <a href="ErrorReference.html" class="tsd-signature-type" data-tsd-kind="Interface">ErrorReference</a><span class="tsd-signature-symbol">[]</span></h4><div><p>an array of error references if route cannot be traversed; an
+
+<h3>Returns</h3><p>an array of error references if route cannot be traversed; an
 empty array or <code>undefined</code> otherwise</p>
-</div></li></ul></section><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="stopTraverse" class="tsd-anchor"></a><h3>stop<wbr/>Traverse</h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">stop<wbr/>Traverse<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="StopTraverseContext.html" class="tsd-signature-type" data-tsd-kind="Interface">StopTraverseContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L601">controller/agv-controller.ts:601</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Registers a handler that is invoked by the associated controller whenever
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>context: <a href="RouteTraversableContext.html" class="tsd-signature-type" data-tsd-kind="Interface">RouteTraversableContext</a></h5>
+<div class="tsd-comment tsd-typography"><p>context information with the route</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="ErrorReference.html" class="tsd-signature-type" data-tsd-kind="Interface">ErrorReference</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L541">controller/agv-controller.ts:541</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="stopTraverse" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>stop<wbr/>Traverse</span><a href="#stopTraverse" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="stopTraverse.stopTraverse-1">stop<wbr/>Traverse<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="StopTraverseContext.html" class="tsd-signature-type" data-tsd-kind="Interface">StopTraverseContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#stopTraverse.stopTraverse-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Registers a handler that is invoked by the associated controller whenever
 the AGV should stop driving while the active order is being canceled and
 after all node/edge actions of this order have already been canceled.</p>
-</div><div><p>If the AGV is on a node or can stop if in between nodes, it should stop
+<p>If the AGV is on a node or can stop if in between nodes, it should stop
 gracefully; otherwise it should continue driving to the next node, and
 automatically stop on arrival. In all these cases the <code>traverse</code>
 handler&#39;s callback <code>context.edgeTraversed</code> should not be invoked any more
@@ -188,29 +376,58 @@ guaranteed that no other invocation of this handler occurs.</p>
 stopping, the adapter must invoke both the callback
 <code>context.drivingToNextNode</code> immediately and the callback
 <code>context.stopped</code> after stopping on arrival.</p>
-</div><dl class="tsd-comment-tags"><dt>remarks</dt><dd><p>It is guaranteed that whenever this function is called all
+
+<h3>Remarks</h3><p>It is guaranteed that whenever this function is called all
 scheduled node and edge actions of the order to be canceled have ended,
 i.e. are either in status FINISHED or FAILED.</p>
-</dd></dl></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>context: <a href="StopTraverseContext.html" class="tsd-signature-type" data-tsd-kind="Interface">StopTraverseContext</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
-<p>context information for reporting when AGV has stopped
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>context: <a href="StopTraverseContext.html" class="tsd-signature-type" data-tsd-kind="Interface">StopTraverseContext</a></h5>
+<div class="tsd-comment tsd-typography"><p>context information for reporting when AGV has stopped
 driving.</p>
-</div></div></li></ul><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></section><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="trajectory" class="tsd-anchor"></a><h3><span class="tsd-flag ts-flagOptional">Optional</span> trajectory</h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">trajectory<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="TrajectoryContext.html" class="tsd-signature-type" data-tsd-kind="Interface">TrajectoryContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Trajectory.html" class="tsd-signature-type" data-tsd-kind="Interface">Trajectory</a></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L617">controller/agv-controller.ts:617</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Registers a handler that is invoked by the associated controller to
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L604">controller/agv-controller.ts:604</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="trajectory" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>trajectory</span><a href="#trajectory" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="trajectory.trajectory-1">trajectory<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="TrajectoryContext.html" class="tsd-signature-type" data-tsd-kind="Interface">TrajectoryContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Trajectory.html" class="tsd-signature-type" data-tsd-kind="Interface">Trajectory</a><a href="#trajectory.trajectory-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Registers a handler that is invoked by the associated controller to
 synchronously calculate the trajectory for a given edge (optional).</p>
-</div><dl class="tsd-comment-tags"><dt>remarks</dt><dd><p>This handler is only required if the AGV should precalculate the
+
+<h3>Remarks</h3><p>This handler is only required if the AGV should precalculate the
 trajectory path of all order edges by itself whenever an order arrives.
 The handler is invoked on all order edges (including horizon edges) in
 the given edges order in series. Do not specify a handler function if the
 AGV should determine the route on the fly when an edge is being traversed
 by invoking the <code>traverse</code> handler.</p>
-</dd></dl></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>context: <a href="TrajectoryContext.html" class="tsd-signature-type" data-tsd-kind="Interface">TrajectoryContext</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
-<p>context information of a trajectory</p>
-</div></div></li></ul><h4 class="tsd-returns-title">Returns <a href="Trajectory.html" class="tsd-signature-type" data-tsd-kind="Interface">Trajectory</a></h4><div><p>the calculated trajectory object</p>
-</div></li></ul></section><section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="traverseEdge" class="tsd-anchor"></a><h3>traverse<wbr/>Edge</h3><ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface"><li class="tsd-signature tsd-kind-icon">traverse<wbr/>Edge<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="TraverseEdgeContext.html" class="tsd-signature-type" data-tsd-kind="Interface">TraverseEdgeContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li></ul><ul class="tsd-descriptions"><li class="tsd-description"><aside class="tsd-sources"><ul><li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/7ad6372/src/controller/agv-controller.ts#L570">controller/agv-controller.ts:570</a></li></ul></aside><div class="tsd-comment tsd-typography"><div class="lead">
-<p>Registers a handler that is invoked by the associated controller to
+
+<h3>Returns</h3><p>the calculated trajectory object</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>context: <a href="TrajectoryContext.html" class="tsd-signature-type" data-tsd-kind="Interface">TrajectoryContext</a></h5>
+<div class="tsd-comment tsd-typography"><p>context information of a trajectory</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="Trajectory.html" class="tsd-signature-type" data-tsd-kind="Interface">Trajectory</a></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L620">controller/agv-controller.ts:620</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface"><a id="traverseEdge" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>traverse<wbr/>Edge</span><a href="#traverseEdge" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+<li class="tsd-signature tsd-anchor-link" id="traverseEdge.traverseEdge-1">traverse<wbr/>Edge<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="TraverseEdgeContext.html" class="tsd-signature-type" data-tsd-kind="Interface">TraverseEdgeContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#traverseEdge.traverseEdge-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Registers a handler that is invoked by the associated controller to
 traverse a given edge with a given start and end node using an (optional)
 trajectory.</p>
-</div><div><p>When the handler function is invoked the AGV should drive along the given
+<p>When the handler function is invoked the AGV should drive along the given
 trajectory (if specified) or by free navigation (if not specified),
 invoking <code>controller.updateDrivingState</code> if needed. However, if pause
 mode is activated the AGV has to postpone traversal until pause mode is
@@ -218,16 +435,66 @@ deactivated by instant action &#39;stopPause&#39;.</p>
 <p>When the given edge has been traversed completely, the callback
 <code>context.edgeTraversed</code> must be invoked. Until this callback has been
 called it is guaranteed that no other invocation of this handler occurs.</p>
-</div><dl class="tsd-comment-tags"><dt>remarks</dt><dd><p>While traversing an edge the AGV adapter must handle activation
-and deactivation of pause mode (triggered either by instant actions
+
+<h3>Remarks</h3><p>While traversing an edge the AGV adapter must handle activation and
+deactivation of pause mode (triggered either by instant actions
 &#39;startPause/stopPause&#39; or by a hardware button) that affects driving
 state and update it accordingly.</p>
-</dd><dt>remarks</dt><dd><p>This handler must take edge and end node orientation changes
-into account if supported by the AGV. If an edge orientation is required
-and rotation is disallowed on the edge, rotate the vehicle before
-entering the edge, otherwise rotate the vehicle on the edge to the
-desired ortientation. Upon traversal and if required, the vehicle must
-be rotated on the end node according to node&#39;s theta angle.</p>
-</dd></dl></div><h4 class="tsd-parameters-title">Parameters</h4><ul class="tsd-parameters"><li><h5>context: <a href="TraverseEdgeContext.html" class="tsd-signature-type" data-tsd-kind="Interface">TraverseEdgeContext</a></h5><div class="tsd-comment tsd-typography"><div class="lead">
-<p>context information of an edge traversal</p>
-</div></div></li></ul><h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4></li></ul></section></section></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class=""><a href="../index.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul><li class="current tsd-kind-interface"><a href="AgvAdapter.html" class="tsd-kind-icon">Agv<wbr/>Adapter</a><ul><li class="tsd-kind-property tsd-parent-kind-interface"><a href="AgvAdapter.html#apiVersion" class="tsd-kind-icon">api<wbr/>Version</a></li><li class="tsd-kind-property tsd-parent-kind-interface"><a href="AgvAdapter.html#controller" class="tsd-kind-icon">controller</a></li><li class="tsd-kind-property tsd-parent-kind-interface"><a href="AgvAdapter.html#name" class="tsd-kind-icon">name</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#attach" class="tsd-kind-icon">attach</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#cancelAction" class="tsd-kind-icon">cancel<wbr/>Action</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#detach" class="tsd-kind-icon">detach</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#executeAction" class="tsd-kind-icon">execute<wbr/>Action</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#finishEdgeAction" class="tsd-kind-icon">finish<wbr/>Edge<wbr/>Action</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#isActionExecutable" class="tsd-kind-icon">is<wbr/>Action<wbr/>Executable</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#isNodeWithinDeviationRange" class="tsd-kind-icon">is<wbr/>Node<wbr/>Within<wbr/>Deviation<wbr/>Range</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#isRouteTraversable" class="tsd-kind-icon">is<wbr/>Route<wbr/>Traversable</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#stopTraverse" class="tsd-kind-icon">stop<wbr/>Traverse</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#trajectory" class="tsd-kind-icon">trajectory</a></li><li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#traverseEdge" class="tsd-kind-icon">traverse<wbr/>Edge</a></li></ul></li></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Legend</h2><div class="tsd-legend-group"><ul class="tsd-legend"><li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li><li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li><li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li><li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li><li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li><li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li></ul><ul class="tsd-legend"><li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li></ul></div><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="../assets/main.js"></script></body></html>
+<p>This handler must take edge and end node orientation changes into account
+if supported by the AGV. If an edge orientation is required and rotation
+is disallowed on the edge, rotate the vehicle before entering the edge,
+otherwise rotate the vehicle on the edge to the desired ortientation.
+Upon traversal and if required, the vehicle must be rotated on the end
+node according to node&#39;s theta angle.</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>context: <a href="TraverseEdgeContext.html" class="tsd-signature-type" data-tsd-kind="Interface">TraverseEdgeContext</a></h5>
+<div class="tsd-comment tsd-typography"><p>context information of an edge traversal</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/coatyio/vda-5050-lib.js/blob/4d3a60b/src/controller/agv-controller.ts#L573">controller/agv-controller.ts:573</a></li></ul></aside></li></ul></section></section></div>
+<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li><a href="../index.html">vda-<wbr/>5050-<wbr/>lib for VDA 5050 version 1.1 -<wbr/> v1.2.1</a>
+<ul></ul></li></ul></div></details></nav>
+<nav class="tsd-navigation secondary menu-sticky">
+<ul>
+<li class="current tsd-kind-interface"><a href="AgvAdapter.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg><span>Agv<wbr/>Adapter</span></a>
+<ul>
+<li class="tsd-kind-property tsd-parent-kind-interface"><a href="AgvAdapter.html#apiVersion" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>api<wbr/>Version</a></li>
+<li class="tsd-kind-property tsd-parent-kind-interface"><a href="AgvAdapter.html#controller" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>controller</a></li>
+<li class="tsd-kind-property tsd-parent-kind-interface"><a href="AgvAdapter.html#name" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>name</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#attach" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>attach</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#cancelAction" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>cancel<wbr/>Action</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#detach" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>detach</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#executeAction" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>execute<wbr/>Action</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#finishEdgeAction" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>finish<wbr/>Edge<wbr/>Action</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#isActionExecutable" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>is<wbr/>Action<wbr/>Executable</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#isNodeWithinDeviationRange" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>is<wbr/>Node<wbr/>Within<wbr/>Deviation<wbr/>Range</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#isRouteTraversable" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>is<wbr/>Route<wbr/>Traversable</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#stopTraverse" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>stop<wbr/>Traverse</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#trajectory" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>trajectory?</a></li>
+<li class="tsd-kind-method tsd-parent-kind-interface"><a href="AgvAdapter.html#traverseEdge" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>traverse<wbr/>Edge</a></li></ul></li></ul></nav></div></div>
+<div class="container tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div><script src="../assets/main.js"></script></body></html>

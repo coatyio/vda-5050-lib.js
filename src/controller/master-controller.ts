@@ -70,16 +70,16 @@ export interface OrderEventHandler {
      * an error in the first place because the order is not executable by the
      * AGV.
      *
-     * @remarks An order is processed if all the order's base nodes/edges have
-     * been traversed and all base node/edge actions have been finished or
-     * failed. Yet, the order may still be active if it contains horizon
-     * nodes/edges. In such a case, you can then assign an order update or
-     * cancel the order.
+     * @remarks
+     * An order is processed if all the order's base nodes/edges have been
+     * traversed and all base node/edge actions have been finished or failed.
+     * Yet, the order may still be active if it contains horizon nodes/edges. In
+     * such a case, you can then assign an order update or cancel the order.
      *
-     * @remarks After this callback has been invoked, no more callbacks related
-     * to the assigned order are invoked afterwards. Events on a subsequent
-     * order update are emitted on the event handlers of the newly assigned
-     * order update.
+     * After this callback has been invoked, no more callbacks related to the
+     * assigned order are invoked afterwards. Events on a subsequent order
+     * update are emitted on the event handlers of the newly assigned order
+     * update.
      *
      * @param withError an Error object if order has been rejected in the first
      * place because it is not executable; otherwise `undefined`
@@ -167,14 +167,15 @@ export interface OrderEventHandler {
      * Invoked whenever an order's node or edge action state has changed
      * (optional).
      *
-     * @remarks If action state changes to FAILED, an accompanying error object
-     * may be reported by the AGV. However, if an order is rejected because an
-     * order action is not executable in the first place, this error is reported
-     * by the `onOrderProcessed` callback.
+     * @remarks
+     * If action state changes to FAILED, an accompanying error object may be
+     * reported by the AGV. However, if an order is rejected because an order
+     * action is not executable in the first place, this error is reported by
+     * the `onOrderProcessed` callback.
      *
-     * @remarks To check whether the action is on a node or on an edge and to
-     * use the `target` parameter in a type-safe way, discriminate by `("nodeId"
-     * in target)` or `("edgeId" in target)`, respectively.
+     * To check whether the action is on a node or on an edge and to use the
+     * `target` parameter in a type-safe way, discriminate by `("nodeId" in
+     * target)` or `("edgeId" in target)`, respectively.
      *
      * @param actionState the new action state
      * @param withError an Error object in case a failed action reports an
@@ -252,14 +253,15 @@ export interface MasterControllerOptions {
  * abstraction layer of the complex control logic defined in the VDA 5050
  * specification.
  *
- * @remarks This VDA 5050 implementation requires Node, Edge, and Action objects
- * to specify unique IDs. You should always use the `createUuid` function to
- * create such an ID as it generates globally unique IDs.
+ * @remarks
+ * This VDA 5050 implementation requires Node, Edge, and Action objects to
+ * specify unique IDs. You should always use the `createUuid` function to create
+ * such an ID as it generates globally unique IDs.
  *
- * @remarks This VDA 5050 implementation requires order rejection errors related
- * to non-supported or non-executable node or edge actions to report an error
- * with `errorType: "orderError"`, whereas order action errors reported for
- * failed actions must specify a different error type (e.g. `errorType:
+ * This VDA 5050 implementation requires order rejection errors related to
+ * non-supported or non-executable node or edge actions to report an error with
+ * `errorType: "orderError"`, whereas order action errors reported for failed
+ * actions must specify a different error type (e.g. `errorType:
  * "orderActionError"`) to make them distinguishable.
  *
  * @category Master Controller
@@ -316,22 +318,23 @@ export class MasterController extends MasterControlClient {
      *   new orderId or reusing the previous orderId with a greater
      *   orderUpdateId.
      *
-     * @remarks If a stitching order is assigned, the event handler callbacks of
-     * the previously assigned order are just triggered for State events still
+     * @remarks
+     * If a stitching order is assigned, the event handler callbacks of the
+     * previously assigned order are just triggered for State events still
      * emitted on the previous order. Any State events triggered on the new
      * order are emitted on the event handler callbacks of the newly assigned
      * stitching order. Note that Node, Edge, and Action objects passed by these
      * event handlers may refer to the order context of the previous order.
      *
-     * @remarks Any order that has the same AGV target and the same orderId and
+     * Any order that has the same AGV target and the same orderId and
      * orderUpdateId as a currently active order will be discarded, resolving
      * `undefined`. The given event handler callbacks will never be invoked.
      * Instead, the previously registered callbacks continue to be invoked.
      *
-     * @remarks Any Node, Edge, Action, and Order object passed to order event
-     * handler callbacks is guaranteed to be reference equal to the original
-     * object passed to this method. However, AgvId objects passed are never
-     * reference equal, but value equal.
+     * Any Node, Edge, Action, and Order object passed to order event handler
+     * callbacks is guaranteed to be reference equal to the original object
+     * passed to this method. However, AgvId objects passed are never reference
+     * equal, but value equal.
      *
      * @param agvId identifies the target AGV
      * @param order the headerless order to be executed

@@ -49,11 +49,12 @@ export interface ClientOptions {
      * name is part of the underlying MQTT topics and used to isolate different
      * transport systems sharing the same MQTT infrastructure.
      *
-     * @remarks As this property is used as a topic level of an MQTT topic, it
-     * must not include the characters `NULL (U+0000)`, `# (U+0023)`, `+
-     * (U+002B)`, and `/ (U+002F)`.
+     * @remarks
+     * As this property is used as a topic level of an MQTT topic, it must not
+     * include the characters `NULL (U+0000)`, `# (U+0023)`, `+ (U+002B)`, and
+     * `/ (U+002F)`.
      *
-     * @remarks This property may also be an empty string according to VDA 5050
+     * This property may also be an empty string according to VDA 5050
      * specification.
      */
     interfaceName: string;
@@ -72,14 +73,15 @@ export interface ClientOptions {
      * messages. Thus, if not specified, value defaults to `{ inbound: true,
      * outbound: true }`.
      *
-     * @remarks An object may include additional properties which are not
-     * defined in the corresponding JSON schema. These properties are ignored,
-     * i.e. not validated.
+     * @remarks
+     * An object may include additional properties which are not defined in the
+     * corresponding JSON schema. These properties are ignored, i.e. not
+     * validated.
      *
-     * @remarks If your MQTT broker supports VDA 5050 conformant topic-payload
-     * validation of published messages and the client connections are secured,
-     * you may turn off client-side validation completely by setting this
-     * property to `{ inbound: false, outbound: false }`.
+     * If your MQTT broker supports VDA 5050 conformant topic-payload validation
+     * of published messages and the client connections are secured, you may
+     * turn off client-side validation completely by setting this property to `{
+     * inbound: false, outbound: false }`.
      */
     topicObjectValidation?: { inbound: boolean, outbound: boolean };
 
@@ -122,13 +124,14 @@ export interface MqttTransportOptions {
      *   characters: `A-Z a-z 0-9 _ . : -`
      * - `%topic%` - VDA 5050 subtopic name (see enum `Topic`)
      *
-     * @remarks The MQTT topic structure is not strictly defined to support a
-     * mandatory topic structure of cloud-based MQTT brokers. While the
-     * `%topic%` placeholder *must* be present in any case the other ones *may*
-     * be omitted.
+     * @remarks
+     * The MQTT topic structure is not strictly defined to support a mandatory
+     * topic structure of cloud-based MQTT brokers. While the `%topic%`
+     * placeholder *must* be present in any case the other ones *may* be
+     * omitted.
      *
-     * @remarks Note that any of the defined placeholders must always make up a
-     * complete MQTT topic level.
+     * Note that any of the defined placeholders must always make up a complete
+     * MQTT topic level.
      *
      * If this option is not specified, the default format looks like this:
      * `%interfaceName%/%majorVersion%/%manufacturer%/%serialNumber%/%topic%`
@@ -182,7 +185,7 @@ export interface MqttTransportOptions {
     /**
      * Connection options for mqtts - MQTT over TLS (optional).
      *
-     * Default is {}. Options are passed through to
+     * Default is `{}`. Options are passed through to
      * [`tls.connect()`](https://nodejs.org/api/tls.html#tls_tls_createsecurecontext_options).
      *
      * @remarks If you run your MQTT connection over WebSockets, use `wsOptions`
@@ -237,7 +240,7 @@ export interface MqttTransportOptions {
     /**
      * WebSocket specific connection options (optional).
      *
-     * Default is {}. Only used for WebSocket connections.
+     * Default is `{}`. Only used for WebSocket connections.
      *
      * For possible options have a look at:
      * https://github.com/websockets/ws/blob/master/doc/ws.md.
@@ -296,8 +299,9 @@ export interface ClientPublishOptions {
  * visualization, monitoring, or logging clients that passively observe VDA 5050
  * communication flows within the DTS.
  *
- * @remarks This class also lays the basis for proprietary extensions, i.e.
- * non-standard operations between control system and AGVs.
+ * @remarks
+ * This class also lays the basis for proprietary extensions, i.e. non-standard
+ * operations between control system and AGVs.
  *
  * This class abstracts VDA 5050 messaging over MQTT, providing the following
  * features:
@@ -316,23 +320,23 @@ export interface ClientPublishOptions {
  * - Support of all standard VDA 5050 communication topics and schemas
  * - Extensible by custom VDA 5050 communication topics and schemas
  *
- * @remarks By default, publications are buffered while the client is offline
- * due to a broken connection. They are published as soon as the client goes
- * online again upon automatic reconnection. You can also vote to disable
- * offline buffering for *individual* publications. For example, regular high
- * frequency state messages on the VDA 5050 "visualization" topic should be
- * dropped while offline.
+ * By default, publications are buffered while the client is offline due to a
+ * broken connection. They are published as soon as the client goes online again
+ * upon automatic reconnection. You can also vote to disable offline buffering
+ * for *individual* publications. For example, regular high frequency state
+ * messages on the VDA 5050 "visualization" topic should be dropped while
+ * offline.
  *
- * @remarks By default, all subscriptions issued while the client has been
- * started are remembered in case the client goes offline due to a broken
- * connection. As soon as the client goes online again upon automatic
- * reconnection these subscriptions are resubscribed.
+ * By default, all subscriptions issued while the client has been started are
+ * remembered in case the client goes offline due to a broken connection. As
+ * soon as the client goes online again upon automatic reconnection these
+ * subscriptions are resubscribed.
  *
- * @remarks Note that the asynchronous publish/subscribe/unsubscribe methods
- * throw *synchronously* on *programming errors*, i.e. non-operational errors
- * like passing invalid arguments or or invoking the function while the client
- * is not started. In contrast, *operational errors* are always signaled by
- * rejecting the returned promise.
+ * Note that the asynchronous publish/subscribe/unsubscribe methods throw
+ * *synchronously* on *programming errors*, i.e. non-operational errors like
+ * passing invalid arguments or or invoking the function while the client is not
+ * started. In contrast, *operational errors* are always signaled by rejecting
+ * the returned promise.
  *
  * @category Client
  */
@@ -455,11 +459,12 @@ export abstract class Client {
      *
      * If client is not started, this operation is a noop.
      *
-     * @remarks Always await this operation before invoking other operations on
-     * this client instance, such as `start`.
+     * @remarks
+     * Always await this operation before invoking other operations on this
+     * client instance, such as `start`.
      *
-     * @remarks After the client is stopped any publish, subscribe, and
-     * unsubscribe operations will throw an error until the client is restarted.
+     * After the client is stopped any publish, subscribe, and unsubscribe
+     * operations will throw an error until the client is restarted.
      *
      * @returns a promise resolved when client is disconnected from the
      * underlying MQTT transport.
@@ -535,11 +540,12 @@ export abstract class Client {
      * Register a callback function invoked whenever the client's connection
      * state changes.
      *
-     * @remarks Upon registration, the given callback is invoked immediately
-     * with the current connection state.
+     * @remarks
+     * Upon registration, the given callback is invoked immediately with the
+     * current connection state.
      *
-     * @remarks You can only register one callback per client; any previously
-     * registered callback is discarded.
+     * You can only register one callback per client; any previously registered
+     * callback is discarded.
      *
      * @param callback a callback function
      */
@@ -567,12 +573,13 @@ export abstract class Client {
      * passed extension object structure does not conform to the passed
      * extension topic and the direction of the message (inbound, outbound).
      *
-     * @remarks If the given topic is already registered, its registration will
-     * be overridden with the new parameters.
+     * @remarks
+     * If the given topic is already registered, its registration will be
+     * overridden with the new parameters.
      *
-     * @remarks Use the function `createValidators` in the `create-validators`
-     * script provided by this package to generate JS validation functions for
-     * your custom JSON schemas. Use these functions in this method override.
+     * Use the function `createValidators` in the `create-validators` script
+     * provided by this package to generate JS validation functions for your
+     * custom JSON schemas. Use these functions in this method override.
      *
      * @param extensionTopic a custom VDA 5050 communication topic
      * @param asInbound whether topic should be allowed on inbound communication
@@ -750,25 +757,26 @@ export abstract class Client {
      * or excluded, to support wildcard subscriptions by control clients.
      * Otherwise, an error is thrown.
      *
-     * @remarks If multiple subscription handlers are registered for a given
+     * @remarks
+     * If multiple subscription handlers are registered for a given
      * subscription, they are invoked synchronously in series, one after the
      * other, but in arbitrary order.
      *
-     * @remarks A subscription handler should never perform long-lasting
-     * synchronous operations as it blocks processing of other handlers and
-     * incoming messages.
+     * A subscription handler should never perform long-lasting synchronous
+     * operations as it blocks processing of other handlers and incoming
+     * messages.
      *
-     * @remarks A subscription handler may also perform asynchronous operations
-     * but these are are not awaited and not synchronized with the invocation of
-     * other handlers.
+     * A subscription handler may also perform asynchronous operations but these
+     * are are not awaited and not synchronized with the invocation of other
+     * handlers.
      *
-     * @remarks A subscription handler is responsible for catching any errors.
-     * Uncaught errors result in "Uncaught Error" or "Unhandled Promise
-     * Rejection" reported by the runtime.
+     * A subscription handler is responsible for catching any errors. Uncaught
+     * errors result in "Uncaught Error" or "Unhandled Promise Rejection"
+     * reported by the runtime.
      *
-     * @remarks Take care to invoke `Client.unsubscribe` method on any
-     * subscription ID that is no longer needed by the application to clean up
-     * the subscription's handler function and to reduce network traffic.
+     * Take care to invoke `Client.unsubscribe` method on any subscription ID
+     * that is no longer needed by the application to clean up the
+     * subscription's handler function and to reduce network traffic.
      * Unsubscribing in a handler function is also possible; use the
      * corresponding subscription id passed as argument. If you want to keep a
      * subscription for the lifetime of the client, there is no need to

@@ -21,14 +21,14 @@ import {
  *
  * @remarks The counterpart of this component on the coordination plane is the
  * class `MasterControlClient`.
- * 
+ *
  * @category Client
  */
 export class AgvClient extends Client {
 
     /**
      * Creates an instance of `AgvClient`.
-     * 
+     *
      * @param agvId the identity of the AGV this client represents
      * @param options configuration options for the client
      */
@@ -68,25 +68,26 @@ export class AgvClient extends Client {
      * handler function to be invoked when matching inbound publication messages
      * are received by this client.
      *
-     * @remarks If multiple subscription handlers are registered for a given
+     * @remarks
+     * If multiple subscription handlers are registered for a given
      * subscription, they are invoked synchronously in series, one after the
      * other, but in arbitrary order.
      *
-     * @remarks A subscription handler should never perform long-lasting
-     * synchronous operations as it blocks processing of other handlers and
-     * incoming messages.
+     * A subscription handler should never perform long-lasting synchronous
+     * operations as it blocks processing of other handlers and incoming
+     * messages.
      *
-     * @remarks A subscription handler may also perform asynchronous operations
-     * but these are are not awaited and not synchronized with the invocation of
-     * other handlers.
+     * A subscription handler may also perform asynchronous operations but these
+     * are are not awaited and not synchronized with the invocation of other
+     * handlers.
      *
-     * @remarks A subscription handler is responsible for catching any errors.
-     * Uncaught errors result in "Uncaught Error" or "Unhandled Promise
-     * Rejection" reported by the runtime.
+     * A subscription handler is responsible for catching any errors. Uncaught
+     * errors result in "Uncaught Error" or "Unhandled Promise Rejection"
+     * reported by the runtime.
      *
-     * @remarks Take care to invoke `Client.unsubscribe` method on any
-     * subscription ID that is no longer needed by the application to clean up
-     * the subscription's handler function and to reduce network traffic.
+     * Take care to invoke `Client.unsubscribe` method on any subscription ID
+     * that is no longer needed by the application to clean up the
+     * subscription's handler function and to reduce network traffic.
      * Unsubscribing in a handler function is also possible; use the
      * corresponding subscription id passed as argument. If you want to keep a
      * subscription for the lifetime of the client, there is no need to

@@ -301,12 +301,13 @@ export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
      *
      * If not specified, value defaults to 2 m/s.
      *
-     * @remarks A virtual AGV is assumed to have the same forward and cornering
-     * speed, as well as infinite acceleration and deceleration. If the
-     * specified speed is greater than the maximum speed on a order's edge the
-     * speed is adjusted accordingly.
+     * @remarks
+     * A virtual AGV is assumed to have the same forward and cornering speed, as
+     * well as infinite acceleration and deceleration. If the specified speed is
+     * greater than the maximum speed on a order's edge the speed is adjusted
+     * accordingly.
      *
-     * @remarks The options `vehicleSpeed`, `vehicleSpeedDistribution`, and
+     * The options `vehicleSpeed`, `vehicleSpeedDistribution`, and
      * `vehicleTimeDistribution` are mutually exclusive. Specify at most one of
      * them. If none is specified, the default value of the option
      * `vehicleSpeed` is applied.
@@ -356,12 +357,12 @@ export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
     /**
      * Maximum reach in meter of an AGV with a fully charged battery (optional).
      *
+     * If not specified, value defaults to 28800 meter (i.e. 4 hours travel time
+     * at a speed of 2m/s).
+     *
      * @remarks This option doesn't take the actual speed of the AGV into
      * account. To keep it simple it is just a rough approximation of the real
      * physics.
-     *
-     * If not specified, value defaults to 28800 meter (i.e. 4 hours travel time
-     * at a speed of 2m/s).
      */
     batteryMaxReach?: number;
 
@@ -385,10 +386,10 @@ export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
      * and reports a corresponding error state with error type
      * `"batteryLowError"` and error level FATAL.
      *
+     * If not specified, value defaults to 1 percent.
+     *
      * @remarks While charging `"batteryLowError"` is removed from state again
      * as soon as charge advances 10% above this threshold.
-     *
-     * If not specified, value defaults to 1 percent.
      */
     lowBatteryChargeThreshold?: number;
 
@@ -437,43 +438,43 @@ export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
  * stay running for 5 seconds. Note that pick and drop actions stay in status
  * INITIALIZING for 1 additional second.
  *
- * @remarks To be executable by the virtual AGV an order must specify
- * `nodePosition` for all nodes except for the first one as VDA 5050 requires
- * the vehicle to be already positioned on the first node (within a given
- * deviation range). The property `nodeId` alone is not usable as a symbolic
- * position.
+ * @remarks
+ * To be executable by the virtual AGV an order must specify `nodePosition` for
+ * all nodes except for the first one as VDA 5050 requires the vehicle to be
+ * already positioned on the first node (within a given deviation range). The
+ * property `nodeId` alone is not usable as a symbolic position.
  *
- * @remarks On initialization, the virtual AGV is positioned at `{ x: 0, y: 0,
- * theta: 0}` relative to a map with mapId `local`. You can override or reset
- * this pose using the instant or node action `initPosition`, specifying `x`,
- * `y`, `theta`, `mapId`, `lastNodeId`, and `lastNodeSequenceId` (optional,
- * defaults to
+ * On initialization, the virtual AGV is positioned at `{ x: 0, y: 0, theta: 0}`
+ * relative to a map with mapId `local`. You can override or reset this pose
+ * using the instant or node action `initPosition`, specifying `x`, `y`,
+ * `theta`, `mapId`, `lastNodeId`, and `lastNodeSequenceId` (optional, defaults
+ * to
  * 0) as action parameters.
  *
- * @remarks The virtual AGV provides a constant safety state where no e-stop is
- * activated and where the protective field is never violated. The operating
- * mode of the virtual AGV is always automatic, i.e. it is fully controlled by
- * master control.
+ * The virtual AGV provides a constant safety state where no e-stop is activated
+ * and where the protective field is never violated. The operating mode of the
+ * virtual AGV is always automatic, i.e. it is fully controlled by master
+ * control.
  *
- * @remarks The virtual AGV can only pick and carry one load at a time. Before
- * picking another load the current load must have been dropped.
+ * The virtual AGV can only pick and carry one load at a time. Before picking
+ * another load the current load must have been dropped.
  *
- * @remarks A charging action is executed on a charging spot while the vehicle
- * is standing, either as an instant action or as a node action. Charging mode
- * is either terminated explicitely by action stopCharging or automatically when
+ * A charging action is executed on a charging spot while the vehicle is
+ * standing, either as an instant action or as a node action. Charging mode is
+ * either terminated explicitely by action stopCharging or automatically when
  * the battery is fully charged.
  *
- * @remarks The AGV's remaining battery reach is reported in the
- * `State.batteryState` property unless the vehicle time distribution mode is
- * active according to the option `vehicleTimeDistribution`. When the AGV's
- * battery runs low according to the option `lowBatteryChargeThreshold` it stops
- * driving and reports an error of type `"batteryLowError"`. The master control
- * must then initiate further actions, e.g. cancel any active order or start
- * charging. The battery low error is removed from State as soon as battery
- * charge advances 10% above the configured threshold.
+ * The AGV's remaining battery reach is reported in the `State.batteryState`
+ * property unless the vehicle time distribution mode is active according to the
+ * option `vehicleTimeDistribution`. When the AGV's battery runs low according
+ * to the option `lowBatteryChargeThreshold` it stops driving and reports an
+ * error of type `"batteryLowError"`. The master control must then initiate
+ * further actions, e.g. cancel any active order or start charging. The battery
+ * low error is removed from State as soon as battery charge advances 10% above
+ * the configured threshold.
  *
- * @remarks The custom action `orderExecutionTime` expects an action parameter
- * key `orders` with an array of VDA 5050 headerless Order objects as parameter
+ * The custom action `orderExecutionTime` expects an action parameter key
+ * `orders` with an array of VDA 5050 headerless Order objects as parameter
  * value. The action finishes immediately reporting the estimated order
  * execution times in seconds as values in a comma-separated string format via
  * the `resultDescription` of the corresponding action state. The calculated
@@ -482,9 +483,9 @@ export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
  * well as the travel time on the order's edges, including both base and horizon
  * nodes and edges.
  *
- * @remarks To support benchmarking and performance measurement based on
- * statistics the virtual AGV also supports probabilistic distribution of
- * driving speed or driving time by corresponding adapter options.
+ * To support benchmarking and performance measurement based on statistics the
+ * virtual AGV also supports probabilistic distribution of driving speed or
+ * driving time by corresponding adapter options.
  *
  * @category AGV Adapter
  */

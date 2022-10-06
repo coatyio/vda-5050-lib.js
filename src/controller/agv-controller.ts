@@ -176,11 +176,11 @@ export interface ActionContext {
      * passing in an updated action status together with the result description,
      * error description, and linked partial state (if applicable).
      *
-     * @remarks This parameter is not defined for the `isActionExecutable`
-     * handler.
+     * @remarks
+     * This parameter is not defined for the `isActionExecutable` handler.
      *
-     * @remarks When the action transitions into status FAILED an additional
-     * error state can be reported by specifying an error description.
+     * When the action transitions into status FAILED an additional error state
+     * can be reported by specifying an error description.
      *
      * @param status new action status with optional result description, error
      * description, and linked state
@@ -397,14 +397,15 @@ export interface AgvAdapter {
      * If the action can be executed, the handler should return an empty array
      * or `undefined`.
      *
-     * @remarks You should not include the `actionId` and the `actionType` as
-     * error references as these are added automatically by the controller. If
-     * the error was caused by erroneous action parameters, include a list of
+     * @remarks
+     * You should not include the `actionId` and the `actionType` as error
+     * references as these are added automatically by the controller. If the
+     * error was caused by erroneous action parameters, include a list of
      * parameters in the reference.
      *
-     * @remarks If an instant action is not executable in principle it will be
-     * rejected with an error by the AGV controller. If a node or edge action is
-     * not executable in principle, the order will be rejected by the AGV
+     * If an instant action is not executable in principle it will be rejected
+     * with an error by the AGV controller. If a node or edge action is not
+     * executable in principle, the order will be rejected by the AGV
      * controller. In the latter case all order node and edge actions are
      * checked for executability _before_ the order is carried out.
      *
@@ -429,27 +430,28 @@ export interface AgvAdapter {
      * `controller.updateDrivingState` before executing the action; otherwise
      * the current driving state must be kept.
      *
-     * @remarks For a node or edge action, the initial action status WAITING is
-     * already preset on the controller's current state. For an instant action,
-     * no action status is preset on the current state. In both cases, the
-     * action handler must initially transition to the action's initial state,
-     * either INITIALIZING or RUNNING (or PAUSED if pause mode is activated),
-     * FINISHED, or FAILED.
+     * @remarks
+     * For a node or edge action, the initial action status WAITING is already
+     * preset on the controller's current state. For an instant action, no
+     * action status is preset on the current state. In both cases, the action
+     * handler must initially transition to the action's initial state, either
+     * INITIALIZING or RUNNING (or PAUSED if pause mode is activated), FINISHED,
+     * or FAILED.
      *
-     * @remarks If pause mode is active, the action to be executed should
-     * transition to PAUSED state (immediately or after initializing/running, if
-     * needed). If pause mode is deactivated, the action should transition to
-     * the previous status again.
+     * If pause mode is active, the action to be executed should transition to
+     * PAUSED state (immediately or after initializing/running, if needed). If
+     * pause mode is deactivated, the action should transition to the previous
+     * status again.
      *
-     * @remarks For instant actions 'startPause' and 'stopPause' this handler
-     * must pause/resume all other actions, and update their action status and
-     * linked state `paused` accordingly. Node processing of an active order is
+     * For instant actions 'startPause' and 'stopPause' this handler must
+     * pause/resume all other actions, and update their action status and linked
+     * state `paused` accordingly. Node processing of an active order is
      * suspended and resumed automatically by the AGV controller. Edge traversal
      * must be suspended and resumed by the AGV adapter.
      *
-     * @remarks Note that the instant actions 'stateRequest' and 'cancelOrder'
-     * are never dispatched to this handler as they are handled by the AGV
-     * controller itself.
+     * Note that the instant actions 'stateRequest' and 'cancelOrder' are never
+     * dispatched to this handler as they are handled by the AGV controller
+     * itself.
      *
      * @param context context information of a node, edge, or instant action to
      * be executed
@@ -553,17 +555,18 @@ export interface AgvAdapter {
      * `context.edgeTraversed` must be invoked. Until this callback has been
      * called it is guaranteed that no other invocation of this handler occurs.
      *
-     * @remarks While traversing an edge the AGV adapter must handle activation
-     * and deactivation of pause mode (triggered either by instant actions
+     * @remarks
+     * While traversing an edge the AGV adapter must handle activation and
+     * deactivation of pause mode (triggered either by instant actions
      * 'startPause/stopPause' or by a hardware button) that affects driving
      * state and update it accordingly.
      *
-     * @remarks This handler must take edge and end node orientation changes
-     * into account if supported by the AGV. If an edge orientation is required
-     * and rotation is disallowed on the edge, rotate the vehicle before
-     * entering the edge, otherwise rotate the vehicle on the edge to the
-     * desired ortientation. Upon traversal and if required, the vehicle must
-     * be rotated on the end node according to node's theta angle.
+     * This handler must take edge and end node orientation changes into account
+     * if supported by the AGV. If an edge orientation is required and rotation
+     * is disallowed on the edge, rotate the vehicle before entering the edge,
+     * otherwise rotate the vehicle on the edge to the desired ortientation.
+     * Upon traversal and if required, the vehicle must be rotated on the end
+     * node according to node's theta angle.
      *
      * @param context context information of an edge traversal
      */
@@ -729,8 +732,9 @@ export interface AgvControllerOptions {
  * points by protected methods through which behavior can be customized if
  * needed.
  *
- * @remarks Regarding errors reported in state messages, the following
- * conventions are used (see enum `ErrorTypes`):
+ * @remarks
+ * Regarding errors reported in state messages, the following conventions are
+ * used (see enum `ErrorTypes`):
  * - Order related errors always include the errorReferences "headerId:
  *   order.headerid", "topic: order", "orderId" (and "orderUpdateId" if
  *   applicable) and specify an errorType of "orderError", "orderUpdateError",
@@ -743,15 +747,15 @@ export interface AgvControllerOptions {
  *   instantAction" and either an action-specify errorType such as
  *   "noOrderToCancel" or the generic errorType "instantActionError".
  *
- * @remarks The AGV controller always overrides the value of the client option
+ * The AGV controller always overrides the value of the client option
  * `topicObjectValidation.inbound` to `false` so that it can respond with an
  * error state to invalid incoming messages. This means that subclasses of
  * `AgvController` must also validate extension topics explicitely using method
  * `validateTopicObject`.
  *
- * @remarks If the AGV controller receives a topic with an invalid object
- * payload, it reports an error state with `errorType: "validationError"`
- * containing the error reference key `topic` (value is `"order"` for orders,
+ * If the AGV controller receives a topic with an invalid object payload, it
+ * reports an error state with `errorType: "validationError"` containing the
+ * error reference key `topic` (value is `"order"` for orders,
  * `"instantActions"` for instant actions, etc.). If a property `headerId` is
  * present on the received object, it is also included in the error references.
  * Additionally, if present for an order validation error, `"orderId"` is added
@@ -771,11 +775,11 @@ export class AgvController extends AgvClient {
      * The currently active order (update), the latest completed order, or
      * undefined if no order has been received yet.
      *
-     * @remarks Use `hasActiveOrder` to determine whether any current order is
-     * active.
+     * @remarks
+     * Use `hasActiveOrder` to determine whether any current order is active.
      *
-     * @remarks Use `hasCancelingOrder` to determine whether any current order
-     * is being canceled.
+     * Use `hasCancelingOrder` to determine whether any current order is being
+     * canceled.
      */
     protected currentOrder: Order;
 
@@ -861,13 +865,14 @@ export class AgvController extends AgvClient {
     /**
      * Gets current state of AGV controller as an immutable object.
      *
-     * @remarks The returned state object is immutable, i.e. it is guaranteed to
-     * not be changed by this controller. To modify the state maintained by this
+     * @remarks
+     * The returned state object is immutable, i.e. it is guaranteed to not be
+     * changed by this controller. To modify the state maintained by this
      * controller, adapters and subclasses must invoke one of the provided state
      * update functions.
      *
-     * @remarks The returned state object always includes a timestamp property
-     * that corresponds to its latest update time.
+     * The returned state object always includes a timestamp property that
+     * corresponds to its latest update time.
      *
      * @returns the current state as an immutable object with latest update
      * timestamp
@@ -1040,15 +1045,15 @@ export class AgvController extends AgvClient {
      * To be invoked by the AGV adapter whenever a new partial state is
      * available.
      *
-     * @remarks This function should only be used in case none of the other more
-     * specific state update functions is applicable; e.g. to update an optional
-     * state property such as `loads`, `distanceSinceLastNode`, `information`,
-     * etc.
+     * @remarks
+     * This function should only be used in case none of the other more specific
+     * state update functions is applicable; e.g. to update an optional state
+     * property such as `loads`, `distanceSinceLastNode`, `information`, etc.
      *
-     * @remarks If the optional parameter `reportImmediately` is passed as
-     * `true`, a new State message is published immediately after updating the
-     * state; otherwise the message is published on the next periodic or
-     * immediate state update.
+     * If the optional parameter `reportImmediately` is passed as `true`, a new
+     * State message is published immediately after updating the state;
+     * otherwise the message is published on the next periodic or immediate
+     * state update.
      *
      * @param newState new partial state
      * @param reportImmediately whether to publish a State message immediately
