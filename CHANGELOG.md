@@ -1,5 +1,15 @@
 # Changelog
 
+
+
+## [1.2.2](https://github.com/coatyio/vda-5050-lib.js/compare/v1.2.1...v1.2.2) (2022-10-06)
+
+This patch release improves the charging logic of the Virtual AGV Adapter.
+
+### Bug Fixes
+
+* **adapter:** improve charging logic of VirtualAgvAdapter ([7ccb017](https://github.com/coatyio/vda-5050-lib.js/commit/7ccb0179922a2a62405ac41f77e60e59a6c69b1b))
+
 ## [1.2.1](https://github.com/coatyio/vda-5050-lib.js/compare/v1.2.0...v1.2.1) (2022-08-19)
 
 This patch release fixes an issue with erroneous edge traversal
