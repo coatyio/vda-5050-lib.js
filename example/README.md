@@ -3,6 +3,7 @@
 ## Table of Contents
 
 * [Introduction](#introduction)
+* [Configuration file format](#configuration-file-format)
 * [Run tests natively](#run-tests-natively)
 * [Run tests against a virtual AGV](#run-tests-against-a-virtual-agv)
 * [License](#license)
