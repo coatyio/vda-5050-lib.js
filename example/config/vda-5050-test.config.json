@@ -1,0 +1,130 @@
+{
+    "testOptions": {
+        "breakOnError": false,
+        "logConfig": false,
+        "logEvents": true,
+        "logConnectionState": true,
+        "logState": false,
+        "logVisualization": false,
+        "logMqtt": false,
+        "runVirtualAgv": false
+    },
+    "communicationOptions": {
+        "interfaceName": "simove",
+        "transport": {
+            "brokerUrl": "mqtt://mybroker.siemens.net:1883",
+            "topicFormat": "%interfaceName%/%majorVersion%/%manufacturer%/%serialNumber%/%topic%"
+        }
+    },
+    "agv": {
+        "manufacturer": "RobotCompany",
+        "serialNumber": "001"
+    },
+    "topics": [
+        {
+            "instantActions": [
+                {
+                    "actionType": "initPosition",
+                    "actionId": "IA-001",
+                    "blockingType": "HARD",
+                    "actionParameters": [
+                        {
+                            "key": "x",
+                            "value": 0
+                        },
+                        {
+                            "key": "y",
+                            "value": 0
+                        },
+                        {
+                            "key": "theta",
+                            "value": 0
+                        },
+                        {
+                            "key": "mapId",
+                            "value": "local"
+                        },
+                        {
+                            "key": "lastNodeId",
+                            "value": "n1"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "orderId": "O-001",
+            "orderUpdateId": 0,
+            "nodes": [
+                {
+                    "nodeId": "n1",
+                    "sequenceId": 0,
+                    "released": true,
+                    "actions": []
+                },
+                {
+                    "nodeId": "n2",
+                    "sequenceId": 2,
+                    "released": true,
+                    "actions": [
+                        {
+                            "actionId": "A-n2-001",
+                            "actionType": "pick",
+                            "blockingType": "HARD",
+                            "actionParameters": [
+                                {
+                                    "key": "stationType",
+                                    "value": "floor"
+                                },
+                                {
+                                    "key": "loadType",
+                                    "value": "EPAL"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "nodeId": "n3",
+                    "sequenceId": 4,
+                    "released": true,
+                    "actions": [
+                        {
+                            "actionId": "A-n3-001",
+                            "actionType": "drop",
+                            "blockingType": "HARD",
+                            "actionParameters": [
+                                {
+                                    "key": "stationType",
+                                    "value": "floor"
+                                },
+                                {
+                                    "key": "loadType",
+                                    "value": "EPAL"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "edges": [
+                {
+                    "edgeId": "e12",
+                    "sequenceId": 1,
+                    "startNodeId": "n1",
+                    "endNodeId": "n2",
+                    "released": true,
+                    "actions": []
+                },
+                {
+                    "edgeId": "e23",
+                    "sequenceId": 3,
+                    "startNodeId": "n2",
+                    "endNodeId": "n3",
+                    "released": true,
+                    "actions": []
+                }
+            ]
+        }
+    ]
+}

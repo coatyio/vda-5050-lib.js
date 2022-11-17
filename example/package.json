@@ -1,0 +1,53 @@
+{
+    "name": "vda-5050-test",
+    "version": "1.0.0",
+    "description": "E2E Testing of VDA 5050",
+    "readme": "README.md",
+    "scripts": {
+        "build": "gulp build",
+        "start": "node -r dotenv/config dist/vda-5050-test.js",
+        "start:virtual": "cross-env VDA_5050_TEST_CONFIG=./config/vda-5050-test-virtual.config.json node -r dotenv/config dist/vda-5050-test.js",
+        "broker": "vda-5050 -q broker",
+        "broker:verbose": "vda-5050 -q broker --verbose"
+    },
+    "keywords": [
+        "test",
+        "end-to-end",
+        "testing",
+        "VDA",
+        "VDA 5050",
+        "Node.js",
+        "javascript",
+        "typescript"
+    ],
+    "author": "Siemens AG",
+    "maintainers": [
+        {
+            "name": "Hubertus Hohl",
+            "email": "hubertus.hohl@siemens.com"
+        }
+    ],
+    "private": true,
+    "dependencies": {
+        "debug": "^4.3.4",
+        "dotenv": "^16.0.3",
+        "fs-extra": "^10.1.0",
+        "supports-color": "^9.2.3",
+        "vda-5050-cli": "^2.0.13",
+        "vda-5050-lib": "^1.2.2"
+    },
+    "devDependencies": {
+        "@types/debug": "^4.1.7",
+        "@types/fs-extra": "^9.0.13",
+        "@types/node": "^18.11.9",
+        "cross-env": "^7.0.3",
+        "gulp": "^4.0.2",
+        "gulp-tslint": "^8.1.4",
+        "gulp-typescript": "^5.0.1",
+        "tslint": "^5.20.1",
+        "typescript": "^4.9.3"
+    },
+    "engines": {
+        "node": ">=14.20.0"
+    }
+}

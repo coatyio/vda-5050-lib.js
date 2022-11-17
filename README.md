@@ -34,6 +34,11 @@ documentation](https://coatyio.github.io/vda-5050-lib.js/api/index.html) and an
 deck](https://coatyio.github.io/vda-5050-lib.js/slides/vda-5050-typescript-javascript-library.pdf)
 of the library in the context of the VDA 5050 specification.
 
+In addition, this project includes an
+[example](https://github.com/coatyio/vda-5050-lib.js/tree/master/example) that
+demonstrates best practices and typical usage patterns of the library on the
+master control side.
+
 > This library is accompanied by a [command line
 > interface](https://www.npmjs.com/package/vda-5050-cli) with tools useful for
 > developing VDA 5050 applications. It features an MQTT broker for development
