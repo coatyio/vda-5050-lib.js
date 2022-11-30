@@ -43,7 +43,7 @@ import {
 export interface VirtualAgvState {
     isDriving: boolean;
     isPaused: boolean;
-    position: AgvPosition;
+    position: AgvPosition & { lastNodeId: string };
     velocity: Velocity;
     batteryState: BatteryState;
     safetyState: SafetyStatus;
@@ -273,9 +273,9 @@ export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
      * range [-Pi ... Pi].
      *
      * If not specified, the position defaults to `{ mapId: "local", x: 0, y: 0,
-     * theta: 0 }`.
+     * theta: 0, lastNodeId: "0" }`.
      */
-    initialPosition?: { mapId: string, x: number, y: number, theta: number };
+    initialPosition?: { mapId: string, x: number, y: number, theta: number, lastNodeId: string };
 
     /**
      * Specifies the AGV's normal deviation x/y tolerance (in meter) if no
@@ -444,12 +444,14 @@ export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
  * already positioned on the first node (within a given deviation range). The
  * property `nodeId` alone is not usable as a symbolic position.
  *
- * On initialization, the virtual AGV is positioned at `{ x: 0, y: 0, theta: 0}`
- * relative to a map with mapId `local`. You can override or reset this pose
- * using the instant or node action `initPosition`, specifying `x`, `y`,
- * `theta`, `mapId`, `lastNodeId`, and `lastNodeSequenceId` (optional, defaults
- * to
- * 0) as action parameters.
+ * By default, when the virtual AGV is started, it is positioned at `{ x: 0, y:
+ * 0, theta: 0, lastNodeId: "0" }` relative to a map with mapId `local`. You can
+ * override this pose by supplying the option
+ * `VirtualAgvAdapterOptions.initialPosition` when instantiating the virtual
+ * AGV. In addition, you can override or reset this pose using the instant or
+ * node action `initPosition`, specifying `x`, `y`, `theta`, `mapId`,
+ * `lastNodeId`, and `lastNodeSequenceId` (optional, defaults to zero) as action
+ * parameters.
  *
  * The virtual AGV provides a constant safety state where no e-stop is activated
  * and where the protective field is never violated. The operating mode of the
@@ -538,7 +540,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
             this._vehicleState = {
                 isDriving: false,
                 isPaused: false,
-                position: { positionInitialized: true, ...this.options.initialPosition },
+                position: { positionInitialized: true, lastNodeId: "0", ...this.options.initialPosition },
                 velocity: { omega: 0, vx: 0, vy: 0 },
                 batteryState: {
                     batteryCharge: this.options.initialBatteryCharge,
@@ -562,8 +564,10 @@ export class VirtualAgvAdapter implements AgvAdapter {
             this._onTick(++this._tick, tickInterval * this.options.timeLapse, realInterval * this.options.timeLapse / 1000);
         }, tickInterval);
 
+        const { lastNodeId, ...position } = this._vehicleState.position;
         context.attached({
-            agvPosition: this._vehicleState.position,
+            agvPosition: position,
+            lastNodeId,
             velocity: this._vehicleState.velocity,
             batteryState: this._vehicleState.batteryState,
             driving: this._vehicleState.isDriving,
@@ -1120,7 +1124,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
 
     private _optionsWithDefaults(options: VirtualAgvAdapterOptions): Required<VirtualAgvAdapterOptions> {
         const optionalDefaults: Required<Optional<VirtualAgvAdapterOptions>> = {
-            initialPosition: { mapId: "local", x: 0, y: 0, theta: 0 },
+            initialPosition: { mapId: "local", x: 0, y: 0, theta: 0, lastNodeId: "0" },
             agvNormalDeviationXyTolerance: 0.5,
             agvNormalDeviationThetaTolerance: 0.349066,
             vehicleSpeed: 2,
@@ -1188,7 +1192,8 @@ export class VirtualAgvAdapter implements AgvAdapter {
                 this._vehicleState.position.y = endNodePosition.y;
                 this._vehicleState.position.theta = endNodePosition.theta ?? this._vehicleState.position.theta;
                 this.updateBatteryState(tx, ty);
-                this.controller.updateAgvPositionVelocity(this._vehicleState.position);
+                const { lastNodeId: _, ...position } = this._vehicleState.position;
+                this.controller.updateAgvPositionVelocity(position);
                 this.stopDriving(true);
                 this._traverseContext = undefined;
                 traverseContext.edgeTraversed();
@@ -1198,7 +1203,8 @@ export class VirtualAgvAdapter implements AgvAdapter {
                 this._vehicleState.position.y += dy;
                 this._vehicleState.position.theta = traverseContext.edge.orientation ?? alpha;
                 this.updateBatteryState(dx, dy);
-                this.controller.updateAgvPositionVelocity(this._vehicleState.position);
+                const { lastNodeId: _, ...position } = this._vehicleState.position;
+                this.controller.updateAgvPositionVelocity(position);
 
                 if (isBatteryLow) {
                     this.debug("low battery charge %d", this._vehicleState.batteryState.batteryCharge);
@@ -1287,14 +1293,14 @@ export class VirtualAgvAdapter implements AgvAdapter {
         this._vehicleState.position.y = action.actionParameters.find(p => p.key === "y").value as number;
         this._vehicleState.position.theta = action.actionParameters.find(p => p.key === "theta").value as number;
         this._vehicleState.position.mapId = action.actionParameters.find(p => p.key === "mapId").value as string;
-        const lastNodeId = action.actionParameters.find(p => p.key === "lastNodeId").value as string;
+        this._vehicleState.position.lastNodeId = action.actionParameters.find(p => p.key === "lastNodeId").value as string;
         const lastNodeSequenceId = action.actionParameters.find(p => p.key === "lastNodeSequenceId")?.value as number;
+        const { lastNodeId, ...position } = this._vehicleState.position;
 
-        this.debug("init position %o with lastNodeId %s and lastNodeSequenceId %d",
-            this._vehicleState.position, lastNodeId, lastNodeSequenceId);
+        this.debug("init position %o with lastNodeId %s and lastNodeSequenceId %d", position, lastNodeId, lastNodeSequenceId);
 
         return {
-            agvPosition: this._vehicleState.position,
+            agvPosition: position,
             lastNodeId,
             lastNodeSequenceId: lastNodeSequenceId ?? 0,
         };
