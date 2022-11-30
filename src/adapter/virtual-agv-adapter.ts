@@ -686,13 +686,16 @@ export class VirtualAgvAdapter implements AgvAdapter {
                     { referenceKey: "nodeId", referenceValue: node.nodeId },
                     { referenceKey: "nodePosition", referenceValue: "undefined" });
                 break;
-            } else if (node.nodePosition && node.nodePosition.mapId !== this._vehicleState.position.mapId) {
-                errorRefs.push(
-                    { referenceKey: AgvController.REF_KEY_ERROR_DESCRIPTION_DETAIL, referenceValue: "incorrect mapId" },
-                    { referenceKey: "nodeId", referenceValue: node.nodeId },
-                    { referenceKey: "nodePosition.mapId", referenceValue: this._vehicleState.position.mapId });
-                break;
             }
+            // mapId is allowed to change by an order node's initPosition action (e.g. elevator use case)
+            //
+            // else if (node.nodePosition && node.nodePosition.mapId !== this._vehicleState.position.mapId) {
+            //     errorRefs.push(
+            //         { referenceKey: AgvController.REF_KEY_ERROR_DESCRIPTION_DETAIL, referenceValue: "incorrect mapId" },
+            //         { referenceKey: "nodeId", referenceValue: node.nodeId },
+            //         { referenceKey: "nodePosition.mapId", referenceValue: this._vehicleState.position.mapId });
+            //     break;
+            // }
         }
 
         return errorRefs;
