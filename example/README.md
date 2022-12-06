@@ -11,9 +11,10 @@
 ## Introduction
 
 This project provides an example application for testing the [VDA
-5050](https://www.vda.de/dam/VDA5050_EN_V1.1.pdf) specification _"Interface for
-the communication between automated guided vehicles (AGV) and a master control"_
-version 1.1 against a given VDA 5050 implementation on the vehicle plane.
+5050](https://github.com/VDA5050/VDA5050) specification _"Interface for the
+communication between automated guided vehicles (AGV) and a master control"_
+[version 1.1](https://github.com/VDA5050/VDA5050/blob/1.1.0/VDA5050_EN_V1.md)
+against a given VDA 5050 implementation on the vehicle plane.
 
 The example application uses the [universal VDA-5050 JavaScript/TypeScript
 library](https://github.com/coatyio/vda-5050-lib.js) to implement the master
