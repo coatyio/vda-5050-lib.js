@@ -2,6 +2,23 @@
 
 
 
+# [1.3.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.2.2...v1.3.0) (2022-12-07)
+
+This feature release targets the VirtualAgvAdapter only. It supports
+initializing State.lastNodeId by the adapter option 'initialPosition'.
+In addition, a virtual AGV now supports changing mapId within an order.
+
+### Bug Fixes
+
+* **adapter:** support change of mapId in order nodes by VirtualAgvAdapter ([a9e46e7](https://github.com/coatyio/vda-5050-lib.js/commit/a9e46e76b3b5220c6742cb49019cb47bb5e7cd12))
+
+
+### Features
+
+* **adapter:** support initializing 'lastNodeId' by option 'initialPosition' of VirtualAgvAdapterOptions ([ef386ab](https://github.com/coatyio/vda-5050-lib.js/commit/ef386abf6a02de3e89f57e7dffeeaa81de6d3034))
+
+
+
 ## [1.2.2](https://github.com/coatyio/vda-5050-lib.js/compare/v1.2.1...v1.2.2) (2022-10-06)
 
 This patch release improves the charging logic of the Virtual AGV Adapter.
