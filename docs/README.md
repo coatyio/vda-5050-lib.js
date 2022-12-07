@@ -32,7 +32,7 @@ proposing a change):
 ## Upgrade gem dependencies
 
 To upgrade a gem dependency to a newer version (e.g. because of a security
-alert), add new gem version to `Gemfile` (e.g. `gem "nokogiri", ">= 1.10.8"`)
+alert), add new gem version to `Gemfile` (e.g. `gem "nokogiri", ">= 1.13.9"`)
 and run `bundle update` on the dependency (e.g. `bundle update nokogiri`).
 
 To update all gem dependencies, run `bundle update`.
