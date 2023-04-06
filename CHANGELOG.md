@@ -2,6 +2,16 @@
 
 
 
+## [1.3.1](https://github.com/coatyio/vda-5050-lib.js/compare/v1.3.0...v1.3.1) (2023-04-06)
+
+This patch release fixes issue #29 concerning AgvController.
+
+### Bug Fixes
+
+* **agv-controller:** ensure updateErrors with mode "remove" keeps all errors except the one to be removed (fixes [#29](https://github.com/coatyio/vda-5050-lib.js/issues/29)) ([f07e9d5](https://github.com/coatyio/vda-5050-lib.js/commit/f07e9d5a746382fa19fdd722a672b7c7ec726c13))
+
+
+
 # [1.3.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.2.2...v1.3.0) (2022-12-07)
 
 This feature release targets the VirtualAgvAdapter only. It supports
