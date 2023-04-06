@@ -1031,7 +1031,8 @@ export class AgvController extends AgvClient {
             if (mode === "add") {
                 return;
             }
-            newErrors = [...this._currentState.errors].splice(index, 1);
+            newErrors = [...this._currentState.errors];
+            newErrors.splice(index, 1);
         } else {
             if (mode === "remove") {
                 return;
