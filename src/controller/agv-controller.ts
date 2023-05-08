@@ -809,6 +809,12 @@ export class AgvController extends AgvClient {
         adapterOptions: AgvAdapterOptions) {
         super(agvId, {
             ...clientOptions,
+
+            // Inbound topic objects must not be validated by client (and
+            // dropped if invalid) as they are validated later when processing
+            // Order and InstantAction topics, responding with corresponding VDA
+            // 5050 error objects in State object (see _processOrder,
+            // _processInstantActions).
             topicObjectValidation: { inbound: false, outbound: clientOptions.topicObjectValidation?.outbound },
         });
         this._controllerOptions = this._controllerOptionsWithDefaults(controllerOptions);
