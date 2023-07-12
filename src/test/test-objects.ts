@@ -46,7 +46,7 @@ export function createHeaderlessObject<T extends string>(topic: T extends Topic 
             } as Headerless<Connection> as any;
         case Topic.InstantActions:
             return {
-                instantActions: [],
+                actions: [],
             } as Headerless<InstantActions> as any;
         case Topic.Order:
             return {

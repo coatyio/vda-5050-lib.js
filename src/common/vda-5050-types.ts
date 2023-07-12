@@ -114,7 +114,7 @@ export interface InstantActions {
      * Array of actions that need to be performed immediately and are not part of the regular
      * order.
      */
-    instantActions: Action[];
+    actions: Action[];
 }
 
 /**

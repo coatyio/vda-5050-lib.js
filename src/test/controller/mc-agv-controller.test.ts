@@ -423,7 +423,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await t.test("instant action invalid - not well-formed", ts => new Promise(async resolve => {
         let errorInvocations = 0;
         const actions = await mcControllerWithoutValidation.initiateInstantActions(agvId3, {
-            instantActions: [{
+            actions: [{
                 actionId: createUuid(),
                 actionType: 42,
                 blockingType: BlockingType.Hard,
@@ -436,7 +436,7 @@ tap.test("Master Controller - AGV Controller", async t => {
             onActionError: (error, action) => {
                 errorInvocations++;
                 ts.equal(errorInvocations, 1);
-                ts.strictSame(action, actions.instantActions[0]);
+                ts.strictSame(action, actions.actions[0]);
                 ts.equal(error.errorLevel, ErrorLevel.Warning);
                 ts.equal(error.errorType, ErrorType.InstantActionValidation);
                 ts.ok(!error.errorReferences.some(r => r.referenceKey === "topic") ||
@@ -449,7 +449,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await t.test("instant action cancelOrder rejected with error", ts => new Promise(async resolve => {
         let errorInvocations = 0;
         const actions = await mcController.initiateInstantActions(agvId1, {
-            instantActions: [{
+            actions: [{
                 actionId: createUuid(),
                 actionType: "cancelOrder",
                 blockingType: BlockingType.Hard,
@@ -462,7 +462,7 @@ tap.test("Master Controller - AGV Controller", async t => {
             onActionError: (error, action) => {
                 errorInvocations++;
                 ts.equal(errorInvocations, 1);
-                ts.strictSame(action, actions.instantActions[0]);
+                ts.strictSame(action, actions.actions[0]);
                 ts.equal(error.errorLevel, ErrorLevel.Warning);
                 ts.equal(error.errorType, ErrorType.InstantActionNoOrderToCancel);
                 ts.ok(!error.errorReferences.some(r => r.referenceKey === "topic") ||
@@ -478,7 +478,7 @@ tap.test("Master Controller - AGV Controller", async t => {
 
         let errorInvocations = 0;
         const actions = await mcController.initiateInstantActions(agvId1, {
-            instantActions: [createPickDropNoopAction("pick")],
+            actions: [createPickDropNoopAction("pick")],
         }, {
             onActionStateChanged: () => {
                 ts.fail("onActionStateChanged should never be called");
@@ -487,7 +487,7 @@ tap.test("Master Controller - AGV Controller", async t => {
             onActionError: (error, action) => {
                 errorInvocations++;
                 ts.equal(errorInvocations, 1);
-                ts.strictSame(action, actions.instantActions[0]);
+                ts.strictSame(action, actions.actions[0]);
                 ts.equal(error.errorLevel, ErrorLevel.Warning);
                 ts.equal(error.errorType, ErrorType.InstantAction);
                 ts.ok(!error.errorReferences.some(r => r.referenceKey === "topic") ||
@@ -502,7 +502,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await t.test("instant action initPosition twice in series as hard blocking action", ts => new Promise(async resolve => {
         let actionStateInvocations = 0;
         const actions = await mcController.initiateInstantActions(agvId1, {
-            instantActions: [{
+            actions: [{
                 actionId: createUuid(),
                 actionDescription: "initialize position to x:10 y:10 on floor2 map",
                 actionType: "initPosition",
@@ -534,21 +534,21 @@ tap.test("Master Controller - AGV Controller", async t => {
                 actionStateInvocations++;
                 ts.ok(actionStateInvocations === 1 || actionStateInvocations === 2);
                 if (actionStateInvocations === 1) {
-                    ts.strictSame(action, actions.instantActions[0]);
+                    ts.strictSame(action, actions.actions[0]);
                     ts.equal(withError, undefined);
-                    ts.equal(actionState.actionId, actions.instantActions[0].actionId);
+                    ts.equal(actionState.actionId, actions.actions[0].actionId);
                     ts.equal(actionState.actionStatus, ActionStatus.Finished);
-                    ts.equal(actionState.actionDescription, actions.instantActions[0].actionDescription);
+                    ts.equal(actionState.actionDescription, actions.actions[0].actionDescription);
                     ts.equal(actionState.resultDescription, "Position initialized");
                     ts.strictSame(state.agvPosition, { x: 10, y: 10, theta: 0, mapId: "floor2", positionInitialized: true });
                     ts.equal(state.lastNodeId, "n1");
                     ts.equal(state.lastNodeSequenceId, 1);
                 } else {
-                    ts.strictSame(action, actions.instantActions[1]);
+                    ts.strictSame(action, actions.actions[1]);
                     ts.equal(withError, undefined);
-                    ts.equal(actionState.actionId, actions.instantActions[1].actionId);
+                    ts.equal(actionState.actionId, actions.actions[1].actionId);
                     ts.equal(actionState.actionStatus, ActionStatus.Finished);
-                    ts.equal(actionState.actionDescription, actions.instantActions[1].actionDescription);
+                    ts.equal(actionState.actionDescription, actions.actions[1].actionDescription);
                     ts.equal(actionState.resultDescription, "Position initialized");
                     ts.strictSame(state.agvPosition, { x: 0, y: 0, theta: 0, mapId: "local", positionInitialized: true });
                     ts.equal(state.lastNodeId, "");
@@ -566,7 +566,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await t.test("instant actions startPause-stopPause in series as hard blocking actions", ts => new Promise(async resolve => {
         let actionStateInvocations = 0;
         const actions = await mcController.initiateInstantActions(agvId1, {
-            instantActions: [{
+            actions: [{
                 actionId: createUuid(),
                 actionType: "startPause",
                 blockingType: BlockingType.Hard,
@@ -581,19 +581,19 @@ tap.test("Master Controller - AGV Controller", async t => {
                 actionStateInvocations++;
                 ts.ok(actionStateInvocations === 1 || actionStateInvocations === 2);
                 if (actionStateInvocations === 1) {
-                    ts.strictSame(action, actions.instantActions[0]);
+                    ts.strictSame(action, actions.actions[0]);
                     ts.equal(withError, undefined);
-                    ts.equal(actionState.actionId, actions.instantActions[0].actionId);
+                    ts.equal(actionState.actionId, actions.actions[0].actionId);
                     ts.equal(actionState.actionStatus, ActionStatus.Finished);
-                    ts.equal(actionState.actionDescription, actions.instantActions[0].actionDescription);
+                    ts.equal(actionState.actionDescription, actions.actions[0].actionDescription);
                     ts.equal(actionState.resultDescription, "Paused");
                     ts.equal(state.paused, true);
                 } else {
-                    ts.strictSame(action, actions.instantActions[1]);
+                    ts.strictSame(action, actions.actions[1]);
                     ts.equal(withError, undefined);
-                    ts.equal(actionState.actionId, actions.instantActions[1].actionId);
+                    ts.equal(actionState.actionId, actions.actions[1].actionId);
                     ts.equal(actionState.actionStatus, ActionStatus.Finished);
-                    ts.equal(actionState.actionDescription, actions.instantActions[1].actionDescription);
+                    ts.equal(actionState.actionDescription, actions.actions[1].actionDescription);
                     ts.equal(actionState.resultDescription, "Unpaused");
                     ts.equal(state.paused, false);
                     resolve();
@@ -609,7 +609,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await t.test("instant action orderExecutionTime", ts => new Promise(async resolve => {
         let actionStateInvocations = 0;
         const actions = await mcController.initiateInstantActions(agvId1, {
-            instantActions: [{
+            actions: [{
                 actionId: createUuid(),
                 actionType: "orderExecutionTime",
                 blockingType: BlockingType.None,
@@ -619,11 +619,11 @@ tap.test("Master Controller - AGV Controller", async t => {
             onActionStateChanged: (actionState, withError, action) => {
                 actionStateInvocations++;
                 ts.equal(actionStateInvocations, 1);
-                ts.strictSame(action, actions.instantActions[0]);
+                ts.strictSame(action, actions.actions[0]);
                 ts.equal(withError, undefined);
-                ts.equal(actionState.actionId, actions.instantActions[0].actionId);
+                ts.equal(actionState.actionId, actions.actions[0].actionId);
                 ts.equal(actionState.actionStatus, ActionStatus.Finished);
-                ts.equal(actionState.actionDescription, actions.instantActions[0].actionDescription);
+                ts.equal(actionState.actionDescription, actions.actions[0].actionDescription);
                 // Pick & Drop times: 2 * (1+5)s; edge traversal time: 50s
                 ts.equal(parseFloat(actionState.resultDescription), 62);
                 resolve();
@@ -646,7 +646,7 @@ tap.test("Master Controller - AGV Controller", async t => {
         const noopAction2 = createPickDropNoopAction("noop");
         noopAction2.actionParameters.push({ key: "duration", value: 1 });
         const actions = await mcController.initiateInstantActions(agvId1, {
-            instantActions: [{
+            actions: [{
                 actionId: createUuid(),
                 actionType: "orderExecutionTime",
                 blockingType: BlockingType.None,
@@ -660,11 +660,11 @@ tap.test("Master Controller - AGV Controller", async t => {
             onActionStateChanged: (actionState, withError, action) => {
                 actionStateInvocations++;
                 ts.equal(actionStateInvocations, 1);
-                ts.strictSame(action, actions.instantActions[0]);
+                ts.strictSame(action, actions.actions[0]);
                 ts.equal(withError, undefined);
-                ts.equal(actionState.actionId, actions.instantActions[0].actionId);
+                ts.equal(actionState.actionId, actions.actions[0].actionId);
                 ts.equal(actionState.actionStatus, ActionStatus.Finished);
-                ts.equal(actionState.actionDescription, actions.instantActions[0].actionDescription);
+                ts.equal(actionState.actionDescription, actions.actions[0].actionDescription);
                 // Pick & Drop times with noops: (1+3+1)+(1+2+1)s; edge traversal time: 50s
                 ts.equal(parseFloat(actionState.resultDescription), 59);
                 resolve();
@@ -679,7 +679,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await t.test("instant actions startCharging-stopCharging", ts => new Promise(async resolve => {
         let actionStateInvocations = 0;
         const actions = await mcController.initiateInstantActions(agvId1, {
-            instantActions: [{
+            actions: [{
                 actionId: createUuid(),
                 actionType: "startCharging",
                 blockingType: BlockingType.Hard,
@@ -688,10 +688,10 @@ tap.test("Master Controller - AGV Controller", async t => {
             onActionStateChanged: async (actionState, withError, action, _agvId, state) => {
                 actionStateInvocations++;
                 ts.ok(actionStateInvocations === 1 || actionStateInvocations === 2);
-                ts.strictSame(action, actions.instantActions[0]);
+                ts.strictSame(action, actions.actions[0]);
                 ts.equal(withError, undefined);
-                ts.equal(actionState.actionId, actions.instantActions[0].actionId);
-                ts.equal(actionState.actionDescription, actions.instantActions[0].actionDescription);
+                ts.equal(actionState.actionId, actions.actions[0].actionId);
+                ts.equal(actionState.actionDescription, actions.actions[0].actionDescription);
                 ts.equal(actionState.actionStatus, actionStateInvocations === 1 ? ActionStatus.Running : ActionStatus.Finished);
                 ts.equal(actionState.resultDescription, actionStateInvocations === 1 ? undefined : "Started charging");
                 ts.equal(state.batteryState.charging, actionStateInvocations === 1 ? false : true);
@@ -711,7 +711,7 @@ tap.test("Master Controller - AGV Controller", async t => {
                         isStoppingCharging = true;
                         let actionStateInvocations1 = 0;
                         const actions1 = await mcController.initiateInstantActions(agvId1, {
-                            instantActions: [{
+                            actions: [{
                                 actionId: createUuid(),
                                 actionType: "stopCharging",
                                 blockingType: BlockingType.Hard,
@@ -720,10 +720,10 @@ tap.test("Master Controller - AGV Controller", async t => {
                             onActionStateChanged: async (actionState1, withError1, action1, _agvId11, state11) => {
                                 actionStateInvocations1++;
                                 ts.ok(actionStateInvocations1 === 1 || actionStateInvocations1 === 2);
-                                ts.strictSame(action1, actions1.instantActions[0]);
+                                ts.strictSame(action1, actions1.actions[0]);
                                 ts.equal(withError1, undefined);
-                                ts.equal(actionState1.actionId, actions1.instantActions[0].actionId);
-                                ts.equal(actionState1.actionDescription, actions1.instantActions[0].actionDescription);
+                                ts.equal(actionState1.actionId, actions1.actions[0].actionId);
+                                ts.equal(actionState1.actionDescription, actions1.actions[0].actionDescription);
                                 ts.equal(actionState1.actionStatus,
                                     actionStateInvocations1 === 1 ? ActionStatus.Running : ActionStatus.Finished);
                                 ts.equal(actionState1.resultDescription,
@@ -1578,7 +1578,7 @@ tap.test("Master Controller - AGV Controller", async t => {
     await t.test("instant action cancelOrder on active order", ts => new Promise(async resolve => {
         let changeInvocation = -1;
         const actions = await mcController.initiateInstantActions(agvId1, {
-            instantActions: [{
+            actions: [{
                 actionId: createUuid(),
                 actionType: "cancelOrder",
                 blockingType: BlockingType.Hard,
@@ -1593,7 +1593,7 @@ tap.test("Master Controller - AGV Controller", async t => {
                 }
                 ts.equal(actionState.actionStatus, changeInvocation === 0 ? ActionStatus.Running : ActionStatus.Finished);
                 ts.strictSame(agvId, agvId1);
-                ts.not(actions.instantActions.indexOf(action), -1);
+                ts.not(actions.actions.indexOf(action), -1);
                 ts.equal(withError, undefined);
 
                 if (actionState.actionStatus === ActionStatus.Finished) {
