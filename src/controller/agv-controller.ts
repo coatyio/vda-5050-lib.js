@@ -1416,6 +1416,7 @@ export class AgvController extends AgvClient {
         if (edgeLen + 1 !== nodeLen) {
             throw new Error("Incompatible sequence of nodes and edges");
         }
+        // TODO End node of a released edge must also be released (see issue #34).
         for (let i = 0; i < edgeLen; i++) {
             const edge = order.edges[i];
             if (edge.sequenceId !== order.nodes[i].sequenceId + 1) {
