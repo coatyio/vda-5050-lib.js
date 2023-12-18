@@ -915,7 +915,7 @@ export interface Edge {
      */
     orientation?: number;
     /**
-     * Enum {GLOBAL, TANGENTIAL}:
+     * Enum GLOBAL, TANGENTIAL
      * "GLOBAL"- relative to the global project specific map coordinate system;
      * "TANGENTIAL"- tangential to the edge.
      * If not defined, the default value is "TANGENTIAL".
@@ -950,7 +950,7 @@ export interface Edge {
 }
 
 /**
- * Enum {GLOBAL, TANGENTIAL}:
+ * Enum GLOBAL, TANGENTIAL
  * "GLOBAL"- relative to the global project specific map coordinate system;
  * "TANGENTIAL"- tangential to the edge.
  * If not defined, the default value is "TANGENTIAL".
