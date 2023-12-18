@@ -14,7 +14,8 @@
         "transport": {
             "brokerUrl": "mqtt://mybroker.siemens.net:1883",
             "topicFormat": "%interfaceName%/%majorVersion%/%manufacturer%/%serialNumber%/%topic%"
-        }
+        },
+        "vdaVersion": "1.1.0"
     },
     "agv": {
         "manufacturer": "RobotCompany",

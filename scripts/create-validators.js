@@ -18,10 +18,9 @@ const vda5050SchemaDir = path.join(path.dirname(require.resolve("vda-5050-cli/li
  * (optional, default is "commonjs")
  */
 async function createCoreValidators(vdaVersion, moduleFormat) {
-    const moduleFile = "src/common/vda-5050-validators.js";
+    const moduleFile = `src/common/vda-5050-validators-${vdaVersion}.js`;
     const exportFolder = fse.mkdtempSync(path.join(os.tmpdir(), "vda-5050-schema-"));
     try {
-        const config = require("../.vda-5050-cli.schema.config.json");
         await jsonSchemaToLang({ lang: "json", vda: vdaVersion, out: exportFolder, vda5050SchemaDir });
         const schemas = [];
         fse.readdirSync(exportFolder).forEach(file => {

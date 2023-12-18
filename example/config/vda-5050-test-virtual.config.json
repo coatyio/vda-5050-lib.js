@@ -13,7 +13,8 @@
         "interfaceName": "virtual",
         "transport": {
             "brokerUrl": "mqtt://localhost:1883"
-        }
+        },
+        "vdaVersion": "1.1.0"
     },
     "agv": {
         "manufacturer": "RobotCompany",

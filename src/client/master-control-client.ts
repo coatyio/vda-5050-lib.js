@@ -214,6 +214,11 @@ export class MasterControlClient extends Client {
                     throw new TypeError("Outbound connection message not compatible with MasterControlClient");
                 }
                 break;
+            case Topic.Factsheet:
+                if (!asInbound) {
+                    throw new TypeError("Outbound factsheet message not compatible with MasterControlClient");
+                }
+                break;
             case Topic.InstantActions:
                 if (asInbound) {
                     throw new TypeError("Inbound instantActions message not compatible with MasterControlClient");

@@ -430,6 +430,7 @@ export interface VirtualAgvAdapterOptions extends AgvAdapterOptions {
  * - startCharging/stopCharging [instant, node]
  * - cancelOrder [instant, supported by AgvController]
  * - stateRequest [instant, supported by AgvController]
+ * - factsheetRequest [instant, supported by AgvController]
  * - orderExecutionTime [instant (custom)]
  *
  * The actions noop, pick, drop, startCharging, and stopCharging accept an
@@ -532,7 +533,7 @@ export class VirtualAgvAdapter implements AgvAdapter {
     }
 
     get apiVersion() {
-        return 1;
+        return 2;
     }
 
     attach(context: AttachContext) {
@@ -563,6 +564,8 @@ export class VirtualAgvAdapter implements AgvAdapter {
             realTime = now;
             this._onTick(++this._tick, tickInterval * this.options.timeLapse, realInterval * this.options.timeLapse / 1000);
         }, tickInterval);
+
+        this._controller.updateFactsheet({});
 
         const { lastNodeId, ...position } = this._vehicleState.position;
         context.attached({

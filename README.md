@@ -24,7 +24,8 @@
 This package provides a universal library for implementing systems based on [VDA
 5050](https://github.com/VDA5050/VDA5050) in TypeScript/JavaScript running in
 Node.js and modern browsers. The library implements the VDA 5050 specification
-[version 1.1](https://github.com/VDA5050/VDA5050/blob/1.1.0/VDA5050_EN.md)
+[version 1.1](https://github.com/VDA5050/VDA5050/blob/1.1.0/VDA5050_EN.md) and 
+[version 2.0](https://github.com/VDA5050/VDA5050/blob/2.0.0/VDA5050_EN_V1.md)
 _"Interface for the communication between automated guided vehicles (AGV) and a
 master control"_.
 
@@ -112,7 +113,7 @@ documentation](https://coatyio.github.io/vda-5050-lib.js/api/index.html).
 
 ```ts
 // Create instance of Master Controller with minimal client options: communication namespace and broker endpoint address.
-const masterController = new MasterController({ interfaceName: "logctx42", transport: { brokerUrl: "mqtt://mybroker.com:1883" } });
+const masterController = new MasterController({ interfaceName: "logctx42", transport: { brokerUrl: "mqtt://mybroker.com:1883" }, vdaVersion: "2.0.0" });
 
 // The target AGV.
 const agvId001: AgvId = { manufacturer: "RobotCompany", serialNumber: "001" };
@@ -179,7 +180,7 @@ and reports them back to master control.
 
 ```ts
 // Use minimal client options: communication namespace and broker endpoint address.
-const agvClientOptions: ClientOptions = { interfaceName: "logctx42", transport: { brokerUrl: "mqtt://mybroker.com:1883" } };
+const agvClientOptions: ClientOptions = { interfaceName: "logctx42", transport: { brokerUrl: "mqtt://mybroker.com:1883" }, vdaVersion: "2.0.0" };
 
 // The target AGV.
 const agvId001: AgvId = { manufacturer: "RobotCompany", serialNumber: "001" };
@@ -249,7 +250,7 @@ the connection state of AGVs.
 
 ```ts
 // Create instance of Master Control Client with minimal options: communication namespace and broker endpoint address.
-const mcClient = new MasterControlClient({ interfaceName: "logctx42", transport: { brokerUrl: "mqtt://mybroker.com:1883" } });
+const mcClient = new MasterControlClient({ interfaceName: "logctx42", transport: { brokerUrl: "mqtt://mybroker.com:1883" }, vdaVersion: "2.0.0" });
 
 // Start client interaction, connect to MQTT broker.
 await mcClient.start();
@@ -301,7 +302,7 @@ const currentVelocity = {} as Velocity;
 const agvId001: AgvId = { manufacturer: "RobotCompany", serialNumber: "001" };
 
 // Create instance of AGV Client "001" with minimal options: communication namespace and broker endpoint address.
-const agvClient = new AgvClient(agvId001, { interfaceName: "logctx42", transport: { brokerUrl: "mqtt://mybroker.com:1883" } });
+const agvClient = new AgvClient(agvId001, { interfaceName: "logctx42", transport: { brokerUrl: "mqtt://mybroker.com:1883" }, vdaVersion: "2.0.0" });
 
 // Start client interaction, connect to MQTT broker.
 await agvClient.start();
@@ -337,7 +338,7 @@ and outbound communication on a Master Controller:
 
 ```ts
 // Create instance of Master Controller with minimal client options: communication namespace and broker endpoint address.
-const masterController = new MasterController({ interfaceName: "logctx42", transport: { brokerUrl: "mqtt://mybroker.com:1883" } });
+const masterController = new MasterController({ interfaceName: "logctx42", transport: { brokerUrl: "mqtt://mybroker.com:1883" }, vdaVersion: "2.0.0" });
 
 // Define extension object type including header properties.
 interface MyExtensionObject extends Header {

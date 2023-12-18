@@ -17,6 +17,7 @@ import {
     ErrorReference,
     ErrorType,
     EStop,
+    Factsheet,
     Headerless,
     InstantActions,
     isPlainObject,
@@ -793,6 +794,7 @@ export class AgvController extends AgvClient {
     private _publishVisualizationIntervalId: any;
     private readonly _agvAdapter: AgvAdapter;
     private readonly _controllerOptions: Required<AgvControllerOptions>;
+    private _currentFactsheet: Headerless<Factsheet>;
 
     /**
      * Creates an instance of `AgvController`, a subclass of `AgvClient`.
@@ -832,7 +834,7 @@ export class AgvController extends AgvClient {
             lastNodeId: "",
             lastNodeSequenceId: 0,
             nodeStates: [],
-            operatingMode: OperatingMode.Automatic,
+            operatingMode: OperatingMode.Manual,
             orderId: "",
             orderUpdateId: 0,
             safetyState: { eStop: EStop.None, fieldViolation: false },
@@ -841,6 +843,7 @@ export class AgvController extends AgvClient {
             this,
             adapterOptions,
             this.debug.extend(this.controllerOptions.agvAdapterType.name));
+        this._currentFactsheet = {};
 
         if (this._agvAdapter.apiVersion !== this.adapterApiVersion) {
             throw new Error(`${this._agvAdapter.name}@${this._agvAdapter.apiVersion} not compatible with adapter protocol ${this.adapterApiVersion} used by ${this.constructor.name}`);
@@ -865,7 +868,7 @@ export class AgvController extends AgvClient {
      * is thrown when the adapter is instantiated.
      */
     get adapterApiVersion() {
-        return 1;
+        return 2;
     }
 
     /**
@@ -1019,6 +1022,17 @@ export class AgvController extends AgvClient {
      */
     updateOperatingMode(operatingMode: OperatingMode, reportImmediately = true) {
         this._updateState(this._cloneState({ operatingMode }), reportImmediately);
+    }
+
+    /**
+     * To be invoked by the AGV adapter whenever a new factsheet  is
+     * available.
+     *
+     * @param factsheet new factsheet
+     */
+    updateFactsheet(factsheet: Headerless<Factsheet>) {
+        const f = factsheet === undefined ? {} : JSON.parse(JSON.stringify(factsheet));
+        this._currentFactsheet = f;
     }
 
     /**
@@ -1206,6 +1220,15 @@ export class AgvController extends AgvClient {
         }
     }
 
+    private async _publishFactsheet(context: ActionContext) {
+        await this.publish(Topic.Factsheet, this._currentFactsheet, { dropIfOffline: true, retainMessage: true });
+
+        context.updateActionStatus({
+            actionStatus: ActionStatus.Finished,
+            resultDescription: "Reported new factsheet",
+        });
+    }
+
     private _updateState(newPartialState: Partial<Headerless<State>>, publishImmediately = false) {
         this._mergeState(newPartialState);
         if (publishImmediately) {
@@ -1265,7 +1288,7 @@ export class AgvController extends AgvClient {
 
         // Check whether order is well-formed.
         try {
-            this.validateTopicObject(Topic.Order, order);
+            this.validateTopicObject(Topic.Order, order, this.clientOptions.vdaVersion);
             this._validateOrderConstraints(order);
         } catch (err) {
             const error = this._createOrderError(order, ErrorType.OrderValidation, `invalid order: ${err}`);
@@ -1426,6 +1449,8 @@ export class AgvController extends AgvClient {
                 isBase = edge.released;
                 if (!isBase && firstHorizonIndex !== i + 1) {
                     throw new Error("Incorrect sequence of base-horizon edges");
+                } else if (isBase && !order.nodes[i + 1].released) {
+                    throw new Error("EndNode of last base edge is not released");
                 }
             } else {
                 if (edge.released) {
@@ -2305,7 +2330,7 @@ export class AgvController extends AgvClient {
     private _processInstantActions(actions: InstantActions) {
         // Check whether InstantActions object is well-formed.
         try {
-            this.validateTopicObject(Topic.InstantActions, actions);
+            this.validateTopicObject(Topic.InstantActions, actions, this.clientOptions.vdaVersion);
         } catch (err) {
             const error = this._createInstantActionsValidationError(actions, `invalid instant actions: ${err}`);
             this.debug("Invalid instant actions: %j", error);
@@ -2374,6 +2399,18 @@ export class AgvController extends AgvClient {
                 this._cancelOrder(context);
                 break;
             }
+            case "factsheetRequest": {
+                this.debug("Processing instant action 'factsheetRequest' with context %o", context);
+                if (this.clientOptions.vdaVersion === "2.0.0") {
+                    this._publishFactsheet(context);
+                } else {
+                    context.updateActionStatus({
+                        actionStatus: ActionStatus.Failed,
+                        errorDescription: `Requesting factsheet with VDA Version ${this.clientOptions.vdaVersion} is not supported`,
+                    });
+                }
+                break;
+            }
             case "stopPause": {
                 context.updateActionStatus = change => {
                     this._updateActionStatus(context, change);
@@ -2436,6 +2473,10 @@ export class AgvController extends AgvClient {
             } else if (this.hasCancelingOrder) {
                 errorRefs.push({ referenceKey: AgvController.REF_KEY_ERROR_DESCRIPTION_DETAIL, referenceValue: "cancel order already pending" });
             }
+        } else if (action.actionType === "stateRequest") {
+            this.debug("Checking instant action stateRequest %o", context);
+        } else if (action.actionType === "factsheetRequest") {
+            this.debug("Checking instant action factsheetRequest %o", context);
         } else {
             this.debug("Invoking isActionExecutable handler on context %o", context);
             errorRefs = this._agvAdapter.isActionExecutable(context);

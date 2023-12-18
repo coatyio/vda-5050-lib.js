@@ -18,8 +18,21 @@ import {
 } from "..";
 import { assertMqttTopicLength } from "./mqtt-utils";
 import { SubscriptionManager } from "./subscription-manager";
-import { validateConnection, validateInstantActions, validateOrder, validateState, validateVisualization } from "./vda-5050-validators";
-
+import {
+    validateConnection as validateConnectionV1,
+    validateInstantActions as validateInstantActionsV1,
+    validateOrder as validateOrderV1,
+    validateState as validateStateV1,
+    validateVisualization as validateVisualizationV1,
+} from "./vda-5050-validators-1.1";
+import {
+    validateConnection as validateConnectionV2,
+    validateFactsheet as validateFactsheetV2,
+    validateInstantActions as validateInstantActionsV2,
+    validateOrder as validateOrderV2,
+    validateState as validateStateV2,
+    validateVisualization as validateVisualizationV2,
+} from "./vda-5050-validators-2.0";
 /**
  * Create a new Version 4 UUID to be used as a unique identifier for nodes,
  * edges, actions, etc.
@@ -89,7 +102,17 @@ export interface ClientOptions {
      * MQTT-specific transport options for a VDA 5050 client (required).
      */
     transport: MqttTransportOptions;
+
+    /**
+     * Represents the selected VDA5050 version (required).
+     */
+    vdaVersion: VdaVersion;
 }
+
+/**
+ * Represents the supported VDA5050 specification versions.
+ */
+export type VdaVersion = "1.1.0" | "2.0.0";
 
 /**
  * Defines MQTT transport options for a VDA 5050 client.
@@ -341,9 +364,6 @@ export interface ClientPublishOptions {
  * @category Client
  */
 export abstract class Client {
-
-    // The semantic version of the implemented VDA 5050 protocol.
-    private static readonly VDA_5050_PROTOCOL_VERSION = "1.1.0";
 
     private static readonly ILLEGAL_TOPIC_LEVEL_CHARS_REGEX = /[\u0000+#/]/;
 
@@ -606,7 +626,7 @@ export abstract class Client {
      * `"<major-version-number>.<minor-version-number>.<patch-version-number>"`
      */
     protected getProtocolVersion() {
-        return Client.VDA_5050_PROTOCOL_VERSION;
+        return this._clientOptions.vdaVersion;
     }
 
     /**
@@ -698,7 +718,7 @@ export abstract class Client {
         const headerfullObject = this._withObjectHeader(topic, subject, object);
 
         if (this.clientOptions.topicObjectValidation?.outbound !== false) {
-            this.validateTopicObject(topic, headerfullObject);
+            this.validateTopicObject(topic, headerfullObject, this.clientOptions.vdaVersion);
         }
 
         // Validate MQTT topic UTF-8 byte length here as mqtt client errors and
@@ -906,34 +926,103 @@ export abstract class Client {
      * @param object a VDA 5050 core or extension object with header properties
      * @throws a `TypeError` if validation check fails
      */
-    protected validateTopicObject(topic: string, object: Vda5050Object) {
+    protected validateTopicObject(topic: string, object: Vda5050Object, vdaVersion: VdaVersion) {
         if (!object || typeof object !== "object") {
             throw new TypeError(`Invalid VDA 5050 object ${object}`);
         }
+        if (object.version !== vdaVersion) {
+            throw new TypeError(`Invalid VDA 5050 Version. ${topic} version: ${object.version} is not compatible with client verion: ${vdaVersion}`);
+        }
         switch (topic) {
             case Topic.Connection:
-                if (!validateConnection(object)) {
-                    throw new TypeError(`Invalid VDA 5050 Connection at ${validateConnection.errors[0].keywordLocation}, ${validateConnection.errors[0].instanceLocation}`);
+                switch (vdaVersion) {
+                    case "1.1.0":
+                        if (!validateConnectionV1(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Connection at ${validateConnectionV1.errors[0].keywordLocation}, ${validateConnectionV1.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "2.0.0":
+                        if (!validateConnectionV2(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Connection at ${validateConnectionV2.errors[0].keywordLocation}, ${validateConnectionV2.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    default:
+                        throw new TypeError(`Connection Topic not supported with VDA 5050 Version ${vdaVersion}`);
                 }
                 break;
             case Topic.InstantActions:
-                if (!validateInstantActions(object)) {
-                    throw new TypeError(`Invalid VDA 5050 InstantActions at ${validateInstantActions.errors[0].keywordLocation}, ${validateInstantActions.errors[0].instanceLocation}`);
+                switch (vdaVersion) {
+                    case "1.1.0":
+                        if (!validateInstantActionsV1(object)) {
+                            throw new TypeError(`Invalid VDA 5050 InstantActions at ${validateInstantActionsV1.errors[0].keywordLocation}, ${validateInstantActionsV1.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "2.0.0":
+                        if (!validateInstantActionsV2(object)) {
+                            throw new TypeError(`Invalid VDA 5050 InstantActions at ${validateInstantActionsV2.errors[0].keywordLocation}, ${validateInstantActionsV2.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    default:
+                        throw new TypeError(`InstantAction Topic not supported with VDA 5050 Version ${vdaVersion}`);
                 }
                 break;
             case Topic.Order:
-                if (!validateOrder(object)) {
-                    throw new TypeError(`Invalid VDA 5050 Order at ${validateOrder.errors[0].keywordLocation}, ${validateOrder.errors[0].instanceLocation}`);
+                switch (vdaVersion) {
+                    case "1.1.0":
+                        if (!validateOrderV1(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Order at ${validateOrderV1.errors[0].keywordLocation}, ${validateOrderV1.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "2.0.0":
+                        if (!validateOrderV2(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Order at ${validateOrderV2.errors[0].keywordLocation}, ${validateOrderV2.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    default:
+                        throw new TypeError(`Order Topic not supported with VDA 5050 Version ${vdaVersion}`);
                 }
                 break;
             case Topic.State:
-                if (!validateState(object)) {
-                    throw new TypeError(`Invalid VDA 5050 State at ${validateState.errors[0].keywordLocation}, ${validateState.errors[0].instanceLocation}`);
+                switch (vdaVersion) {
+                    case "1.1.0":
+                        if (!validateStateV1(object)) {
+                            throw new TypeError(`Invalid VDA 5050 State at ${validateStateV1.errors[0].keywordLocation}, ${validateStateV1.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "2.0.0":
+                        if (!validateStateV2(object)) {
+                            throw new TypeError(`Invalid VDA 5050 State at ${validateStateV2.errors[0].keywordLocation}, ${validateStateV2.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    default:
+                        throw new TypeError(`State Topic not supported with VDA 5050 Version ${vdaVersion}`);
                 }
                 break;
             case Topic.Visualization:
-                if (!validateVisualization(object)) {
-                    throw new TypeError(`Invalid VDA 5050 Visualization at ${validateVisualization.errors[0].keywordLocation}, ${validateVisualization.errors[0].instanceLocation}`);
+                switch (vdaVersion) {
+                    case "1.1.0":
+                        if (!validateVisualizationV1(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Visualization at ${validateVisualizationV1.errors[0].keywordLocation}, ${validateVisualizationV1.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "2.0.0":
+                        if (!validateVisualizationV2(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Visualization at ${validateVisualizationV2.errors[0].keywordLocation}, ${validateVisualizationV2.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    default:
+                        throw new TypeError(`Visualization Topic not supported with VDA 5050 Version ${vdaVersion}`);
+                }
+                break;
+            case Topic.Factsheet:
+                switch (vdaVersion) {
+                    case "2.0.0":
+                        if (!validateFactsheetV2(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Factsheet at ${validateFactsheetV2.errors[0].keywordLocation}, ${validateFactsheetV2.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    default:
+                        throw new TypeError(`Factsheet Topic not supported with VDA 5050 Version ${vdaVersion}`);
                 }
                 break;
             default:
@@ -1139,7 +1228,7 @@ export abstract class Client {
             const [idAndHandlers, topic] = this._subscriptionManager.find(mqttTopic, subject);
 
             if (this.clientOptions.topicObjectValidation?.inbound !== false) {
-                this.validateTopicObject(topic, object);
+                this.validateTopicObject(topic, object, this.clientOptions.vdaVersion);
             }
 
             rethrowError = true;
@@ -1167,6 +1256,16 @@ export abstract class Client {
         if (!options.transport?.brokerUrl) {
             throw new TypeError("MqttTransportOption brokerUrl is missing");
         }
+        if (options.vdaVersion === undefined) {
+            throw new TypeError(`Vda Version is required`);
+        }
+        if (!this._isValidVdaVersion(options.vdaVersion)) {
+            throw new TypeError(`Vda ${options.vdaVersion} Version not supported`);
+        }
+    }
+
+    private _isValidVdaVersion(version: string) {
+        return version === "1.1.0" || version === "1.1" || version === "2.0" || version === "2.0.0";
     }
 
     private _validateTopic(topic: string, forSubscription: boolean) {

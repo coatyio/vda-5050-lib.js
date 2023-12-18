@@ -13,4 +13,4 @@ before: dist/test/test-before.js
 after: dist/test/test-after.js
 files: [ dist/test/**/*.test.js ]
 # for individual testing
-#files: [ dist/test/controller/mc-agv-controller.test.js ]
+# files: [ dist/test/controller/mc-agv-controller.test.js ]

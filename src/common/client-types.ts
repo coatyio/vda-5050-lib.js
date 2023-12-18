@@ -1,6 +1,6 @@
 /*! Copyright (c) 2021 Siemens AG. Licensed under the MIT License. */
 
-import { Connection, Header, InstantActions, Order, State, Visualization } from "./vda-5050-types";
+import { Connection, Factsheet, Header, InstantActions, Order, State, Visualization } from "./vda-5050-types";
 
 /**
  * Get all optional keys in T (non-array types only).
@@ -42,7 +42,7 @@ export type ExtensionValidator = (extensionTopic: string, extensionObject: Exten
  * 
  * @category Common
  */
-export type Vda5050Object = Connection | Order | InstantActions | State | Visualization | ExtensionObject;
+export type Vda5050Object = Connection | Order | InstantActions | State | Visualization | Factsheet | ExtensionObject;
 
 /**
  * Generic type for VDA 5050 object types *without* protocol header properties.
@@ -102,6 +102,13 @@ export enum Topic {
      * health. To be used for an MQTT protocol level check of connection only.
      */
     Connection = "connection",
+
+    /**
+     * Communication of the AGV factshett to master control on request.
+     * 
+     * Published by AGV. Subscribed by master control.
+     */
+    Factsheet = "factsheet",
 }
 
 /**
@@ -134,6 +141,7 @@ export interface TopicObjectTypeMappings {
     [Topic.InstantActions]: InstantActions;
     [Topic.State]: State;
     [Topic.Visualization]: Visualization;
+    [Topic.Factsheet]: Factsheet;
     [key: string]: ExtensionObject;
 }
 

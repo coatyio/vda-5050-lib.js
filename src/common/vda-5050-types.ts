@@ -58,6 +58,624 @@ export enum ConnectionState {
 }
 
 /**
+ * The factsheet provides basic information about a specific AGV type series. This
+ * information allows comparison of different AGV types and can be applied for the planning,
+ * dimensioning and simulation of an AGV system. The factsheet also includes information
+ * about AGV communication interfaces which are required for the integration of an AGV type
+ * series into a VD[M]A-5050-compliant master control.
+ */
+export interface Factsheet {
+    /**
+     * headerId of the message. The headerId is defined per topic and incremented by 1 with each
+     * sent (but not necessarily received) message.
+     */
+    headerId: number;
+    /**
+     * Manufacturer of the AGV
+     */
+    manufacturer: string;
+    /**
+     * Serial number of the AGV
+     */
+    serialNumber: string;
+    /**
+     * Timestamp (ISO8601, UTC); YYYY-MM-DDTHH:mm:ss.ssZ; e.g. 2017-04-15T11:40:03.12Z
+     */
+    timestamp: string;
+    /**
+     * Version of the protocol [Major].[Minor].[Patch], e.g. 1.3.2
+     */
+    version: string;
+    /**
+     * Detailed definition of AGV geometry
+     */
+    agvGeometry?: AgvGeometry;
+    /**
+     * Abstract specification of load capabilities
+     */
+    loadSpecification?: LoadSpecification;
+    /**
+     * Detailed specification of localization
+     */
+    localizationParameters?: number;
+    /**
+     * These parameters specify the basic physical properties of the AGV
+     */
+    physicalParameters?: PhysicalParameters;
+    /**
+     * Supported features of VDA5050 protocol
+     */
+    protocolFeatures?: ProtocolFeatures;
+    /**
+     * This JSON-object describes the protocol limitations of the AGV. If a parameter is not
+     * defined or set to zero then there is no explicit limit for this parameter.
+     */
+    protocolLimits?: ProtocolLimits;
+    /**
+     * These parameters generally specify the class and the capabilities of the AGV
+     */
+    typeSpecification?: TypeSpecification;
+}
+
+/**
+ * Detailed definition of AGV geometry
+ */
+export interface AgvGeometry {
+    envelopes2d?: Envelopes2D[];
+    /**
+     * list of AGV-envelope curves in 3D (german: „Hüllkurven“)
+     */
+    envelopes3d?: Envelopes3D[];
+    /**
+     * list of wheels, containing wheel-arrangement and geometry
+     */
+    wheelDefinitions?: WheelDefinition[];
+}
+
+export interface Envelopes2D {
+    /**
+     * free text: description of envelope curve set
+     */
+    description?: string;
+    /**
+     * envelope curve as a x/y-polygon polygon is assumed as closed and must be
+     * non-self-intersecting
+     */
+    polygonPoints: PolygonPoint[];
+    /**
+     * name of the envelope curve set
+     */
+    set: string;
+}
+
+export interface PolygonPoint {
+    /**
+     * x-position of polygon-point
+     */
+    x: number;
+    /**
+     * y-position of polygon-point
+     */
+    y: number;
+}
+
+export interface Envelopes3D {
+    /**
+     * 3D-envelope curve data, format specified in ‚format‘
+     */
+    data?: { [key: string]: any };
+    /**
+     * free text: description of envelope curve set
+     */
+    description?: number;
+    /**
+     * format of data e.g. DXF
+     */
+    format: string;
+    /**
+     * name of the envelope curve set
+     */
+    set: string;
+    /**
+     * protocol and url-definition for downloading the 3D-envelope curve data e.g.
+     * ftp://xxx.yyy.com/ac4dgvhoif5tghji
+     */
+    url?: string;
+}
+
+export interface WheelDefinition {
+    /**
+     * nominal displacement of the wheel’s center to the rotation point (necessary for caster
+     * wheels). If the parameter is not defined, it is assumed to be 0
+     */
+    centerDisplacement?: number;
+    /**
+     * free text: can be used by the manufacturer to define constraints
+     */
+    constraints?: string;
+    /**
+     * nominal diameter of wheel
+     */
+    diameter: number;
+    /**
+     * True: wheel is actively driven (de: angetrieben)
+     */
+    isActiveDriven: boolean;
+    /**
+     * True: wheel is actively steered (de: aktiv gelenkt)
+     */
+    isActiveSteered: boolean;
+    position: Position;
+    /**
+     * wheel type. DRIVE, CASTER, FIXED, MECANUM
+     */
+    type: Type;
+    /**
+     * nominal width of wheel
+     */
+    width: number;
+}
+
+export interface Position {
+    /**
+     * orientation of wheel in AGV-coordinate system Necessary for fixed wheels
+     */
+    theta?: number;
+    /**
+     * [m] x-position in AGV-coordinate system
+     */
+    x: number;
+    /**
+     * y-position in AGV-coordinate system
+     */
+    y: number;
+}
+
+/**
+ * wheel type. DRIVE, CASTER, FIXED, MECANUM
+ */
+export enum Type {
+    Caster = "CASTER",
+    Drive = "DRIVE",
+    Fixed = "FIXED",
+    Mecanum = "MECANUM",
+}
+
+/**
+ * Abstract specification of load capabilities
+ */
+export interface LoadSpecification {
+    /**
+     * list of load positions / load handling devices. This lists contains the valid values for
+     * the oarameter “state.loads[].loadPosition” and for the action parameter “lhd” of the
+     * actions pick and drop. If this list doesn’t exist or is empty, the AGV has no load
+     * handling device.
+     */
+    loadPositions?: string[];
+    /**
+     * list of load-sets that can be handled by the AGV
+     */
+    loadSets?: LoadSet[];
+}
+
+export interface LoadSet {
+    /**
+     * maximum allowed acceleration for this load-type and –weight
+     */
+    agvAccelerationLimit?: number;
+    /**
+     * maximum allowed deceleration for this load-type and –weight
+     */
+    agvDecelerationLimit?: number;
+    /**
+     * maximum allowed speed for this load-type and –weight
+     */
+    agvSpeedLimit?: number;
+    /**
+     * bounding box reference as defined in parameter loads[] in state-message
+     */
+    boundingBoxReference?: LoadSetBoundingBoxReference;
+    /**
+     * free text description of the load handling set
+     */
+    description?: number;
+    /**
+     * approx. time for dropping the load
+     */
+    dropTime?: number;
+    loadDimensions?: LoadSetLoadDimensions;
+    /**
+     * list of load positions btw. load handling devices, this load-set is valid for. If this
+     * parameter does not exist or is empty, this load-set is valid for all load handling
+     * devices on this AGV.
+     */
+    loadPositions?: string[];
+    /**
+     * type of load e.g. EPAL, XLT1200, ….
+     */
+    loadType: string;
+    /**
+     * maximum allowed depth for this load-type and –weight. references to boundingBoxReference
+     */
+    maxLoadhandlingDepth?: number;
+    /**
+     * maximum allowed height for handling of this load-type and –weight. references to
+     * boundingBoxReference
+     */
+    maxLoadhandlingHeight?: number;
+    /**
+     * maximum allowed tilt for this load-type and –weight
+     */
+    maxLoadhandlingTilt?: number;
+    /**
+     * maximum weight of loadtype
+     */
+    maxWeigth?: number;
+    /**
+     * minimum allowed depth for this load-type and –weight. references to boundingBoxReference
+     */
+    minLoadhandlingDepth?: number;
+    /**
+     * minimum allowed height for handling of this load-type and –weight. References to
+     * boundingBoxReference
+     */
+    minLoadhandlingHeight?: number;
+    /**
+     * minimum allowed tilt for this load-type and –weight
+     */
+    minLoadhandlingTilt?: number;
+    /**
+     * approx. time for picking up the load
+     */
+    pickTime?: number;
+    /**
+     * Unique name of the load set, e.g. DEFAULT, SET1, ...
+     */
+    setName: string;
+}
+
+/**
+ * bounding box reference as defined in parameter loads[] in state-message
+ */
+export interface LoadSetBoundingBoxReference {
+    /**
+     * Orientation of the loads bounding box. Important for tugger trains, etc.
+     */
+    theta?: number;
+    /**
+     * x-coordinate of the point of reference.
+     */
+    x: number;
+    /**
+     * y-coordinate of the point of reference.
+     */
+    y: number;
+    /**
+     * z-coordinate of the point of reference.
+     */
+    z: number;
+}
+
+export interface LoadSetLoadDimensions {
+    /**
+     * Absolute height of the load´s bounding box. Optional: Set value only if known.
+     */
+    height?: number;
+    /**
+     * Absolute length of the load´s bounding box.
+     */
+    length: number;
+    /**
+     * Absolute width of the load´s bounding bo
+     */
+    width: number;
+}
+
+/**
+ * These parameters specify the basic physical properties of the AGV
+ */
+export interface PhysicalParameters {
+    /**
+     * maximum acceleration with maximum load
+     */
+    accelerationMax: number;
+    /**
+     * maximum deceleration with maximum load
+     */
+    decelerationMax: number;
+    /**
+     * maximum height of AGV
+     */
+    heightMax: number;
+    /**
+     * minimum height of AGV
+     */
+    heightMin?: number;
+    /**
+     * length of AGV
+     */
+    length: number;
+    /**
+     * maximum speed of the AGV
+     */
+    speedMax: number;
+    /**
+     * minimal controlled continuous speed of the AGV
+     */
+    speedMin: number;
+    /**
+     * width of AGV
+     */
+    width: number;
+}
+
+/**
+ * Supported features of VDA5050 protocol
+ */
+export interface ProtocolFeatures {
+    /**
+     * list of all actions with parameters supported by this AGV. This includes standard actions
+     * specified in VDA5050 and manufacturer-specific actions
+     */
+    agvActions: AgvAction[];
+    /**
+     * list of supported and/or required optional parameters. Optional parameters, that are not
+     * listed here, are assumed to be not supported by the AGV.
+     */
+    optionalParameters: OptionalParameter[];
+}
+
+export interface AgvAction {
+    /**
+     * free text: description of the action
+     */
+    actionDescription?: string;
+    /**
+     * list of parameters. if not defined, the action has no parameters
+     */
+    actionParameters?: AgvActionActionParameter[];
+    /**
+     * list of allowed scopes for using this action-type. INSTANT: usable as instantAction,
+     * NODE: usable on nodes, EDGE: usable on edges.
+     */
+    actionScopes: AgvActionActionScope[];
+    /**
+     * unique actionType corresponding to action.actionType
+     */
+    actionType: string;
+    /**
+     * free text: description of the resultDescription
+     */
+    resultDescription?: string;
+}
+
+export interface AgvActionActionParameter {
+    /**
+     * free text: description of the parameter
+     */
+    description?: string;
+    /**
+     * True: optional parameter
+     */
+    isOptional?: boolean;
+    /**
+     * key-String for Parameter
+     */
+    key: string;
+    /**
+     * data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING,
+     * OBJECT, ARRAY
+     */
+    valueDataType: ValueDataType;
+}
+
+/**
+ * data type of Value, possible data types are: BOOL, NUMBER, INTEGER, FLOAT, STRING,
+ * OBJECT, ARRAY
+ */
+export enum ValueDataType {
+    Array = "ARRAY",
+    Bool = "BOOL",
+    Float = "FLOAT",
+    Integer = "INTEGER",
+    Number = "NUMBER",
+    Object = "OBJECT",
+    String = "STRING",
+}
+
+export enum AgvActionActionScope {
+    Edge = "EDGE",
+    Instant = "INSTANT",
+    Node = "NODE",
+}
+
+export interface OptionalParameter {
+    /**
+     * free text. Description of optional parameter. E.g. Reason, why the optional parameter
+     * ‚direction‘ is necessary for this AGV-type and which values it can contain. The parameter
+     * ‘nodeMarker’ must contain unsigned interger-numbers only. Nurbs-Support is limited to
+     * straight lines and circle segments.
+     */
+    description?: string;
+    /**
+     * full name of optional parameter, e.g. “order.nodes.nodePosition.allowedDeviationTheta”
+     */
+    parameter: string;
+    /**
+     * type of support for the optional parameter, the following values are possible: SUPPORTED:
+     * optional parameter is supported like specified. REQUIRED: optional parameter is required
+     * for proper AGV-operation.
+     */
+    support: Support;
+}
+
+/**
+ * type of support for the optional parameter, the following values are possible: SUPPORTED:
+ * optional parameter is supported like specified. REQUIRED: optional parameter is required
+ * for proper AGV-operation.
+ */
+export enum Support {
+    Required = "REQUIRED",
+    Supported = "SUPPORTED",
+}
+
+/**
+ * This JSON-object describes the protocol limitations of the AGV. If a parameter is not
+ * defined or set to zero then there is no explicit limit for this parameter.
+ */
+export interface ProtocolLimits {
+    /**
+     * maximum lengths of arrays
+     */
+    maxArrayLens: { [key: string]: any };
+    /**
+     * maximum lengths of strings
+     */
+    maxStringLens: MaxStringLens;
+    /**
+     * timing information
+     */
+    timing: Timing;
+}
+
+/**
+ * maximum lengths of strings
+ */
+export interface MaxStringLens {
+    /**
+     * maximum length of ENUM- and Key-Strings. Affected parameters: action.actionType,
+     * action.blockingType, edge.direction, actionParameter.key, state.operatingMode,
+     * load.loadPosition, load.loadType, actionState.actionStatus, error.errorType,
+     * error.errorLevel, errorReference.referenceKey, info.infoType, info.infoLevel,
+     * safetyState.eStop, connection.connectionState
+     */
+    enumLen?: number;
+    /**
+     * maximum length of ID-Strings. Affected parameters: order.orderId, order.zoneSetId,
+     * node.nodeId, nodePosition.mapId, action.actionId, edge.edgeId, edge.startNodeId,
+     * edge.endNodeId
+     */
+    idLen?: number;
+    /**
+     * If true ID-strings need to contain numerical values only
+     */
+    idNumericalOnly?: boolean;
+    /**
+     * maximum length of loadId Strings
+     */
+    loadIdLen?: number;
+    /**
+     * maximum MQTT Message length
+     */
+    msgLen?: number;
+    /**
+     * maximum length of all other parts in MQTT-topics. Affected parameters: order.timestamp,
+     * order.version, order.manufacturer, instantActions.timestamp, instantActions.version,
+     * instantActions.manufacturer, state.timestamp, state.version, state.manufacturer,
+     * visualization.timestamp, visualization.version, visualization.manufacturer,
+     * connection.timestamp, connection.version, connection.manufacturer
+     */
+    topicElemLen?: number;
+    /**
+     * maximum length of serial-number part in MQTT-topics. Affected Parameters:
+     * order.serialNumber, instantActions.serialNumber, state.SerialNumber,
+     * visualization.serialNumber, connection.serialNumber
+     */
+    topicSerialLen?: number;
+}
+
+/**
+ * timing information
+ */
+export interface Timing {
+    /**
+     * default interval for sending state-messages if not defined, the default value from the
+     * main document is used
+     */
+    defaultStateInterval?: number;
+    /**
+     * minimum interval sending order messages to the AGV
+     */
+    minOrderInterval: number;
+    /**
+     * minimum interval for sending state-messages
+     */
+    minStateInterval: number;
+    /**
+     * default interval for sending messages on visualization topic
+     */
+    visualizationInterval?: number;
+}
+
+/**
+ * These parameters generally specify the class and the capabilities of the AGV
+ */
+export interface TypeSpecification {
+    /**
+     * Simplified description of AGV class.
+     */
+    agvClass: AgvClass;
+    /**
+     * simplified description of AGV kinematics-type.
+     */
+    agvKinematic: AgvKinematic;
+    /**
+     * simplified description of localization type
+     */
+    localizationTypes: LocalizationType[];
+    /**
+     * maximum loadable mass
+     */
+    maxLoadMass: number;
+    /**
+     * List of path planning types supported by the AGV, sorted by priority
+     */
+    navigationTypes: NavigationType[];
+    /**
+     * Free text human readable description of the AGV type series
+     */
+    seriesDescription?: string;
+    /**
+     * Free text generalized series name as specified by manufacturer
+     */
+    seriesName: string;
+}
+
+/**
+ * Simplified description of AGV class.
+ */
+export enum AgvClass {
+    Carrier = "CARRIER",
+    Conveyor = "CONVEYOR",
+    Forklift = "FORKLIFT",
+    Tugger = "TUGGER",
+}
+
+/**
+ * simplified description of AGV kinematics-type.
+ */
+export enum AgvKinematic {
+    Diff = "DIFF",
+    Omni = "OMNI",
+    Threewheel = "THREEWHEEL",
+}
+
+export enum LocalizationType {
+    Dmc = "DMC",
+    Grid = "GRID",
+    Natural = "NATURAL",
+    RFID = "RFID",
+    Reflector = "REFLECTOR",
+    Spot = "SPOT",
+}
+
+export enum NavigationType {
+    Autonomous = "AUTONOMOUS",
+    PhysicalLindeGuided = "PHYSICAL_LINDE_GUIDED",
+    VirtualLineGuided = "VIRTUAL_LINE_GUIDED",
+}
+
+/**
  * Includes the protocol header of a VDA 5050 object defining common properties: headerId,
  * manufacturer, serialNumber, timestamp, version.
  */
@@ -140,7 +758,7 @@ export interface Action {
      */
     actionParameters?: ActionParameter[];
     /**
-     * Enum of actions as described in the first column of "Actions and Parameters"
+     * Name of action as described in the first column of "Actions and Parameters"
      * Identifies the function of the action.
      */
     actionType: string;
@@ -261,6 +879,12 @@ export interface Edge {
      */
     endNodeId: string;
     /**
+     * Distance of the path from startNode to endNode in meters.
+     * Optional: This value is used by line-guided AGVs to decrease their speed before reaching
+     * a stop position.
+     */
+    length?: number;
+    /**
      * Permitted maximum height of the vehicle, including the load, on edge. In meters.
      */
     maxHeight?: number;
@@ -291,6 +915,13 @@ export interface Edge {
      */
     orientation?: number;
     /**
+     * Enum {GLOBAL, TANGENTIAL}:
+     * "GLOBAL"- relative to the global project specific map coordinate system;
+     * "TANGENTIAL"- tangential to the edge.
+     * If not defined, the default value is "TANGENTIAL".
+     */
+    orientationType?: OrientationType;
+    /**
      * If true, the edge is part of the base plan. If false, the edge is part of the horizon
      * plan.
      */
@@ -319,6 +950,17 @@ export interface Edge {
 }
 
 /**
+ * Enum {GLOBAL, TANGENTIAL}:
+ * "GLOBAL"- relative to the global project specific map coordinate system;
+ * "TANGENTIAL"- tangential to the edge.
+ * If not defined, the default value is "TANGENTIAL".
+ */
+export enum OrientationType {
+    Global = "GLOBAL",
+    Tangential = "TANGENTIAL",
+}
+
+/**
  * Trajectory JSON-object for this edge as a NURBS. Defines the curve on which the AGV
  * should move between startNode and endNode.
  * Optional: Can be omitted if AGV cannot process trajectories or if AGV plans its own
@@ -335,7 +977,9 @@ export interface Trajectory {
      */
     controlPoints: ControlPoint[];
     /**
-     * The degree of the NURBS.
+     * Defines the number of control points that influence any given point on the curve.
+     * Increasing the degree increases continuity.
+     * If not defined, the default value is 1.
      */
     degree: number;
     /**
@@ -356,7 +1000,7 @@ export interface ControlPoint {
      * Range: (0 .. Infinity). The weight with which this control point pulls on the curve.
      * When not defined, the default will be 1.0.
      */
-    weight: number;
+    weight?: number;
     /**
      * X coordinate described in the world coordinate system.
      */
@@ -683,7 +1327,7 @@ export interface AgvPosition {
      */
     positionInitialized: boolean;
     /**
-     * Range: [-Pi ... Pi]
+     * Range: [-pi ... pi]
      * Orientation of the AGV.
      */
     theta: number;

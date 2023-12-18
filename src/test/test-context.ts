@@ -48,6 +48,7 @@ export function testClientOptions(
         transport: {
             brokerUrl: test.context.brokerUrls[0],
         },
+        vdaVersion: "1.1.0",
     };
 
     clientOptions = clientOptions && clone(clientOptions);

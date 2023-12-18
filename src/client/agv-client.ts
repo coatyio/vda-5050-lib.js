@@ -119,6 +119,11 @@ export class AgvClient extends Client {
                     throw new TypeError("Inbound connection message not compatible with AgvClient");
                 }
                 break;
+            case Topic.Factsheet:
+                if (asInbound) {
+                    throw new TypeError("Inbound factsheet message not compatible with AgvClient");
+                }
+                break;
             case Topic.InstantActions:
                 if (!asInbound) {
                     throw new TypeError("Outbound instantActions message not compatible with AgvClient");
