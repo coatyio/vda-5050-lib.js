@@ -2,6 +2,16 @@
 
 
 
+# [1.4.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.3.1...v1.4.0) (2023-12-18)
+
+This feature release adds support for VDA 5050 V2.0.
+
+### Features
+
+* add VDA5050 V2.0 support ([d9c5a16](https://github.com/coatyio/vda-5050-lib.js/commit/d9c5a165f9ad8b200bbae9595b4c828c1a959260))
+
+
+
 ## [1.3.1](https://github.com/coatyio/vda-5050-lib.js/compare/v1.3.0...v1.3.1) (2023-04-06)
 
 This patch release fixes issue #29 concerning AgvController.
