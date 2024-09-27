@@ -10,6 +10,7 @@ import {
     BatteryState,
     BlockingType,
     ClientOptions,
+    ConnectionState,
     Edge,
     EdgeState,
     Error,
@@ -1172,10 +1173,17 @@ export class AgvController extends AgvClient {
         await this.subscribe(Topic.Order, order => this._processOrder(order));
         await this.subscribe(Topic.InstantActions, actions => this._processInstantActions(actions));
 
-        // Ensure State is reported immediately once after client is online again.
-        this.registerConnectionStateChange((currentState, prevState) => {
-            if (currentState === "online" && prevState !== "online") {
-                this._publishCurrentState();
+        // Ensure State and Connection are reported once immediately after client is online again.
+        this.registerConnectionStateChange((connectionState, previousConnectionState) => {
+            // this is not called on the initial connection because it is registered after we connect.
+            if (connectionState !== previousConnectionState) {
+                this.debug(`connection state changed: ${previousConnectionState} -> ${connectionState}`);
+                if (connectionState === "online") {
+                    // only called on reconnect
+                    this.debug("Connection online again.");
+                    this.publishConnectionState(ConnectionState.Online);
+                    this._publishCurrentState();
+                }
             }
         });
 
