@@ -1314,22 +1314,22 @@ const ref0 = function validate(data) {
     validate.errors = [errorMerge(suberr0[0], "#/allOf/0/$ref", "#")]
     return false
   }
-  if (!("instantActions" in data && hasOwn(data, "instantActions"))) {
-    validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/instantActions" }]
+  if (!("actions" in data && hasOwn(data, "actions"))) {
+    validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/actions" }]
     return false
   }
-  if (!Array.isArray(data.instantActions)) {
-    validate.errors = [{ keywordLocation: "#/allOf/1/properties/instantActions/type", instanceLocation: "#/instantActions" }]
+  if (!Array.isArray(data.actions)) {
+    validate.errors = [{ keywordLocation: "#/allOf/1/properties/actions/type", instanceLocation: "#/actions" }]
     return false
   }
-  for (let i = 0; i < data.instantActions.length; i++) {
-    if (i in data.instantActions && hasOwn(data.instantActions, i)) {
+  for (let i = 0; i < data.actions.length; i++) {
+    if (i in data.actions && hasOwn(data.actions, i)) {
       const err1 = validate.errors
-      const res1 = ref2(data.instantActions[i])
+      const res1 = ref2(data.actions[i])
       const suberr1 = ref2.errors
       validate.errors = err1
       if (!res1) {
-        validate.errors = [errorMerge(suberr1[0], "#/allOf/1/properties/instantActions/items/$ref", "#/instantActions/"+i)]
+        validate.errors = [errorMerge(suberr1[0], "#/allOf/1/properties/actions/items/$ref", "#/actions/"+i)]
         return false
       }
     }
@@ -1902,6 +1902,10 @@ const ref0 = function validate(data) {
       if ("orientationType" in data.edges[l] && hasOwn(data.edges[l], "orientationType")) {
         if (!(typeof data.edges[l].orientationType === "string")) {
           validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/orientationType/type", instanceLocation: "#/edges/"+l+"/orientationType" }]
+          return false
+        }
+        if (!(data.edges[l].orientationType === "GLOBAL" || data.edges[l].orientationType === "TANGENTIAL")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/orientationType/enum", instanceLocation: "#/edges/"+l+"/orientationType" }]
           return false
         }
       }
