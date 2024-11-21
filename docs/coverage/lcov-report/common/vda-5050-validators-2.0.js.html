@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">26.41% </span>
+                <span class="strong">26.42% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>633/2396</span>
+                <span class='fraction'>634/2399</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">34.24% </span>
+                <span class="strong">34.26% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>926/2704</span>
+                <span class='fraction'>928/2708</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">26.9% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>619/2301</span>
+                <span class='fraction'>620/2304</span>
             </div>
         
             
@@ -3239,7 +3239,11 @@
 <a name='L3174'></a><a href='#L3174'>3174</a>
 <a name='L3175'></a><a href='#L3175'>3175</a>
 <a name='L3176'></a><a href='#L3176'>3176</a>
-<a name='L3177'></a><a href='#L3177'>3177</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L3177'></a><a href='#L3177'>3177</a>
+<a name='L3178'></a><a href='#L3178'>3178</a>
+<a name='L3179'></a><a href='#L3179'>3179</a>
+<a name='L3180'></a><a href='#L3180'>3180</a>
+<a name='L3181'></a><a href='#L3181'>3181</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -5141,6 +5145,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -7731,22 +7739,22 @@ const ref0 = function validate(data) {
 <span class="cstat-no" title="statement not covered" >    validate.errors = [errorMerge(suberr0[0], "#/allOf/0/$ref", "#")]</span>
 <span class="cstat-no" title="statement not covered" >    return false</span>
   }
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (!("instantActions" in data &amp;&amp; hasOwn(data, "instantActions"))) {
-<span class="cstat-no" title="statement not covered" >    validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/instantActions" }]</span>
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!("actions" in data &amp;&amp; hasOwn(data, "actions"))) {
+<span class="cstat-no" title="statement not covered" >    validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/actions" }]</span>
 <span class="cstat-no" title="statement not covered" >    return false</span>
   }
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (!Array.isArray(data.instantActions)) {
-<span class="cstat-no" title="statement not covered" >    validate.errors = [{ keywordLocation: "#/allOf/1/properties/instantActions/type", instanceLocation: "#/instantActions" }]</span>
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!Array.isArray(data.actions)) {
+<span class="cstat-no" title="statement not covered" >    validate.errors = [{ keywordLocation: "#/allOf/1/properties/actions/type", instanceLocation: "#/actions" }]</span>
 <span class="cstat-no" title="statement not covered" >    return false</span>
   }
-  for (let i = 0; i &lt; data.instantActions.length; i++) {
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (i in data.instantActions &amp;&amp; hasOwn(data.instantActions, i)) {
+  for (let i = 0; i &lt; data.actions.length; i++) {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (i in data.actions &amp;&amp; hasOwn(data.actions, i)) {
       const err1 = validate.errors
-      const res1 = ref2(data.instantActions[i])
+      const res1 = ref2(data.actions[i])
       const suberr1 = ref2.errors
       validate.errors = err1
       if (!res1) {
-        validate.errors = [errorMerge(suberr1[0], "#/allOf/1/properties/instantActions/items/$ref", "#/instantActions/"+i)]
+        validate.errors = [errorMerge(suberr1[0], "#/allOf/1/properties/actions/items/$ref", "#/actions/"+i)]
         return false
       }
     }
@@ -8319,6 +8327,10 @@ const ref0 = function validate(data) {
       if ("orientationType" in data.edges[l] &amp;&amp; hasOwn(data.edges[l], "orientationType")) {
         <span class="missing-if-branch" title="if path not taken" >I</span>if (!(typeof data.edges[l].orientationType === "string")) {
 <span class="cstat-no" title="statement not covered" >          validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/orientationType/type", instanceLocation: "#/edges/"+l+"/orientationType" }]</span>
+<span class="cstat-no" title="statement not covered" >          return false</span>
+        }
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!(data.edges[l].orientationType === "GLOBAL" || <span class="branch-1 cbranch-no" title="branch not covered" >data.edges[l].orientationType === "TANGENTIAL")</span>) {
+<span class="cstat-no" title="statement not covered" >          validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/orientationType/enum", instanceLocation: "#/edges/"+l+"/orientationType" }]</span>
 <span class="cstat-no" title="statement not covered" >          return false</span>
         }
       }
@@ -9598,7 +9610,7 @@ module.exports = { validateConnection, validateFactsheet, validateHeader, valida
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-12-18T14:37:05.003Z
+                at 2024-11-21T15:26:44.217Z
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -2,6 +2,56 @@
 
 
 
+## [1.4.2](https://github.com/coatyio/vda-5050-lib.js/compare/v1.4.0...v1.4.2) (2024-11-21)
+
+Release (v1.4.2)
+
+### Bug Fixes
+
+* insatntAction property "actions" according to vda5050 v2.0 ([65a2334](https://github.com/coatyio/vda-5050-lib.js/commit/65a2334086913b3d054f1b47e42b2a29d81dc96f))
+
+
+
+## [1.4.5](https://github.com/coatyio/vda-5050-lib.js/compare/v1.4.0...v1.4.5) (2024-11-21)
+
+Release v1.4.2
+
+### Bug Fixes
+
+* insatntAction property "actions" according to vda5050 v2.0 ([65a2334](https://github.com/coatyio/vda-5050-lib.js/commit/65a2334086913b3d054f1b47e42b2a29d81dc96f))
+
+
+
+## [1.4.4](https://github.com/coatyio/vda-5050-lib.js/compare/v1.4.0...v1.4.4) (2024-11-21)
+
+Release v1.4.2
+
+### Bug Fixes
+
+* insatntAction property "actions" according to vda5050 v2.0 ([65a2334](https://github.com/coatyio/vda-5050-lib.js/commit/65a2334086913b3d054f1b47e42b2a29d81dc96f))
+
+
+
+## [1.4.3](https://github.com/coatyio/vda-5050-lib.js/compare/v1.4.0...v1.4.3) (2024-11-21)
+
+Release v1.4.2 (fix instantAction property)
+
+### Bug Fixes
+
+* insatntAction property "actions" according to vda5050 v2.0 ([65a2334](https://github.com/coatyio/vda-5050-lib.js/commit/65a2334086913b3d054f1b47e42b2a29d81dc96f))
+
+
+
+## [1.4.2](https://github.com/coatyio/vda-5050-lib.js/compare/v1.4.0...v1.4.2) (2024-11-21)
+
+Release v1.4.2 (fix: vda5050 v2.0 instantAction)
+
+### Bug Fixes
+
+* insatntAction property "actions" according to vda5050 v2.0 ([65a2334](https://github.com/coatyio/vda-5050-lib.js/commit/65a2334086913b3d054f1b47e42b2a29d81dc96f))
+
+
+
 # [1.4.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.3.1...v1.4.0) (2023-12-18)
 
 This feature release adds support for VDA 5050 V2.0.

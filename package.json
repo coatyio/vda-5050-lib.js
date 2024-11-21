@@ -1,6 +1,6 @@
 {
     "name": "vda-5050-lib",
-    "version": "1.4.1",
+    "version": "1.4.2",
     "description": "Universal VDA 5050 library for Node.js and browsers",
     "homepage": "https://github.com/coatyio/vda-5050-lib.js",
     "repository": {
@@ -17,7 +17,7 @@
         "doc": "gulp doc",
         "test": "gulp build && tap",
         "test:detail": "gulp build && tap --reporter=tap",
-        "test:coverage": "gulp build && npm-run-all -s -c _test:cov1 _test:cov2 _test:cov3",
+        "test:coverage": "gulp build && npm-run-all -s -c _test:cov1 _test:cov2",
         "_test:cov1": "tap --coverage --check-coverage --branches=45 --functions=60 --lines=45 --statements=45",
         "_test:cov2": "node dist/test/test-after-coverage.js",
         "_test:cov3": "opener coverage/lcov-report/index.html",
@@ -78,7 +78,7 @@
         "@release-it/conventional-changelog": "^5.1.1",
         "@types/debug": "^4.1.7",
         "@types/node": "^18.11.11",
-        "@types/tap": "^15.0.7",
+        "@types/tap": "^15.0.11",
         "@types/uuid": "^9.0.0",
         "cross-env": "^7.0.3",
         "fast-glob": "^3.2.12",
@@ -97,7 +97,7 @@
         "tslint": "^5.20.1",
         "typedoc": "^0.23.21",
         "typescript": "~4.9.3",
-        "vda-5050-cli": "^2.1.1"
+        "vda-5050-cli": "^2.1.2"
     },
     "engines": {
         "node": ">=11.0.0"
