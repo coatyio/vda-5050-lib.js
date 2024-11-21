@@ -2343,7 +2343,13 @@ export class AgvController extends AgvClient {
 
         const afterAction = this._currentInstantActions[this._currentInstantActions.length - 1];
         const hasPendingHardAction = this._currentInstantActions.some(a => a.blockingType === BlockingType.Hard);
-        this._currentInstantActions.push(...actions.instantActions.filter(a => this._checkInstantActionExecutable(a)));
+
+        if (this.clientOptions.vdaVersion === "1.1.0") {
+            this._currentInstantActions.push(...actions.instantActions.filter(a => this._checkInstantActionExecutable(a)));
+        } else {
+            this._currentInstantActions.push(...actions.actions.filter(a => this._checkInstantActionExecutable(a)));
+        }
+
         if (!hasPendingHardAction) {
             // Trigger all newly added NONE and SOFT actions up to but not including the
             // first new HARD blocking action. If no more old actions are pending at all,

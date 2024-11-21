@@ -396,8 +396,14 @@ export class MasterController extends MasterControlClient {
             this._currentInstantActions.set(agvId, actionStateCaches = new Map());
         }
         const newInstantActionsRef = this._currentInstantActionsRef === undefined ? 1 : this._currentInstantActionsRef + 1;
-        instantActions.instantActions.forEach(action => actionStateCaches.set(action.actionId,
-            { agvId, action, eventHandler, instantActionsRef: newInstantActionsRef }));
+
+        if (this.clientOptions.vdaVersion === "1.1.0") {
+            instantActions.instantActions.forEach(action => actionStateCaches.set(action.actionId,
+                { agvId, action, eventHandler, instantActionsRef: newInstantActionsRef }));
+        } else {
+            instantActions.actions.forEach(action => actionStateCaches.set(action.actionId,
+                { agvId, action, eventHandler, instantActionsRef: newInstantActionsRef }));
+        }
 
         try {
             const actionsWithHeader = await this.publish(Topic.InstantActions, agvId, instantActions);
@@ -406,7 +412,13 @@ export class MasterController extends MasterControlClient {
             return actionsWithHeader;
         } catch (error) {
             this.debug("Error initiating instant actions %o on AGV %o: %s", instantActions, agvId, error.message ?? error);
-            instantActions.instantActions.forEach(action => actionStateCaches.delete(action.actionId));
+
+            if (this.clientOptions.vdaVersion === "1.1.0") {
+                instantActions.instantActions.forEach(action => actionStateCaches.delete(action.actionId));
+            } else {
+                instantActions.actions.forEach(action => actionStateCaches.delete(action.actionId));
+            }
+
             if (actionStateCaches.size === 0) {
                 this._currentInstantActions.delete(agvId);
             }
