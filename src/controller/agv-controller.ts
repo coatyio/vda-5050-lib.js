@@ -2407,7 +2407,7 @@ export class AgvController extends AgvClient {
             }
             case "factsheetRequest": {
                 this.debug("Processing instant action 'factsheetRequest' with context %o", context);
-                if (this.clientOptions.vdaVersion === "2.0.0") {
+                if (this.clientOptions.vdaVersion === "2.0.0" || this.clientOptions.vdaVersion === "2.1.0") {
                     this._publishFactsheet(context);
                 } else {
                     context.updateActionStatus({

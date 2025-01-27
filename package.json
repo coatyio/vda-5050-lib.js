@@ -9,8 +9,8 @@
     },
     "readme": "README.md",
     "scripts": {
-        "build:schema": "vda-5050 schema -V 2.0 -q -c .vda-5050-cli.schema.config.json",
-        "build:validator": "node -e \"require('./scripts/create-validators.js').createCoreValidators('1.1')\" && node -e \"require('./scripts/create-validators.js').createCoreValidators('2.0')\"",
+        "build:schema": "vda-5050 schema -q -c .vda-5050-cli.schema.config.json",
+        "build:validator": "node -e \"require('./scripts/create-validators.js').createCoreValidators('1.1')\" && node -e \"require('./scripts/create-validators.js').createCoreValidators('2.0')\" && node -e \"require('./scripts/create-validators.js').createCoreValidators('2.1')\"",
         "build": "gulp build",
         "lint": "gulp lint",
         "lint:fix": "gulp lint:fix",
@@ -97,7 +97,7 @@
         "tslint": "^5.20.1",
         "typedoc": "^0.23.21",
         "typescript": "~4.9.3",
-        "vda-5050-cli": "^2.1.2"
+        "vda-5050-cli": "^2.3.0"
     },
     "engines": {
         "node": ">=11.0.0"

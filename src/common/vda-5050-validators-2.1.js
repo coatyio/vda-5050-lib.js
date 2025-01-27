@@ -1042,6 +1042,94 @@ const ref0 = function validate(data) {
       }
     }
   }
+  if ("vehicleConfig" in data && hasOwn(data, "vehicleConfig")) {
+    if (!(typeof data.vehicleConfig === "object" && data.vehicleConfig && !Array.isArray(data.vehicleConfig))) {
+      validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/type", instanceLocation: "#/vehicleConfig" }]
+      return false
+    }
+    if ("versions" in data.vehicleConfig && hasOwn(data.vehicleConfig, "versions")) {
+      if (!Array.isArray(data.vehicleConfig.versions)) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/versions/type", instanceLocation: "#/vehicleConfig/versions" }]
+        return false
+      }
+      for (let v = 0; v < data.vehicleConfig.versions.length; v++) {
+        if (v in data.vehicleConfig.versions && hasOwn(data.vehicleConfig.versions, v)) {
+          if (!(typeof data.vehicleConfig.versions[v] === "object" && data.vehicleConfig.versions[v] && !Array.isArray(data.vehicleConfig.versions[v]))) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/versions/items/type", instanceLocation: "#/vehicleConfig/versions/"+v }]
+            return false
+          }
+          if (!("key" in data.vehicleConfig.versions[v] && hasOwn(data.vehicleConfig.versions[v], "key"))) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/versions/items/required", instanceLocation: "#/vehicleConfig/versions/"+v+"/key" }]
+            return false
+          }
+          if (!("value" in data.vehicleConfig.versions[v] && hasOwn(data.vehicleConfig.versions[v], "value"))) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/versions/items/required", instanceLocation: "#/vehicleConfig/versions/"+v+"/value" }]
+            return false
+          }
+          if (!(typeof data.vehicleConfig.versions[v].key === "string")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/versions/items/properties/key/type", instanceLocation: "#/vehicleConfig/versions/"+v+"/key" }]
+            return false
+          }
+          if (!(typeof data.vehicleConfig.versions[v].value === "string")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/versions/items/properties/value/type", instanceLocation: "#/vehicleConfig/versions/"+v+"/value" }]
+            return false
+          }
+        }
+      }
+    }
+    if ("network" in data.vehicleConfig && hasOwn(data.vehicleConfig, "network")) {
+      if (!(typeof data.vehicleConfig.network === "object" && data.vehicleConfig.network && !Array.isArray(data.vehicleConfig.network))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/network/type", instanceLocation: "#/vehicleConfig/network" }]
+        return false
+      }
+      if ("dnsServers" in data.vehicleConfig.network && hasOwn(data.vehicleConfig.network, "dnsServers")) {
+        if (!Array.isArray(data.vehicleConfig.network.dnsServers)) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/network/properties/dnsServers/type", instanceLocation: "#/vehicleConfig/network/dnsServers" }]
+          return false
+        }
+        for (let x = 0; x < data.vehicleConfig.network.dnsServers.length; x++) {
+          if (x in data.vehicleConfig.network.dnsServers && hasOwn(data.vehicleConfig.network.dnsServers, x)) {
+            if (!(typeof data.vehicleConfig.network.dnsServers[x] === "string")) {
+              validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/network/properties/dnsServers/items/type", instanceLocation: "#/vehicleConfig/network/dnsServers/"+x }]
+              return false
+            }
+          }
+        }
+      }
+      if ("localIpAddress" in data.vehicleConfig.network && hasOwn(data.vehicleConfig.network, "localIpAddress")) {
+        if (!(typeof data.vehicleConfig.network.localIpAddress === "string")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/network/properties/localIpAddress/type", instanceLocation: "#/vehicleConfig/network/localIpAddress" }]
+          return false
+        }
+      }
+      if ("ntpServers" in data.vehicleConfig.network && hasOwn(data.vehicleConfig.network, "ntpServers")) {
+        if (!Array.isArray(data.vehicleConfig.network.ntpServers)) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/network/properties/ntpServers/type", instanceLocation: "#/vehicleConfig/network/ntpServers" }]
+          return false
+        }
+        for (let y = 0; y < data.vehicleConfig.network.ntpServers.length; y++) {
+          if (y in data.vehicleConfig.network.ntpServers && hasOwn(data.vehicleConfig.network.ntpServers, y)) {
+            if (!(typeof data.vehicleConfig.network.ntpServers[y] === "string")) {
+              validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/network/properties/ntpServers/items/type", instanceLocation: "#/vehicleConfig/network/ntpServers/"+y }]
+              return false
+            }
+          }
+        }
+      }
+      if ("netmask" in data.vehicleConfig.network && hasOwn(data.vehicleConfig.network, "netmask")) {
+        if (!(typeof data.vehicleConfig.network.netmask === "string")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/network/properties/netmask/type", instanceLocation: "#/vehicleConfig/network/netmask" }]
+          return false
+        }
+      }
+      if ("defaultGateway" in data.vehicleConfig.network && hasOwn(data.vehicleConfig.network, "defaultGateway")) {
+        if (!(typeof data.vehicleConfig.network.defaultGateway === "string")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/vehicleConfig/properties/network/properties/defaultGateway/type", instanceLocation: "#/vehicleConfig/network/defaultGateway" }]
+          return false
+        }
+      }
+    }
+  }
   return true
 };
 return ref0})();
@@ -1453,39 +1541,9 @@ const ref2 = function validate(data) {
       return false
     }
   }
-  if ("allowedDeviationXy" in data && hasOwn(data, "allowedDeviationXy")) {
-    if (!(typeof data.allowedDeviationXy === "number")) {
-      validate.errors = [{ keywordLocation: "#/properties/allowedDeviationXy/type", instanceLocation: "#/allowedDeviationXy" }]
-      return false
-    }
-    if (!(0 <= data.allowedDeviationXy)) {
-      validate.errors = [{ keywordLocation: "#/properties/allowedDeviationXy/minimum", instanceLocation: "#/allowedDeviationXy" }]
-      return false
-    }
-  }
-  if ("allowedDeviationTheta" in data && hasOwn(data, "allowedDeviationTheta")) {
-    if (!(typeof data.allowedDeviationTheta === "number")) {
-      validate.errors = [{ keywordLocation: "#/properties/allowedDeviationTheta/type", instanceLocation: "#/allowedDeviationTheta" }]
-      return false
-    }
-    if (!(-3.14159265359 <= data.allowedDeviationTheta)) {
-      validate.errors = [{ keywordLocation: "#/properties/allowedDeviationTheta/minimum", instanceLocation: "#/allowedDeviationTheta" }]
-      return false
-    }
-    if (!(3.141592654 >= data.allowedDeviationTheta)) {
-      validate.errors = [{ keywordLocation: "#/properties/allowedDeviationTheta/maximum", instanceLocation: "#/allowedDeviationTheta" }]
-      return false
-    }
-  }
   if (!(typeof data.mapId === "string")) {
     validate.errors = [{ keywordLocation: "#/properties/mapId/type", instanceLocation: "#/mapId" }]
     return false
-  }
-  if ("mapDescription" in data && hasOwn(data, "mapDescription")) {
-    if (!(typeof data.mapDescription === "string")) {
-      validate.errors = [{ keywordLocation: "#/properties/mapDescription/type", instanceLocation: "#/mapDescription" }]
-      return false
-    }
   }
   return true
 };
@@ -1632,26 +1690,6 @@ const ref4 = function validate(data) {
       if (!(typeof data.controlPoints[n].y === "number")) {
         validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/y/type", instanceLocation: "#/controlPoints/"+n+"/y" }]
         return false
-      }
-      if ("weight" in data.controlPoints[n] && hasOwn(data.controlPoints[n], "weight")) {
-        if (!(typeof data.controlPoints[n].weight === "number")) {
-          validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/weight/type", instanceLocation: "#/controlPoints/"+n+"/weight" }]
-          return false
-        }
-      }
-      if ("orientation" in data.controlPoints[n] && hasOwn(data.controlPoints[n], "orientation")) {
-        if (!(typeof data.controlPoints[n].orientation === "number")) {
-          validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/orientation/type", instanceLocation: "#/controlPoints/"+n+"/orientation" }]
-          return false
-        }
-        if (!(-3.14159265359 <= data.controlPoints[n].orientation)) {
-          validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/orientation/minimum", instanceLocation: "#/controlPoints/"+n+"/orientation" }]
-          return false
-        }
-        if (!(3.14159265359 >= data.controlPoints[n].orientation)) {
-          validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/orientation/maximum", instanceLocation: "#/controlPoints/"+n+"/orientation" }]
-          return false
-        }
       }
     }
   }
@@ -1937,6 +1975,46 @@ const ref0 = function validate(data) {
           return false
         }
       }
+      if ("corridor" in data.edges[l] && hasOwn(data.edges[l], "corridor")) {
+        if (!(typeof data.edges[l].corridor === "object" && data.edges[l].corridor && !Array.isArray(data.edges[l].corridor))) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/corridor/type", instanceLocation: "#/edges/"+l+"/corridor" }]
+          return false
+        }
+        if (!("leftWidth" in data.edges[l].corridor && hasOwn(data.edges[l].corridor, "leftWidth"))) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/corridor/required", instanceLocation: "#/edges/"+l+"/corridor/leftWidth" }]
+          return false
+        }
+        if (!("rightWidth" in data.edges[l].corridor && hasOwn(data.edges[l].corridor, "rightWidth"))) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/corridor/required", instanceLocation: "#/edges/"+l+"/corridor/rightWidth" }]
+          return false
+        }
+        if (!(typeof data.edges[l].corridor.leftWidth === "number")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/corridor/properties/leftWidth/type", instanceLocation: "#/edges/"+l+"/corridor/leftWidth" }]
+          return false
+        }
+        if (!(0 <= data.edges[l].corridor.leftWidth)) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/corridor/properties/leftWidth/minimum", instanceLocation: "#/edges/"+l+"/corridor/leftWidth" }]
+          return false
+        }
+        if (!(typeof data.edges[l].corridor.rightWidth === "number")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/corridor/properties/rightWidth/type", instanceLocation: "#/edges/"+l+"/corridor/rightWidth" }]
+          return false
+        }
+        if (!(0 <= data.edges[l].corridor.rightWidth)) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/corridor/properties/rightWidth/minimum", instanceLocation: "#/edges/"+l+"/corridor/rightWidth" }]
+          return false
+        }
+        if ("corridorRefPoint" in data.edges[l].corridor && hasOwn(data.edges[l].corridor, "corridorRefPoint")) {
+          if (!(typeof data.edges[l].corridor.corridorRefPoint === "string")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/corridor/properties/corridorRefPoint/type", instanceLocation: "#/edges/"+l+"/corridor/corridorRefPoint" }]
+            return false
+          }
+          if (!(data.edges[l].corridor.corridorRefPoint === "KINEMATICCENTER" || data.edges[l].corridor.corridorRefPoint === "CONTOUR")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/corridor/properties/corridorRefPoint/enum", instanceLocation: "#/edges/"+l+"/corridor/corridorRefPoint" }]
+            return false
+          }
+        }
+      }
       if (!(Array.isArray(data.edges[l].actions))) {
         validate.errors = [{ keywordLocation: "#/allOf/1/properties/edges/items/properties/actions/type", instanceLocation: "#/edges/"+l+"/actions" }]
         return false
@@ -2080,39 +2158,9 @@ const ref2 = function validate(data) {
       return false
     }
   }
-  if ("allowedDeviationXy" in data && hasOwn(data, "allowedDeviationXy")) {
-    if (!(typeof data.allowedDeviationXy === "number")) {
-      validate.errors = [{ keywordLocation: "#/properties/allowedDeviationXy/type", instanceLocation: "#/allowedDeviationXy" }]
-      return false
-    }
-    if (!(0 <= data.allowedDeviationXy)) {
-      validate.errors = [{ keywordLocation: "#/properties/allowedDeviationXy/minimum", instanceLocation: "#/allowedDeviationXy" }]
-      return false
-    }
-  }
-  if ("allowedDeviationTheta" in data && hasOwn(data, "allowedDeviationTheta")) {
-    if (!(typeof data.allowedDeviationTheta === "number")) {
-      validate.errors = [{ keywordLocation: "#/properties/allowedDeviationTheta/type", instanceLocation: "#/allowedDeviationTheta" }]
-      return false
-    }
-    if (!(-3.14159265359 <= data.allowedDeviationTheta)) {
-      validate.errors = [{ keywordLocation: "#/properties/allowedDeviationTheta/minimum", instanceLocation: "#/allowedDeviationTheta" }]
-      return false
-    }
-    if (!(3.141592654 >= data.allowedDeviationTheta)) {
-      validate.errors = [{ keywordLocation: "#/properties/allowedDeviationTheta/maximum", instanceLocation: "#/allowedDeviationTheta" }]
-      return false
-    }
-  }
   if (!(typeof data.mapId === "string")) {
     validate.errors = [{ keywordLocation: "#/properties/mapId/type", instanceLocation: "#/mapId" }]
     return false
-  }
-  if ("mapDescription" in data && hasOwn(data, "mapDescription")) {
-    if (!(typeof data.mapDescription === "string")) {
-      validate.errors = [{ keywordLocation: "#/properties/mapDescription/type", instanceLocation: "#/mapDescription" }]
-      return false
-    }
   }
   return true
 };
@@ -2146,18 +2194,18 @@ const ref3 = function validate(data) {
     validate.errors = [{ keywordLocation: "#/properties/knotVector/type", instanceLocation: "#/knotVector" }]
     return false
   }
-  for (let k = 0; k < data.knotVector.length; k++) {
-    if (k in data.knotVector && hasOwn(data.knotVector, k)) {
-      if (!(typeof data.knotVector[k] === "number")) {
-        validate.errors = [{ keywordLocation: "#/properties/knotVector/items/type", instanceLocation: "#/knotVector/"+k }]
+  for (let l = 0; l < data.knotVector.length; l++) {
+    if (l in data.knotVector && hasOwn(data.knotVector, l)) {
+      if (!(typeof data.knotVector[l] === "number")) {
+        validate.errors = [{ keywordLocation: "#/properties/knotVector/items/type", instanceLocation: "#/knotVector/"+l }]
         return false
       }
-      if (!(0 <= data.knotVector[k])) {
-        validate.errors = [{ keywordLocation: "#/properties/knotVector/items/minimum", instanceLocation: "#/knotVector/"+k }]
+      if (!(0 <= data.knotVector[l])) {
+        validate.errors = [{ keywordLocation: "#/properties/knotVector/items/minimum", instanceLocation: "#/knotVector/"+l }]
         return false
       }
-      if (!(1 >= data.knotVector[k])) {
-        validate.errors = [{ keywordLocation: "#/properties/knotVector/items/maximum", instanceLocation: "#/knotVector/"+k }]
+      if (!(1 >= data.knotVector[l])) {
+        validate.errors = [{ keywordLocation: "#/properties/knotVector/items/maximum", instanceLocation: "#/knotVector/"+l }]
         return false
       }
     }
@@ -2166,47 +2214,27 @@ const ref3 = function validate(data) {
     validate.errors = [{ keywordLocation: "#/properties/controlPoints/type", instanceLocation: "#/controlPoints" }]
     return false
   }
-  for (let l = 0; l < data.controlPoints.length; l++) {
-    if (l in data.controlPoints && hasOwn(data.controlPoints, l)) {
-      if (!(typeof data.controlPoints[l] === "object" && data.controlPoints[l] && !Array.isArray(data.controlPoints[l]))) {
-        validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/type", instanceLocation: "#/controlPoints/"+l }]
+  for (let m = 0; m < data.controlPoints.length; m++) {
+    if (m in data.controlPoints && hasOwn(data.controlPoints, m)) {
+      if (!(typeof data.controlPoints[m] === "object" && data.controlPoints[m] && !Array.isArray(data.controlPoints[m]))) {
+        validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/type", instanceLocation: "#/controlPoints/"+m }]
         return false
       }
-      if (!("x" in data.controlPoints[l] && hasOwn(data.controlPoints[l], "x"))) {
-        validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/required", instanceLocation: "#/controlPoints/"+l+"/x" }]
+      if (!("x" in data.controlPoints[m] && hasOwn(data.controlPoints[m], "x"))) {
+        validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/required", instanceLocation: "#/controlPoints/"+m+"/x" }]
         return false
       }
-      if (!("y" in data.controlPoints[l] && hasOwn(data.controlPoints[l], "y"))) {
-        validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/required", instanceLocation: "#/controlPoints/"+l+"/y" }]
+      if (!("y" in data.controlPoints[m] && hasOwn(data.controlPoints[m], "y"))) {
+        validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/required", instanceLocation: "#/controlPoints/"+m+"/y" }]
         return false
       }
-      if (!(typeof data.controlPoints[l].x === "number")) {
-        validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/x/type", instanceLocation: "#/controlPoints/"+l+"/x" }]
+      if (!(typeof data.controlPoints[m].x === "number")) {
+        validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/x/type", instanceLocation: "#/controlPoints/"+m+"/x" }]
         return false
       }
-      if (!(typeof data.controlPoints[l].y === "number")) {
-        validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/y/type", instanceLocation: "#/controlPoints/"+l+"/y" }]
+      if (!(typeof data.controlPoints[m].y === "number")) {
+        validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/y/type", instanceLocation: "#/controlPoints/"+m+"/y" }]
         return false
-      }
-      if ("weight" in data.controlPoints[l] && hasOwn(data.controlPoints[l], "weight")) {
-        if (!(typeof data.controlPoints[l].weight === "number")) {
-          validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/weight/type", instanceLocation: "#/controlPoints/"+l+"/weight" }]
-          return false
-        }
-      }
-      if ("orientation" in data.controlPoints[l] && hasOwn(data.controlPoints[l], "orientation")) {
-        if (!(typeof data.controlPoints[l].orientation === "number")) {
-          validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/orientation/type", instanceLocation: "#/controlPoints/"+l+"/orientation" }]
-          return false
-        }
-        if (!(-3.14159265359 <= data.controlPoints[l].orientation)) {
-          validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/orientation/minimum", instanceLocation: "#/controlPoints/"+l+"/orientation" }]
-          return false
-        }
-        if (!(3.14159265359 >= data.controlPoints[l].orientation)) {
-          validate.errors = [{ keywordLocation: "#/properties/controlPoints/items/properties/orientation/maximum", instanceLocation: "#/controlPoints/"+l+"/orientation" }]
-          return false
-        }
       }
     }
   }
@@ -2382,6 +2410,12 @@ const ref0 = function validate(data) {
     validate.errors = [{ keywordLocation: "#/allOf/1/required", instanceLocation: "#/safetyState" }]
     return false
   }
+  if ("maps" in data && hasOwn(data, "maps")) {
+    if (!Array.isArray(data.maps)) {
+      validate.errors = [{ keywordLocation: "#/allOf/1/properties/maps/type", instanceLocation: "#/maps" }]
+      return false
+    }
+  }
   if (!(typeof data.orderId === "string")) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/orderId/type", instanceLocation: "#/orderId" }]
     return false
@@ -2454,50 +2488,50 @@ const ref0 = function validate(data) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/type", instanceLocation: "#/nodeStates" }]
     return false
   }
-  for (let i = 0; i < data.nodeStates.length; i++) {
-    if (i in data.nodeStates && hasOwn(data.nodeStates, i)) {
-      if (!(typeof data.nodeStates[i] === "object" && data.nodeStates[i] && !Array.isArray(data.nodeStates[i]))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/type", instanceLocation: "#/nodeStates/"+i }]
+  for (let j = 0; j < data.nodeStates.length; j++) {
+    if (j in data.nodeStates && hasOwn(data.nodeStates, j)) {
+      if (!(typeof data.nodeStates[j] === "object" && data.nodeStates[j] && !Array.isArray(data.nodeStates[j]))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/type", instanceLocation: "#/nodeStates/"+j }]
         return false
       }
-      if (!("nodeId" in data.nodeStates[i] && hasOwn(data.nodeStates[i], "nodeId"))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/required", instanceLocation: "#/nodeStates/"+i+"/nodeId" }]
+      if (!("nodeId" in data.nodeStates[j] && hasOwn(data.nodeStates[j], "nodeId"))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/required", instanceLocation: "#/nodeStates/"+j+"/nodeId" }]
         return false
       }
-      if (!("released" in data.nodeStates[i] && hasOwn(data.nodeStates[i], "released"))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/required", instanceLocation: "#/nodeStates/"+i+"/released" }]
+      if (!("released" in data.nodeStates[j] && hasOwn(data.nodeStates[j], "released"))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/required", instanceLocation: "#/nodeStates/"+j+"/released" }]
         return false
       }
-      if (!("sequenceId" in data.nodeStates[i] && hasOwn(data.nodeStates[i], "sequenceId"))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/required", instanceLocation: "#/nodeStates/"+i+"/sequenceId" }]
+      if (!("sequenceId" in data.nodeStates[j] && hasOwn(data.nodeStates[j], "sequenceId"))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/required", instanceLocation: "#/nodeStates/"+j+"/sequenceId" }]
         return false
       }
-      if (!(typeof data.nodeStates[i].nodeId === "string")) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/properties/nodeId/type", instanceLocation: "#/nodeStates/"+i+"/nodeId" }]
+      if (!(typeof data.nodeStates[j].nodeId === "string")) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/properties/nodeId/type", instanceLocation: "#/nodeStates/"+j+"/nodeId" }]
         return false
       }
-      if (!(Number.isInteger(data.nodeStates[i].sequenceId))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/properties/sequenceId/type", instanceLocation: "#/nodeStates/"+i+"/sequenceId" }]
+      if (!(Number.isInteger(data.nodeStates[j].sequenceId))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/properties/sequenceId/type", instanceLocation: "#/nodeStates/"+j+"/sequenceId" }]
         return false
       }
-      if ("nodeDescription" in data.nodeStates[i] && hasOwn(data.nodeStates[i], "nodeDescription")) {
-        if (!(typeof data.nodeStates[i].nodeDescription === "string")) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/properties/nodeDescription/type", instanceLocation: "#/nodeStates/"+i+"/nodeDescription" }]
+      if ("nodeDescription" in data.nodeStates[j] && hasOwn(data.nodeStates[j], "nodeDescription")) {
+        if (!(typeof data.nodeStates[j].nodeDescription === "string")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/properties/nodeDescription/type", instanceLocation: "#/nodeStates/"+j+"/nodeDescription" }]
           return false
         }
       }
-      if ("nodePosition" in data.nodeStates[i] && hasOwn(data.nodeStates[i], "nodePosition")) {
+      if ("nodePosition" in data.nodeStates[j] && hasOwn(data.nodeStates[j], "nodePosition")) {
         const err1 = validate.errors
-        const res1 = ref2(data.nodeStates[i].nodePosition)
+        const res1 = ref2(data.nodeStates[j].nodePosition)
         const suberr1 = ref2.errors
         validate.errors = err1
         if (!res1) {
-          validate.errors = [errorMerge(suberr1[0], "#/allOf/1/properties/nodeStates/items/properties/nodePosition/$ref", "#/nodeStates/"+i+"/nodePosition")]
+          validate.errors = [errorMerge(suberr1[0], "#/allOf/1/properties/nodeStates/items/properties/nodePosition/$ref", "#/nodeStates/"+j+"/nodePosition")]
           return false
         }
       }
-      if (!(typeof data.nodeStates[i].released === "boolean")) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/properties/released/type", instanceLocation: "#/nodeStates/"+i+"/released" }]
+      if (!(typeof data.nodeStates[j].released === "boolean")) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/nodeStates/items/properties/released/type", instanceLocation: "#/nodeStates/"+j+"/released" }]
         return false
       }
     }
@@ -2506,49 +2540,49 @@ const ref0 = function validate(data) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/type", instanceLocation: "#/edgeStates" }]
     return false
   }
-  for (let j = 0; j < data.edgeStates.length; j++) {
-    if (j in data.edgeStates && hasOwn(data.edgeStates, j)) {
-      if (!(typeof data.edgeStates[j] === "object" && data.edgeStates[j] && !Array.isArray(data.edgeStates[j]))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/type", instanceLocation: "#/edgeStates/"+j }]
+  for (let k = 0; k < data.edgeStates.length; k++) {
+    if (k in data.edgeStates && hasOwn(data.edgeStates, k)) {
+      if (!(typeof data.edgeStates[k] === "object" && data.edgeStates[k] && !Array.isArray(data.edgeStates[k]))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/type", instanceLocation: "#/edgeStates/"+k }]
         return false
       }
-      if (!("edgeId" in data.edgeStates[j] && hasOwn(data.edgeStates[j], "edgeId"))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/required", instanceLocation: "#/edgeStates/"+j+"/edgeId" }]
+      if (!("edgeId" in data.edgeStates[k] && hasOwn(data.edgeStates[k], "edgeId"))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/required", instanceLocation: "#/edgeStates/"+k+"/edgeId" }]
         return false
       }
-      if (!("sequenceId" in data.edgeStates[j] && hasOwn(data.edgeStates[j], "sequenceId"))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/required", instanceLocation: "#/edgeStates/"+j+"/sequenceId" }]
+      if (!("sequenceId" in data.edgeStates[k] && hasOwn(data.edgeStates[k], "sequenceId"))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/required", instanceLocation: "#/edgeStates/"+k+"/sequenceId" }]
         return false
       }
-      if (!("released" in data.edgeStates[j] && hasOwn(data.edgeStates[j], "released"))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/required", instanceLocation: "#/edgeStates/"+j+"/released" }]
+      if (!("released" in data.edgeStates[k] && hasOwn(data.edgeStates[k], "released"))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/required", instanceLocation: "#/edgeStates/"+k+"/released" }]
         return false
       }
-      if (!(typeof data.edgeStates[j].edgeId === "string")) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/properties/edgeId/type", instanceLocation: "#/edgeStates/"+j+"/edgeId" }]
+      if (!(typeof data.edgeStates[k].edgeId === "string")) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/properties/edgeId/type", instanceLocation: "#/edgeStates/"+k+"/edgeId" }]
         return false
       }
-      if (!(Number.isInteger(data.edgeStates[j].sequenceId))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/properties/sequenceId/type", instanceLocation: "#/edgeStates/"+j+"/sequenceId" }]
+      if (!(Number.isInteger(data.edgeStates[k].sequenceId))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/properties/sequenceId/type", instanceLocation: "#/edgeStates/"+k+"/sequenceId" }]
         return false
       }
-      if ("edgeDescription" in data.edgeStates[j] && hasOwn(data.edgeStates[j], "edgeDescription")) {
-        if (!(typeof data.edgeStates[j].edgeDescription === "string")) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/properties/edgeDescription/type", instanceLocation: "#/edgeStates/"+j+"/edgeDescription" }]
+      if ("edgeDescription" in data.edgeStates[k] && hasOwn(data.edgeStates[k], "edgeDescription")) {
+        if (!(typeof data.edgeStates[k].edgeDescription === "string")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/properties/edgeDescription/type", instanceLocation: "#/edgeStates/"+k+"/edgeDescription" }]
           return false
         }
       }
-      if (!(typeof data.edgeStates[j].released === "boolean")) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/properties/released/type", instanceLocation: "#/edgeStates/"+j+"/released" }]
+      if (!(typeof data.edgeStates[k].released === "boolean")) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/edgeStates/items/properties/released/type", instanceLocation: "#/edgeStates/"+k+"/released" }]
         return false
       }
-      if ("trajectory" in data.edgeStates[j] && hasOwn(data.edgeStates[j], "trajectory")) {
+      if ("trajectory" in data.edgeStates[k] && hasOwn(data.edgeStates[k], "trajectory")) {
         const err2 = validate.errors
-        const res2 = ref3(data.edgeStates[j].trajectory)
+        const res2 = ref3(data.edgeStates[k].trajectory)
         const suberr2 = ref3.errors
         validate.errors = err2
         if (!res2) {
-          validate.errors = [errorMerge(suberr2[0], "#/allOf/1/properties/edgeStates/items/properties/trajectory/$ref", "#/edgeStates/"+j+"/trajectory")]
+          validate.errors = [errorMerge(suberr2[0], "#/allOf/1/properties/edgeStates/items/properties/trajectory/$ref", "#/edgeStates/"+k+"/trajectory")]
           return false
         }
       }
@@ -2579,97 +2613,97 @@ const ref0 = function validate(data) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/type", instanceLocation: "#/loads" }]
       return false
     }
-    for (let m = 0; m < data.loads.length; m++) {
-      if (m in data.loads && hasOwn(data.loads, m)) {
-        if (!(typeof data.loads[m] === "object" && data.loads[m] && !Array.isArray(data.loads[m]))) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/type", instanceLocation: "#/loads/"+m }]
+    for (let n = 0; n < data.loads.length; n++) {
+      if (n in data.loads && hasOwn(data.loads, n)) {
+        if (!(typeof data.loads[n] === "object" && data.loads[n] && !Array.isArray(data.loads[n]))) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/type", instanceLocation: "#/loads/"+n }]
           return false
         }
-        if ("loadId" in data.loads[m] && hasOwn(data.loads[m], "loadId")) {
-          if (!(typeof data.loads[m].loadId === "string")) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadId/type", instanceLocation: "#/loads/"+m+"/loadId" }]
+        if ("loadId" in data.loads[n] && hasOwn(data.loads[n], "loadId")) {
+          if (!(typeof data.loads[n].loadId === "string")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadId/type", instanceLocation: "#/loads/"+n+"/loadId" }]
             return false
           }
         }
-        if ("loadType" in data.loads[m] && hasOwn(data.loads[m], "loadType")) {
-          if (!(typeof data.loads[m].loadType === "string")) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadType/type", instanceLocation: "#/loads/"+m+"/loadType" }]
+        if ("loadType" in data.loads[n] && hasOwn(data.loads[n], "loadType")) {
+          if (!(typeof data.loads[n].loadType === "string")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadType/type", instanceLocation: "#/loads/"+n+"/loadType" }]
             return false
           }
         }
-        if ("loadPosition" in data.loads[m] && hasOwn(data.loads[m], "loadPosition")) {
-          if (!(typeof data.loads[m].loadPosition === "string")) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadPosition/type", instanceLocation: "#/loads/"+m+"/loadPosition" }]
+        if ("loadPosition" in data.loads[n] && hasOwn(data.loads[n], "loadPosition")) {
+          if (!(typeof data.loads[n].loadPosition === "string")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadPosition/type", instanceLocation: "#/loads/"+n+"/loadPosition" }]
             return false
           }
         }
-        if ("boundingBoxReference" in data.loads[m] && hasOwn(data.loads[m], "boundingBoxReference")) {
-          if (!(typeof data.loads[m].boundingBoxReference === "object" && data.loads[m].boundingBoxReference && !Array.isArray(data.loads[m].boundingBoxReference))) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/type", instanceLocation: "#/loads/"+m+"/boundingBoxReference" }]
+        if ("boundingBoxReference" in data.loads[n] && hasOwn(data.loads[n], "boundingBoxReference")) {
+          if (!(typeof data.loads[n].boundingBoxReference === "object" && data.loads[n].boundingBoxReference && !Array.isArray(data.loads[n].boundingBoxReference))) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/type", instanceLocation: "#/loads/"+n+"/boundingBoxReference" }]
             return false
           }
-          if (!("x" in data.loads[m].boundingBoxReference && hasOwn(data.loads[m].boundingBoxReference, "x"))) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/required", instanceLocation: "#/loads/"+m+"/boundingBoxReference/x" }]
+          if (!("x" in data.loads[n].boundingBoxReference && hasOwn(data.loads[n].boundingBoxReference, "x"))) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/required", instanceLocation: "#/loads/"+n+"/boundingBoxReference/x" }]
             return false
           }
-          if (!("y" in data.loads[m].boundingBoxReference && hasOwn(data.loads[m].boundingBoxReference, "y"))) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/required", instanceLocation: "#/loads/"+m+"/boundingBoxReference/y" }]
+          if (!("y" in data.loads[n].boundingBoxReference && hasOwn(data.loads[n].boundingBoxReference, "y"))) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/required", instanceLocation: "#/loads/"+n+"/boundingBoxReference/y" }]
             return false
           }
-          if (!("z" in data.loads[m].boundingBoxReference && hasOwn(data.loads[m].boundingBoxReference, "z"))) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/required", instanceLocation: "#/loads/"+m+"/boundingBoxReference/z" }]
+          if (!("z" in data.loads[n].boundingBoxReference && hasOwn(data.loads[n].boundingBoxReference, "z"))) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/required", instanceLocation: "#/loads/"+n+"/boundingBoxReference/z" }]
             return false
           }
-          if (!(typeof data.loads[m].boundingBoxReference.x === "number")) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/properties/x/type", instanceLocation: "#/loads/"+m+"/boundingBoxReference/x" }]
+          if (!(typeof data.loads[n].boundingBoxReference.x === "number")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/properties/x/type", instanceLocation: "#/loads/"+n+"/boundingBoxReference/x" }]
             return false
           }
-          if (!(typeof data.loads[m].boundingBoxReference.y === "number")) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/properties/y/type", instanceLocation: "#/loads/"+m+"/boundingBoxReference/y" }]
+          if (!(typeof data.loads[n].boundingBoxReference.y === "number")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/properties/y/type", instanceLocation: "#/loads/"+n+"/boundingBoxReference/y" }]
             return false
           }
-          if (!(typeof data.loads[m].boundingBoxReference.z === "number")) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/properties/z/type", instanceLocation: "#/loads/"+m+"/boundingBoxReference/z" }]
+          if (!(typeof data.loads[n].boundingBoxReference.z === "number")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/properties/z/type", instanceLocation: "#/loads/"+n+"/boundingBoxReference/z" }]
             return false
           }
-          if ("theta" in data.loads[m].boundingBoxReference && hasOwn(data.loads[m].boundingBoxReference, "theta")) {
-            if (!(typeof data.loads[m].boundingBoxReference.theta === "number")) {
-              validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/properties/theta/type", instanceLocation: "#/loads/"+m+"/boundingBoxReference/theta" }]
+          if ("theta" in data.loads[n].boundingBoxReference && hasOwn(data.loads[n].boundingBoxReference, "theta")) {
+            if (!(typeof data.loads[n].boundingBoxReference.theta === "number")) {
+              validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/boundingBoxReference/properties/theta/type", instanceLocation: "#/loads/"+n+"/boundingBoxReference/theta" }]
               return false
             }
           }
         }
-        if ("loadDimensions" in data.loads[m] && hasOwn(data.loads[m], "loadDimensions")) {
-          if (!(typeof data.loads[m].loadDimensions === "object" && data.loads[m].loadDimensions && !Array.isArray(data.loads[m].loadDimensions))) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/type", instanceLocation: "#/loads/"+m+"/loadDimensions" }]
+        if ("loadDimensions" in data.loads[n] && hasOwn(data.loads[n], "loadDimensions")) {
+          if (!(typeof data.loads[n].loadDimensions === "object" && data.loads[n].loadDimensions && !Array.isArray(data.loads[n].loadDimensions))) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/type", instanceLocation: "#/loads/"+n+"/loadDimensions" }]
             return false
           }
-          if (!("length" in data.loads[m].loadDimensions && hasOwn(data.loads[m].loadDimensions, "length"))) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/required", instanceLocation: "#/loads/"+m+"/loadDimensions/length" }]
+          if (!("length" in data.loads[n].loadDimensions && hasOwn(data.loads[n].loadDimensions, "length"))) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/required", instanceLocation: "#/loads/"+n+"/loadDimensions/length" }]
             return false
           }
-          if (!("width" in data.loads[m].loadDimensions && hasOwn(data.loads[m].loadDimensions, "width"))) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/required", instanceLocation: "#/loads/"+m+"/loadDimensions/width" }]
+          if (!("width" in data.loads[n].loadDimensions && hasOwn(data.loads[n].loadDimensions, "width"))) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/required", instanceLocation: "#/loads/"+n+"/loadDimensions/width" }]
             return false
           }
-          if (!(typeof data.loads[m].loadDimensions.length === "number")) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/properties/length/type", instanceLocation: "#/loads/"+m+"/loadDimensions/length" }]
+          if (!(typeof data.loads[n].loadDimensions.length === "number")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/properties/length/type", instanceLocation: "#/loads/"+n+"/loadDimensions/length" }]
             return false
           }
-          if (!(typeof data.loads[m].loadDimensions.width === "number")) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/properties/width/type", instanceLocation: "#/loads/"+m+"/loadDimensions/width" }]
+          if (!(typeof data.loads[n].loadDimensions.width === "number")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/properties/width/type", instanceLocation: "#/loads/"+n+"/loadDimensions/width" }]
             return false
           }
-          if ("height" in data.loads[m].loadDimensions && hasOwn(data.loads[m].loadDimensions, "height")) {
-            if (!(typeof data.loads[m].loadDimensions.height === "number")) {
-              validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/properties/height/type", instanceLocation: "#/loads/"+m+"/loadDimensions/height" }]
+          if ("height" in data.loads[n].loadDimensions && hasOwn(data.loads[n].loadDimensions, "height")) {
+            if (!(typeof data.loads[n].loadDimensions.height === "number")) {
+              validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/loadDimensions/properties/height/type", instanceLocation: "#/loads/"+n+"/loadDimensions/height" }]
               return false
             }
           }
         }
-        if ("weight" in data.loads[m] && hasOwn(data.loads[m], "weight")) {
-          if (!(typeof data.loads[m].weight === "number")) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/weight/type", instanceLocation: "#/loads/"+m+"/weight" }]
+        if ("weight" in data.loads[n] && hasOwn(data.loads[n], "weight")) {
+          if (!(typeof data.loads[n].weight === "number")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/loads/items/properties/weight/type", instanceLocation: "#/loads/"+n+"/weight" }]
             return false
           }
         }
@@ -2680,47 +2714,47 @@ const ref0 = function validate(data) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/type", instanceLocation: "#/actionStates" }]
     return false
   }
-  for (let n = 0; n < data.actionStates.length; n++) {
-    if (n in data.actionStates && hasOwn(data.actionStates, n)) {
-      if (!(typeof data.actionStates[n] === "object" && data.actionStates[n] && !Array.isArray(data.actionStates[n]))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/type", instanceLocation: "#/actionStates/"+n }]
+  for (let o = 0; o < data.actionStates.length; o++) {
+    if (o in data.actionStates && hasOwn(data.actionStates, o)) {
+      if (!(typeof data.actionStates[o] === "object" && data.actionStates[o] && !Array.isArray(data.actionStates[o]))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/type", instanceLocation: "#/actionStates/"+o }]
         return false
       }
-      if (!("actionId" in data.actionStates[n] && hasOwn(data.actionStates[n], "actionId"))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/required", instanceLocation: "#/actionStates/"+n+"/actionId" }]
+      if (!("actionId" in data.actionStates[o] && hasOwn(data.actionStates[o], "actionId"))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/required", instanceLocation: "#/actionStates/"+o+"/actionId" }]
         return false
       }
-      if (!("actionStatus" in data.actionStates[n] && hasOwn(data.actionStates[n], "actionStatus"))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/required", instanceLocation: "#/actionStates/"+n+"/actionStatus" }]
+      if (!("actionStatus" in data.actionStates[o] && hasOwn(data.actionStates[o], "actionStatus"))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/required", instanceLocation: "#/actionStates/"+o+"/actionStatus" }]
         return false
       }
-      if (!(typeof data.actionStates[n].actionId === "string")) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionId/type", instanceLocation: "#/actionStates/"+n+"/actionId" }]
+      if (!(typeof data.actionStates[o].actionId === "string")) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionId/type", instanceLocation: "#/actionStates/"+o+"/actionId" }]
         return false
       }
-      if ("actionType" in data.actionStates[n] && hasOwn(data.actionStates[n], "actionType")) {
-        if (!(typeof data.actionStates[n].actionType === "string")) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionType/type", instanceLocation: "#/actionStates/"+n+"/actionType" }]
+      if ("actionType" in data.actionStates[o] && hasOwn(data.actionStates[o], "actionType")) {
+        if (!(typeof data.actionStates[o].actionType === "string")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionType/type", instanceLocation: "#/actionStates/"+o+"/actionType" }]
           return false
         }
       }
-      if ("actionDescription" in data.actionStates[n] && hasOwn(data.actionStates[n], "actionDescription")) {
-        if (!(typeof data.actionStates[n].actionDescription === "string")) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionDescription/type", instanceLocation: "#/actionStates/"+n+"/actionDescription" }]
+      if ("actionDescription" in data.actionStates[o] && hasOwn(data.actionStates[o], "actionDescription")) {
+        if (!(typeof data.actionStates[o].actionDescription === "string")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionDescription/type", instanceLocation: "#/actionStates/"+o+"/actionDescription" }]
           return false
         }
       }
-      if (!(typeof data.actionStates[n].actionStatus === "string")) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionStatus/type", instanceLocation: "#/actionStates/"+n+"/actionStatus" }]
+      if (!(typeof data.actionStates[o].actionStatus === "string")) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionStatus/type", instanceLocation: "#/actionStates/"+o+"/actionStatus" }]
         return false
       }
-      if (!(data.actionStates[n].actionStatus === "WAITING" || data.actionStates[n].actionStatus === "INITIALIZING" || data.actionStates[n].actionStatus === "PAUSED" || data.actionStates[n].actionStatus === "RUNNING" || data.actionStates[n].actionStatus === "FINISHED" || data.actionStates[n].actionStatus === "FAILED")) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionStatus/enum", instanceLocation: "#/actionStates/"+n+"/actionStatus" }]
+      if (!(data.actionStates[o].actionStatus === "WAITING" || data.actionStates[o].actionStatus === "INITIALIZING" || data.actionStates[o].actionStatus === "PAUSED" || data.actionStates[o].actionStatus === "RUNNING" || data.actionStates[o].actionStatus === "FINISHED" || data.actionStates[o].actionStatus === "FAILED")) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/actionStatus/enum", instanceLocation: "#/actionStates/"+o+"/actionStatus" }]
         return false
       }
-      if ("resultDescription" in data.actionStates[n] && hasOwn(data.actionStates[n], "resultDescription")) {
-        if (!(typeof data.actionStates[n].resultDescription === "string")) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/resultDescription/type", instanceLocation: "#/actionStates/"+n+"/resultDescription" }]
+      if ("resultDescription" in data.actionStates[o] && hasOwn(data.actionStates[o], "resultDescription")) {
+        if (!(typeof data.actionStates[o].resultDescription === "string")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/actionStates/items/properties/resultDescription/type", instanceLocation: "#/actionStates/"+o+"/resultDescription" }]
           return false
         }
       }
@@ -2749,7 +2783,7 @@ const ref0 = function validate(data) {
     }
   }
   if ("batteryHealth" in data.batteryState && hasOwn(data.batteryState, "batteryHealth")) {
-    if (!Number.isInteger(data.batteryState.batteryHealth)) {
+    if (!(typeof data.batteryState.batteryHealth === "number")) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/batteryState/properties/batteryHealth/type", instanceLocation: "#/batteryState/batteryHealth" }]
       return false
     }
@@ -2784,66 +2818,72 @@ const ref0 = function validate(data) {
     validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/type", instanceLocation: "#/errors" }]
     return false
   }
-  for (let o = 0; o < data.errors.length; o++) {
-    if (o in data.errors && hasOwn(data.errors, o)) {
-      if (!(typeof data.errors[o] === "object" && data.errors[o] && !Array.isArray(data.errors[o]))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/type", instanceLocation: "#/errors/"+o }]
+  for (let p = 0; p < data.errors.length; p++) {
+    if (p in data.errors && hasOwn(data.errors, p)) {
+      if (!(typeof data.errors[p] === "object" && data.errors[p] && !Array.isArray(data.errors[p]))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/type", instanceLocation: "#/errors/"+p }]
         return false
       }
-      if (!("errorType" in data.errors[o] && hasOwn(data.errors[o], "errorType"))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/required", instanceLocation: "#/errors/"+o+"/errorType" }]
+      if (!("errorType" in data.errors[p] && hasOwn(data.errors[p], "errorType"))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/required", instanceLocation: "#/errors/"+p+"/errorType" }]
         return false
       }
-      if (!("errorLevel" in data.errors[o] && hasOwn(data.errors[o], "errorLevel"))) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/required", instanceLocation: "#/errors/"+o+"/errorLevel" }]
+      if (!("errorLevel" in data.errors[p] && hasOwn(data.errors[p], "errorLevel"))) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/required", instanceLocation: "#/errors/"+p+"/errorLevel" }]
         return false
       }
-      if (!(typeof data.errors[o].errorType === "string")) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorType/type", instanceLocation: "#/errors/"+o+"/errorType" }]
+      if (!(typeof data.errors[p].errorType === "string")) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorType/type", instanceLocation: "#/errors/"+p+"/errorType" }]
         return false
       }
-      if ("errorReferences" in data.errors[o] && hasOwn(data.errors[o], "errorReferences")) {
-        if (!(Array.isArray(data.errors[o].errorReferences))) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/type", instanceLocation: "#/errors/"+o+"/errorReferences" }]
+      if ("errorReferences" in data.errors[p] && hasOwn(data.errors[p], "errorReferences")) {
+        if (!(Array.isArray(data.errors[p].errorReferences))) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/type", instanceLocation: "#/errors/"+p+"/errorReferences" }]
           return false
         }
-        for (let p = 0; p < data.errors[o].errorReferences.length; p++) {
-          if (p in data.errors[o].errorReferences && hasOwn(data.errors[o].errorReferences, p)) {
-            if (!(typeof data.errors[o].errorReferences[p] === "object" && data.errors[o].errorReferences[p] && !Array.isArray(data.errors[o].errorReferences[p]))) {
-              validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/type", instanceLocation: "#/errors/"+o+"errorReferences/"+p }]
+        for (let q = 0; q < data.errors[p].errorReferences.length; q++) {
+          if (q in data.errors[p].errorReferences && hasOwn(data.errors[p].errorReferences, q)) {
+            if (!(typeof data.errors[p].errorReferences[q] === "object" && data.errors[p].errorReferences[q] && !Array.isArray(data.errors[p].errorReferences[q]))) {
+              validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/type", instanceLocation: "#/errors/"+p+"errorReferences/"+q }]
               return false
             }
-            if (!("referenceKey" in data.errors[o].errorReferences[p] && hasOwn(data.errors[o].errorReferences[p], "referenceKey"))) {
-              validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/required", instanceLocation: "#/errors/"+o+"errorReferences/"+p+"/referenceKey" }]
+            if (!("referenceKey" in data.errors[p].errorReferences[q] && hasOwn(data.errors[p].errorReferences[q], "referenceKey"))) {
+              validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/required", instanceLocation: "#/errors/"+p+"errorReferences/"+q+"/referenceKey" }]
               return false
             }
-            if (!("referenceValue" in data.errors[o].errorReferences[p] && hasOwn(data.errors[o].errorReferences[p], "referenceValue"))) {
-              validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/required", instanceLocation: "#/errors/"+o+"errorReferences/"+p+"/referenceValue" }]
+            if (!("referenceValue" in data.errors[p].errorReferences[q] && hasOwn(data.errors[p].errorReferences[q], "referenceValue"))) {
+              validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/required", instanceLocation: "#/errors/"+p+"errorReferences/"+q+"/referenceValue" }]
               return false
             }
-            if (!(typeof data.errors[o].errorReferences[p].referenceKey === "string")) {
-              validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/properties/referenceKey/type", instanceLocation: "#/errors/"+o+"errorReferences/"+p+"/referenceKey" }]
+            if (!(typeof data.errors[p].errorReferences[q].referenceKey === "string")) {
+              validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/properties/referenceKey/type", instanceLocation: "#/errors/"+p+"errorReferences/"+q+"/referenceKey" }]
               return false
             }
-            if (!(typeof data.errors[o].errorReferences[p].referenceValue === "string")) {
-              validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/properties/referenceValue/type", instanceLocation: "#/errors/"+o+"errorReferences/"+p+"/referenceValue" }]
+            if (!(typeof data.errors[p].errorReferences[q].referenceValue === "string")) {
+              validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorReferences/items/properties/referenceValue/type", instanceLocation: "#/errors/"+p+"errorReferences/"+q+"/referenceValue" }]
               return false
             }
           }
         }
       }
-      if ("errorDescription" in data.errors[o] && hasOwn(data.errors[o], "errorDescription")) {
-        if (!(typeof data.errors[o].errorDescription === "string")) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorDescription/type", instanceLocation: "#/errors/"+o+"/errorDescription" }]
+      if ("errorDescription" in data.errors[p] && hasOwn(data.errors[p], "errorDescription")) {
+        if (!(typeof data.errors[p].errorDescription === "string")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorDescription/type", instanceLocation: "#/errors/"+p+"/errorDescription" }]
           return false
         }
       }
-      if (!(typeof data.errors[o].errorLevel === "string")) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorLevel/type", instanceLocation: "#/errors/"+o+"/errorLevel" }]
+      if ("errorHint" in data.errors[p] && hasOwn(data.errors[p], "errorHint")) {
+        if (!(typeof data.errors[p].errorHint === "string")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorHint/type", instanceLocation: "#/errors/"+p+"/errorHint" }]
+          return false
+        }
+      }
+      if (!(typeof data.errors[p].errorLevel === "string")) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorLevel/type", instanceLocation: "#/errors/"+p+"/errorLevel" }]
         return false
       }
-      if (!(data.errors[o].errorLevel === "WARNING" || data.errors[o].errorLevel === "FATAL")) {
-        validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorLevel/enum", instanceLocation: "#/errors/"+o+"/errorLevel" }]
+      if (!(data.errors[p].errorLevel === "WARNING" || data.errors[p].errorLevel === "FATAL")) {
+        validate.errors = [{ keywordLocation: "#/allOf/1/properties/errors/items/properties/errorLevel/enum", instanceLocation: "#/errors/"+p+"/errorLevel" }]
         return false
       }
     }
@@ -2853,66 +2893,66 @@ const ref0 = function validate(data) {
       validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/type", instanceLocation: "#/information" }]
       return false
     }
-    for (let q = 0; q < data.information.length; q++) {
-      if (q in data.information && hasOwn(data.information, q)) {
-        if (!(typeof data.information[q] === "object" && data.information[q] && !Array.isArray(data.information[q]))) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/type", instanceLocation: "#/information/"+q }]
+    for (let r = 0; r < data.information.length; r++) {
+      if (r in data.information && hasOwn(data.information, r)) {
+        if (!(typeof data.information[r] === "object" && data.information[r] && !Array.isArray(data.information[r]))) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/type", instanceLocation: "#/information/"+r }]
           return false
         }
-        if (!("infoType" in data.information[q] && hasOwn(data.information[q], "infoType"))) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/required", instanceLocation: "#/information/"+q+"/infoType" }]
+        if (!("infoType" in data.information[r] && hasOwn(data.information[r], "infoType"))) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/required", instanceLocation: "#/information/"+r+"/infoType" }]
           return false
         }
-        if (!("infoLevel" in data.information[q] && hasOwn(data.information[q], "infoLevel"))) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/required", instanceLocation: "#/information/"+q+"/infoLevel" }]
+        if (!("infoLevel" in data.information[r] && hasOwn(data.information[r], "infoLevel"))) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/required", instanceLocation: "#/information/"+r+"/infoLevel" }]
           return false
         }
-        if (!(typeof data.information[q].infoType === "string")) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoType/type", instanceLocation: "#/information/"+q+"/infoType" }]
+        if (!(typeof data.information[r].infoType === "string")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoType/type", instanceLocation: "#/information/"+r+"/infoType" }]
           return false
         }
-        if ("infoReferences" in data.information[q] && hasOwn(data.information[q], "infoReferences")) {
-          if (!(Array.isArray(data.information[q].infoReferences))) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/type", instanceLocation: "#/information/"+q+"/infoReferences" }]
+        if ("infoReferences" in data.information[r] && hasOwn(data.information[r], "infoReferences")) {
+          if (!(Array.isArray(data.information[r].infoReferences))) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/type", instanceLocation: "#/information/"+r+"/infoReferences" }]
             return false
           }
-          for (let r = 0; r < data.information[q].infoReferences.length; r++) {
-            if (r in data.information[q].infoReferences && hasOwn(data.information[q].infoReferences, r)) {
-              if (!(typeof data.information[q].infoReferences[r] === "object" && data.information[q].infoReferences[r] && !Array.isArray(data.information[q].infoReferences[r]))) {
-                validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/type", instanceLocation: "#/information/"+q+"infoReferences/"+r }]
+          for (let s = 0; s < data.information[r].infoReferences.length; s++) {
+            if (s in data.information[r].infoReferences && hasOwn(data.information[r].infoReferences, s)) {
+              if (!(typeof data.information[r].infoReferences[s] === "object" && data.information[r].infoReferences[s] && !Array.isArray(data.information[r].infoReferences[s]))) {
+                validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/type", instanceLocation: "#/information/"+r+"infoReferences/"+s }]
                 return false
               }
-              if (!("referenceKey" in data.information[q].infoReferences[r] && hasOwn(data.information[q].infoReferences[r], "referenceKey"))) {
-                validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/required", instanceLocation: "#/information/"+q+"infoReferences/"+r+"/referenceKey" }]
+              if (!("referenceKey" in data.information[r].infoReferences[s] && hasOwn(data.information[r].infoReferences[s], "referenceKey"))) {
+                validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/required", instanceLocation: "#/information/"+r+"infoReferences/"+s+"/referenceKey" }]
                 return false
               }
-              if (!("referenceValue" in data.information[q].infoReferences[r] && hasOwn(data.information[q].infoReferences[r], "referenceValue"))) {
-                validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/required", instanceLocation: "#/information/"+q+"infoReferences/"+r+"/referenceValue" }]
+              if (!("referenceValue" in data.information[r].infoReferences[s] && hasOwn(data.information[r].infoReferences[s], "referenceValue"))) {
+                validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/required", instanceLocation: "#/information/"+r+"infoReferences/"+s+"/referenceValue" }]
                 return false
               }
-              if (!(typeof data.information[q].infoReferences[r].referenceKey === "string")) {
-                validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/properties/referenceKey/type", instanceLocation: "#/information/"+q+"infoReferences/"+r+"/referenceKey" }]
+              if (!(typeof data.information[r].infoReferences[s].referenceKey === "string")) {
+                validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/properties/referenceKey/type", instanceLocation: "#/information/"+r+"infoReferences/"+s+"/referenceKey" }]
                 return false
               }
-              if (!(typeof data.information[q].infoReferences[r].referenceValue === "string")) {
-                validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/properties/referenceValue/type", instanceLocation: "#/information/"+q+"infoReferences/"+r+"/referenceValue" }]
+              if (!(typeof data.information[r].infoReferences[s].referenceValue === "string")) {
+                validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoReferences/items/properties/referenceValue/type", instanceLocation: "#/information/"+r+"infoReferences/"+s+"/referenceValue" }]
                 return false
               }
             }
           }
         }
-        if ("infoDescription" in data.information[q] && hasOwn(data.information[q], "infoDescription")) {
-          if (!(typeof data.information[q].infoDescription === "string")) {
-            validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoDescription/type", instanceLocation: "#/information/"+q+"/infoDescription" }]
+        if ("infoDescription" in data.information[r] && hasOwn(data.information[r], "infoDescription")) {
+          if (!(typeof data.information[r].infoDescription === "string")) {
+            validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoDescription/type", instanceLocation: "#/information/"+r+"/infoDescription" }]
             return false
           }
         }
-        if (!(typeof data.information[q].infoLevel === "string")) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoLevel/type", instanceLocation: "#/information/"+q+"/infoLevel" }]
+        if (!(typeof data.information[r].infoLevel === "string")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoLevel/type", instanceLocation: "#/information/"+r+"/infoLevel" }]
           return false
         }
-        if (!(data.information[q].infoLevel === "INFO" || data.information[q].infoLevel === "DEBUG")) {
-          validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoLevel/enum", instanceLocation: "#/information/"+q+"/infoLevel" }]
+        if (!(data.information[r].infoLevel === "INFO" || data.information[r].infoLevel === "DEBUG")) {
+          validate.errors = [{ keywordLocation: "#/allOf/1/properties/information/items/properties/infoLevel/enum", instanceLocation: "#/information/"+r+"/infoLevel" }]
           return false
         }
       }
