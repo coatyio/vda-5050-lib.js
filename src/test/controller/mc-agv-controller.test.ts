@@ -3955,7 +3955,7 @@ initTestContext(tap);
                 edges: [
                     {
                         edgeId: "e12", sequenceId: 1, startNodeId: "n1", endNodeId: "n2", released: true, actions: [],
-                        corridor: { leftWidth: 10, rightWidth: 10 }
+                        corridor: { leftWidth: 10, rightWidth: 10 },
                     },
                     { edgeId: "e21", sequenceId: 3, startNodeId: "n2", endNodeId: "n1", released: true, actions: [] },
                 ],
