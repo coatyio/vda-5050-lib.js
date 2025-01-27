@@ -115,6 +115,7 @@ export interface Factsheet {
      * These parameters generally specify the class and the capabilities of the AGV
      */
     typeSpecification?: TypeSpecification;
+    vehicleConfig?: VehicleConfig;
 }
 
 /**
@@ -675,6 +676,49 @@ export enum NavigationType {
     VirtualLineGuided = "VIRTUAL_LINE_GUIDED",
 }
 
+export interface VehicleConfig {
+    network?: Network;
+    /**
+     * Array containing various hardware and software versions running on the vehicle.
+     */
+    versions?: Version[];
+}
+
+export interface Network {
+    /**
+     * Default gateway used by the vehicle.
+     */
+    defaultGateway?: string;
+    /**
+     * List of DNS servers used by the vehicle.
+     */
+    dnsServers?: string[];
+    /**
+     * A priori assigned IP address of the vehicle used to communicate with the MQTT broker.
+     * Note that this IP address should not be modified/changed during operations.
+     */
+    localIpAddress?: string;
+    /**
+     * Network subnet mask.
+     */
+    netmask?: string;
+    /**
+     * List of NTP servers used by the vehicle.
+     */
+    ntpServers?: string[];
+}
+
+export interface Version {
+    /**
+     * The key of the version.
+     */
+    key: string;
+    /**
+     * The value of the action parameter.
+     */
+    value: string;
+}
+
 /**
  * Includes the protocol header of a VDA 5050 object defining common properties: headerId,
  * manufacturer, serialNumber, timestamp, version.
@@ -861,16 +905,16 @@ export interface Edge {
      */
     actions: Action[];
     /**
+     * Definition of boundaries in which a vehicle can deviate from its trajectory, e. g. to
+     * avoid obstacles.
+     */
+    corridor?: Corridor;
+    /**
      * Sets direction at junctions for line-guided vehicles, to be defined initially
      * (vehicle-individual). Can be descriptive (left, right, middle, straight) or a frequency
      * ("433MHz").
      */
     direction?: string;
-    /**
-     * Distance of the path from startNode to endNode in meters. This value is used by
-     * line-guided AGVs to decrease their speed before reaching a stop position.
-     */
-    distance?: number;
     /**
      * Verbose description of the edge.
      */
@@ -920,7 +964,7 @@ export interface Edge {
      */
     orientation?: number;
     /**
-     * Enum GLOBAL, TANGENTIAL
+     * Enum
      * "GLOBAL"- relative to the global project specific map coordinate system;
      * "TANGENTIAL"- tangential to the edge.
      * If not defined, the default value is "TANGENTIAL".
@@ -955,7 +999,38 @@ export interface Edge {
 }
 
 /**
- * Enum GLOBAL, TANGENTIAL
+ * Definition of boundaries in which a vehicle can deviate from its trajectory, e. g. to
+ * avoid obstacles.
+ */
+export interface Corridor {
+    /**
+     * Defines whether the boundaries are valid for the kinematic center or the contour of the
+     * vehicle.
+     */
+    corridorRefPoint?: CorridorRefPoint;
+    /**
+     * Defines the width of the corridor in meters to the left related to the trajectory of the
+     * vehicle.
+     */
+    leftWidth: number;
+    /**
+     * Defines the width of the corridor in meters to the right related to the trajectory of the
+     * vehicle.
+     */
+    rightWidth: number;
+}
+
+/**
+ * Defines whether the boundaries are valid for the kinematic center or the contour of the
+ * vehicle.
+ */
+export enum CorridorRefPoint {
+    Contour = "CONTOUR",
+    Kinematiccenter = "KINEMATICCENTER",
+}
+
+/**
+ * Enum
  * "GLOBAL"- relative to the global project specific map coordinate system;
  * "TANGENTIAL"- tangential to the edge.
  * If not defined, the default value is "TANGENTIAL".
@@ -1196,6 +1271,10 @@ export interface State {
      */
     loads?: Load[];
     /**
+     * Array of map-objects that are currently stored on the vehicle.
+     */
+    maps?: any[];
+    /**
      * True: AGV is almost at the end of the base and will reduce speed if no new base is
      * transmitted. Trigger for MC to send new base
      * False: no base update required
@@ -1409,6 +1488,10 @@ export interface Error {
      * Verbose description of error.
      */
     errorDescription?: string;
+    /**
+     * Hint on how to approach or solve the reported error.
+     */
+    errorHint?: string;
     /**
      * Error level.
      * WARNING: AGV is ready to start (e.g. maintenance cycle expiration warning).

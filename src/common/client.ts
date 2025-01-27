@@ -26,13 +26,21 @@ import {
     validateVisualization as validateVisualizationV1,
 } from "./vda-5050-validators-1.1";
 import {
-    validateConnection as validateConnectionV2,
-    validateFactsheet as validateFactsheetV2,
-    validateInstantActions as validateInstantActionsV2,
-    validateOrder as validateOrderV2,
-    validateState as validateStateV2,
-    validateVisualization as validateVisualizationV2,
+    validateConnection as validateConnectionV2_0,
+    validateFactsheet as validateFactsheetV2_0,
+    validateInstantActions as validateInstantActionsV2_0,
+    validateOrder as validateOrderV2_0,
+    validateState as validateStateV2_0,
+    validateVisualization as validateVisualizationV2_0,
 } from "./vda-5050-validators-2.0";
+import {
+    validateConnection as validateConnectionV2_1,
+    validateFactsheet as validateFactsheetV2_1,
+    validateInstantActions as validateInstantActionsV2_1,
+    validateOrder as validateOrderV2_1,
+    validateState as validateStateV2_1,
+    validateVisualization as validateVisualizationV2_1,
+} from "./vda-5050-validators-2.1";
 /**
  * Create a new Version 4 UUID to be used as a unique identifier for nodes,
  * edges, actions, etc.
@@ -112,7 +120,7 @@ export interface ClientOptions {
 /**
  * Represents the supported VDA5050 specification versions.
  */
-export type VdaVersion = "1.1.0" | "2.0.0";
+export type VdaVersion = "1.1.0" | "2.0.0" | "2.1.0";
 
 /**
  * Defines MQTT transport options for a VDA 5050 client.
@@ -942,8 +950,13 @@ export abstract class Client {
                         }
                         break;
                     case "2.0.0":
-                        if (!validateConnectionV2(object)) {
-                            throw new TypeError(`Invalid VDA 5050 Connection at ${validateConnectionV2.errors[0].keywordLocation}, ${validateConnectionV2.errors[0].instanceLocation}`);
+                        if (!validateConnectionV2_0(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Connection at ${validateConnectionV2_0.errors[0].keywordLocation}, ${validateConnectionV2_0.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "2.1.0":
+                        if (!validateConnectionV2_1(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Connection at ${validateConnectionV2_1.errors[0].keywordLocation}, ${validateConnectionV2_1.errors[0].instanceLocation}`);
                         }
                         break;
                     default:
@@ -958,8 +971,13 @@ export abstract class Client {
                         }
                         break;
                     case "2.0.0":
-                        if (!validateInstantActionsV2(object)) {
-                            throw new TypeError(`Invalid VDA 5050 InstantActions at ${validateInstantActionsV2.errors[0].keywordLocation}, ${validateInstantActionsV2.errors[0].instanceLocation}`);
+                        if (!validateInstantActionsV2_0(object)) {
+                            throw new TypeError(`Invalid VDA 5050 InstantActions at ${validateInstantActionsV2_0.errors[0].keywordLocation}, ${validateInstantActionsV2_0.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "2.1.0":
+                        if (!validateInstantActionsV2_1(object)) {
+                            throw new TypeError(`Invalid VDA 5050 InstantActions at ${validateInstantActionsV2_1.errors[0].keywordLocation}, ${validateInstantActionsV2_1.errors[0].instanceLocation}`);
                         }
                         break;
                     default:
@@ -974,8 +992,13 @@ export abstract class Client {
                         }
                         break;
                     case "2.0.0":
-                        if (!validateOrderV2(object)) {
-                            throw new TypeError(`Invalid VDA 5050 Order at ${validateOrderV2.errors[0].keywordLocation}, ${validateOrderV2.errors[0].instanceLocation}`);
+                        if (!validateOrderV2_0(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Order at ${validateOrderV2_0.errors[0].keywordLocation}, ${validateOrderV2_0.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "2.1.0":
+                        if (!validateOrderV2_1(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Order at ${validateOrderV2_1.errors[0].keywordLocation}, ${validateOrderV2_1.errors[0].instanceLocation}`);
                         }
                         break;
                     default:
@@ -990,8 +1013,13 @@ export abstract class Client {
                         }
                         break;
                     case "2.0.0":
-                        if (!validateStateV2(object)) {
-                            throw new TypeError(`Invalid VDA 5050 State at ${validateStateV2.errors[0].keywordLocation}, ${validateStateV2.errors[0].instanceLocation}`);
+                        if (!validateStateV2_0(object)) {
+                            throw new TypeError(`Invalid VDA 5050 State at ${validateStateV2_0.errors[0].keywordLocation}, ${validateStateV2_0.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "2.1.0":
+                        if (!validateStateV2_1(object)) {
+                            throw new TypeError(`Invalid VDA 5050 State at ${validateStateV2_1.errors[0].keywordLocation}, ${validateStateV2_1.errors[0].instanceLocation}`);
                         }
                         break;
                     default:
@@ -1006,8 +1034,13 @@ export abstract class Client {
                         }
                         break;
                     case "2.0.0":
-                        if (!validateVisualizationV2(object)) {
-                            throw new TypeError(`Invalid VDA 5050 Visualization at ${validateVisualizationV2.errors[0].keywordLocation}, ${validateVisualizationV2.errors[0].instanceLocation}`);
+                        if (!validateVisualizationV2_0(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Visualization at ${validateVisualizationV2_0.errors[0].keywordLocation}, ${validateVisualizationV2_0.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "2.1.0":
+                        if (!validateVisualizationV2_1(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Visualization at ${validateVisualizationV2_1.errors[0].keywordLocation}, ${validateVisualizationV2_1.errors[0].instanceLocation}`);
                         }
                         break;
                     default:
@@ -1017,8 +1050,13 @@ export abstract class Client {
             case Topic.Factsheet:
                 switch (vdaVersion) {
                     case "2.0.0":
-                        if (!validateFactsheetV2(object)) {
-                            throw new TypeError(`Invalid VDA 5050 Factsheet at ${validateFactsheetV2.errors[0].keywordLocation}, ${validateFactsheetV2.errors[0].instanceLocation}`);
+                        if (!validateFactsheetV2_0(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Factsheet at ${validateFactsheetV2_0.errors[0].keywordLocation}, ${validateFactsheetV2_0.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "2.1.0":
+                        if (!validateFactsheetV2_1(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Factsheet at ${validateFactsheetV2_1.errors[0].keywordLocation}, ${validateFactsheetV2_1.errors[0].instanceLocation}`);
                         }
                         break;
                     default:
@@ -1265,7 +1303,7 @@ export abstract class Client {
     }
 
     private _isValidVdaVersion(version: string) {
-        return version === "1.1.0" || version === "1.1" || version === "2.0" || version === "2.0.0";
+        return version === "1.1.0" || version === "1.1" || version === "2.0" || version === "2.0.0" || version === "2.1" || version === "2.1.0";
     }
 
     private _validateTopic(topic: string, forSubscription: boolean) {

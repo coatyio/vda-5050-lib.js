@@ -1042,12 +1042,6 @@ const ref0 = function validate(data) {
       }
     }
   }
-  if ("localizationParameters" in data && hasOwn(data, "localizationParameters")) {
-    if (!Number.isInteger(data.localizationParameters)) {
-      validate.errors = [{ keywordLocation: "#/allOf/1/properties/localizationParameters/type", instanceLocation: "#/localizationParameters" }]
-      return false
-    }
-  }
   return true
 };
 return ref0})();
