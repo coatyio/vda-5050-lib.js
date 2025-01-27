@@ -2,6 +2,16 @@
 
 
 
+# [1.5.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.4.2...v1.5.0) (2025-01-27)
+
+Adding VDA5050 V2.1.0 Support
+
+### Features
+
+* add vda5050 v2.1.0 support ([8f3c8cd](https://github.com/coatyio/vda-5050-lib.js/commit/8f3c8cd1ff934020d2cd9b5555ccbd7bcb5fa578))
+
+
+
 ## [1.4.2](https://github.com/coatyio/vda-5050-lib.js/compare/v1.4.0...v1.4.2) (2024-11-21)
 
 Release (v1.4.2)

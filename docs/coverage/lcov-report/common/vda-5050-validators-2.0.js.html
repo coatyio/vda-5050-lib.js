@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">26.42% </span>
+                <span class="strong">26.43% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>634/2399</span>
+                <span class='fraction'>633/2395</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">34.26% </span>
+                <span class="strong">34.49% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>928/2708</span>
+                <span class='fraction'>932/2702</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">26.9% </span>
+                <span class="strong">26.91% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>620/2304</span>
+                <span class='fraction'>619/2300</span>
             </div>
         
             
@@ -57,11 +57,11 @@
         <template id="filterTemplate">
             <div class="quiet">
                 Filter:
-                <input oninput="onInput()" type="search" id="fileSearch">
+                <input type="search" id="fileSearch">
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -3237,13 +3237,7 @@
 <a name='L3172'></a><a href='#L3172'>3172</a>
 <a name='L3173'></a><a href='#L3173'>3173</a>
 <a name='L3174'></a><a href='#L3174'>3174</a>
-<a name='L3175'></a><a href='#L3175'>3175</a>
-<a name='L3176'></a><a href='#L3176'>3176</a>
-<a name='L3177'></a><a href='#L3177'>3177</a>
-<a name='L3178'></a><a href='#L3178'>3178</a>
-<a name='L3179'></a><a href='#L3179'>3179</a>
-<a name='L3180'></a><a href='#L3180'>3180</a>
-<a name='L3181'></a><a href='#L3181'>3181</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L3175'></a><a href='#L3175'>3175</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -4285,12 +4279,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -6433,7 +6421,7 @@ const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 const format0 = (input) =&gt; {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (input.length &gt; 10 + 1 + 9 + 12 + 6) <span class="cstat-no" title="statement not covered" >return false</span>
     const full = /^\d\d\d\d-(?:0[1-9]|1[0-2])-(?:[0-2]\d|3[01])[t\s](?:2[0-3]|[0-1]\d):[0-5]\d:(?:[0-5]\d|60)(?:\.\d+)?(?:z|[+-](?:2[0-3]|[0-1]\d)(?::?[0-5]\d)?)$/i
-    const feb = input[5] === '0' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >input[6] === '2'</span>
+    const feb = input[5] === '0' &amp;&amp; input[6] === '2'
     <span class="missing-if-branch" title="if path not taken" >I</span>if ((feb &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >input[8] === '3')</span> || !full.test(input)) <span class="cstat-no" title="statement not covered" >return false</span>
     <span class="missing-if-branch" title="if path not taken" >I</span>if (input[17] === '6') {
       const p = <span class="cstat-no" title="statement not covered" >input.slice(11).match(/([0-9.]+|[^0-9.])/g)</span>
@@ -6544,7 +6532,7 @@ const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 const format0 = (input) =&gt; {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (input.length &gt; 10 + 1 + 9 + 12 + 6) <span class="cstat-no" title="statement not covered" >return false</span>
     const full = /^\d\d\d\d-(?:0[1-9]|1[0-2])-(?:[0-2]\d|3[01])[t\s](?:2[0-3]|[0-1]\d):[0-5]\d:(?:[0-5]\d|60)(?:\.\d+)?(?:z|[+-](?:2[0-3]|[0-1]\d)(?::?[0-5]\d)?)$/i
-    const feb = input[5] === '0' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >input[6] === '2'</span>
+    const feb = input[5] === '0' &amp;&amp; input[6] === '2'
     <span class="missing-if-branch" title="if path not taken" >I</span>if ((feb &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >input[8] === '3')</span> || !full.test(input)) <span class="cstat-no" title="statement not covered" >return false</span>
     <span class="missing-if-branch" title="if path not taken" >I</span>if (input[17] === '6') {
       const p = <span class="cstat-no" title="statement not covered" >input.slice(11).match(/([0-9.]+|[^0-9.])/g)</span>
@@ -7467,12 +7455,6 @@ const ref0 = function validate(data) {
       }
     }
   }
-  <span class="missing-if-branch" title="if path not taken" >I</span>if ("localizationParameters" in data &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >hasOwn(data, "localizationParameters"))</span> {
-<span class="cstat-no" title="statement not covered" >    if (!Number.isInteger(data.localizationParameters)) {</span>
-<span class="cstat-no" title="statement not covered" >      validate.errors = [{ keywordLocation: "#/allOf/1/properties/localizationParameters/type", instanceLocation: "#/localizationParameters" }]</span>
-<span class="cstat-no" title="statement not covered" >      return false</span>
-    }
-  }
   return true
 };
 return ref0})();
@@ -7578,7 +7560,7 @@ const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 const format0 = (input) =&gt; {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (input.length &gt; 10 + 1 + 9 + 12 + 6) <span class="cstat-no" title="statement not covered" >return false</span>
     const full = /^\d\d\d\d-(?:0[1-9]|1[0-2])-(?:[0-2]\d|3[01])[t\s](?:2[0-3]|[0-1]\d):[0-5]\d:(?:[0-5]\d|60)(?:\.\d+)?(?:z|[+-](?:2[0-3]|[0-1]\d)(?::?[0-5]\d)?)$/i
-    const feb = input[5] === '0' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >input[6] === '2'</span>
+    const feb = input[5] === '0' &amp;&amp; input[6] === '2'
     <span class="missing-if-branch" title="if path not taken" >I</span>if ((feb &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >input[8] === '3')</span> || !full.test(input)) <span class="cstat-no" title="statement not covered" >return false</span>
     <span class="missing-if-branch" title="if path not taken" >I</span>if (input[17] === '6') {
       const p = <span class="cstat-no" title="statement not covered" >input.slice(11).match(/([0-9.]+|[^0-9.])/g)</span>
@@ -7769,7 +7751,7 @@ const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 const format0 = (input) =&gt; {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (input.length &gt; 10 + 1 + 9 + 12 + 6) <span class="cstat-no" title="statement not covered" >return false</span>
     const full = /^\d\d\d\d-(?:0[1-9]|1[0-2])-(?:[0-2]\d|3[01])[t\s](?:2[0-3]|[0-1]\d):[0-5]\d:(?:[0-5]\d|60)(?:\.\d+)?(?:z|[+-](?:2[0-3]|[0-1]\d)(?::?[0-5]\d)?)$/i
-    const feb = input[5] === '0' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >input[6] === '2'</span>
+    const feb = input[5] === '0' &amp;&amp; input[6] === '2'
     <span class="missing-if-branch" title="if path not taken" >I</span>if ((feb &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >input[8] === '3')</span> || !full.test(input)) <span class="cstat-no" title="statement not covered" >return false</span>
     <span class="missing-if-branch" title="if path not taken" >I</span>if (input[17] === '6') {
       const p = <span class="cstat-no" title="statement not covered" >input.slice(11).match(/([0-9.]+|[^0-9.])/g)</span>
@@ -8396,7 +8378,7 @@ const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 const format0 = (input) =&gt; {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (input.length &gt; 10 + 1 + 9 + 12 + 6) <span class="cstat-no" title="statement not covered" >return false</span>
     const full = /^\d\d\d\d-(?:0[1-9]|1[0-2])-(?:[0-2]\d|3[01])[t\s](?:2[0-3]|[0-1]\d):[0-5]\d:(?:[0-5]\d|60)(?:\.\d+)?(?:z|[+-](?:2[0-3]|[0-1]\d)(?::?[0-5]\d)?)$/i
-    const feb = input[5] === '0' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >input[6] === '2'</span>
+    const feb = input[5] === '0' &amp;&amp; input[6] === '2'
     <span class="missing-if-branch" title="if path not taken" >I</span>if ((feb &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >input[8] === '3')</span> || !full.test(input)) <span class="cstat-no" title="statement not covered" >return false</span>
     <span class="missing-if-branch" title="if path not taken" >I</span>if (input[17] === '6') {
       const p = <span class="cstat-no" title="statement not covered" >input.slice(11).match(/([0-9.]+|[^0-9.])/g)</span>
@@ -9383,7 +9365,7 @@ const hasOwn = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
 const format0 = (input) =&gt; {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (input.length &gt; 10 + 1 + 9 + 12 + 6) <span class="cstat-no" title="statement not covered" >return false</span>
     const full = /^\d\d\d\d-(?:0[1-9]|1[0-2])-(?:[0-2]\d|3[01])[t\s](?:2[0-3]|[0-1]\d):[0-5]\d:(?:[0-5]\d|60)(?:\.\d+)?(?:z|[+-](?:2[0-3]|[0-1]\d)(?::?[0-5]\d)?)$/i
-    const feb = input[5] === '0' &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >input[6] === '2'</span>
+    const feb = input[5] === '0' &amp;&amp; input[6] === '2'
     <span class="missing-if-branch" title="if path not taken" >I</span>if ((feb &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >input[8] === '3')</span> || !full.test(input)) <span class="cstat-no" title="statement not covered" >return false</span>
     <span class="missing-if-branch" title="if path not taken" >I</span>if (input[17] === '6') {
       const p = <span class="cstat-no" title="statement not covered" >input.slice(11).match(/([0-9.]+|[^0-9.])/g)</span>
@@ -9610,7 +9592,7 @@ module.exports = { validateConnection, validateFactsheet, validateHeader, valida
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-11-21T15:26:44.217Z
+                at 2025-01-27T12:42:12.477Z
             </div>
         <script src="../prettify.js"></script>
         <script>
