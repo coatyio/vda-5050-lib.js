@@ -1,6 +1,6 @@
 {
     "name": "vda-5050-lib",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "description": "Universal VDA 5050 library for Node.js and browsers",
     "homepage": "https://github.com/coatyio/vda-5050-lib.js",
     "repository": {

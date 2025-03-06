@@ -109,8 +109,10 @@ async function testOrderError(
                 ts.not(withError, undefined);
                 ts.equal(withError.errorLevel, ErrorLevel.Warning);
                 ts.equal(withError.errorType, errorType);
-                ts.ok(withError.errorReferences.some(r => r.referenceKey === "orderId" && r.referenceValue === order.orderId));
-                ts.ok(withError.errorReferences.some(r => r.referenceKey === "orderUpdateId"));
+                ts.ok((withError.errorReferences.length < 1) ||
+                    (withError.errorReferences.some(r => r.referenceKey === "orderId" && r.referenceValue === order.orderId)));
+                ts.ok((withError.errorReferences.length < 1) ||
+                    withError.errorReferences.some(r => r.referenceKey === "orderUpdateId"));
                 ts.ok(!withError.errorReferences.some(r => r.referenceKey === "topic") ||
                     withError.errorReferences.some(r => r.referenceKey === "topic" && r.referenceValue === Topic.Order));
                 ts.ok(!withError.errorReferences.some(r => r.referenceKey === "headerId") ||
@@ -419,7 +421,6 @@ initTestContext(tap);
                 resolve();
             }, 3000);
         }));
-
         /* Isolated instant action tests */
 
         await t.test("instant action invalid - not well-formed", ts => new Promise(async resolve => {
@@ -1200,6 +1201,26 @@ initTestContext(tap);
             undefined,
             { referenceKey: "operatingMode", referenceValue: "SERVICE" },
             { referenceKey: "orderUpdateId", referenceValue: "0" },
+        );
+
+        await testOrderError(t, "order invalid - first node not within deviation range, malformed error references",
+            ErrorType.OrderNoRoute,
+            mcControllerWithoutValidation,
+            agvId3,
+            {
+                orderId: createUuid(),
+                orderUpdateId: 0,
+                nodes: [{ nodeId: "n1", sequenceId: 0, released: true, nodePosition: { x: 1, y: 1, mapId: "local" }, actions: [] }],
+                edges: [],
+            },
+            {
+                ac: agvController3, keyChain: "errors", newValue: [{
+                    errorType: ErrorType.OrderNoRoute,
+                    errorLevel: ErrorLevel.Warning,
+                    errorReferences: [],
+                }],
+            },
+            undefined,
         );
 
         /* Order execution tests */
@@ -3728,6 +3749,26 @@ initTestContext(tap);
             { referenceKey: "nodeId", referenceValue: "n2" },
             { referenceKey: "nodePosition", referenceValue: "undefined" },
             { referenceKey: "orderUpdateId", referenceValue: "0" },
+        );
+
+        await testOrderError(t, "order invalid - first node not within deviation range, malformed error references",
+            ErrorType.OrderNoRoute,
+            mcControllerWithoutValidation,
+            agvId3,
+            {
+                orderId: createUuid(),
+                orderUpdateId: 0,
+                nodes: [{ nodeId: "n1", sequenceId: 0, released: true, nodePosition: { x: 1, y: 1, mapId: "local" }, actions: [] }],
+                edges: [],
+            },
+            {
+                ac: agvController3, keyChain: "errors", newValue: [{
+                    errorType: ErrorType.OrderNoRoute,
+                    errorLevel: ErrorLevel.Warning,
+                    errorReferences: [],
+                }],
+            },
+            undefined,
         );
 
         await testOrderError(t, "order invalid - first node not within deviation range",
