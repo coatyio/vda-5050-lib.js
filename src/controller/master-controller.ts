@@ -491,6 +491,9 @@ export class MasterController extends MasterControlClient {
                 // To prevent such cases, it is recommended to always validate
                 // outbound topic objects with master controller client option
                 // "topicObjectValidation" (default is true).
+            } else if (orderId === undefined) {
+                // In case that there are no orderId in the error references, get the last assigned order from cache
+                cache = this._getLastAssignedOrderStateCache(agvId);
             }
             if (cache !== undefined) {
                 // Clear cache entry to support follow-up assignment of an order
