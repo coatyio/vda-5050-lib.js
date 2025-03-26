@@ -10,7 +10,10 @@
     "readme": "README.md",
     "scripts": {
         "build:schema": "vda-5050 schema -q -c .vda-5050-cli.schema.config.json",
-        "build:validator": "node -e \"require('./scripts/create-validators.js').createCoreValidators('1.1')\" && node -e \"require('./scripts/create-validators.js').createCoreValidators('2.0')\" && node -e \"require('./scripts/create-validators.js').createCoreValidators('2.1')\"",
+        "build:validator": "npm-run-all -s -c _build:validator1_1 _build:validator2_0 _build:validator2_1",
+        "_build:validator1_1": "node -e \"require('./scripts/create-validators.js').createCoreValidators('1.1')\"",
+        "_build:validator2_0": "node -e \"require('./scripts/create-validators.js').createCoreValidators('2.0')\"",
+        "_build:validator2_1": "node -e \"require('./scripts/create-validators.js').createCoreValidators('2.2')\"",
         "build": "gulp build",
         "lint": "gulp lint",
         "lint:fix": "gulp lint:fix",
