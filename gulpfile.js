@@ -51,15 +51,25 @@ gulp.task("copy:js", () => {
         .pipe(gulp.dest("dist"));
 });
 
-gulp.task("copy:assets", () => {
-    return gulp
-        .src([
+gulp.task("copy:assets", async () => {
+    await new Promise((resolve, reject) => {
+        gulp.src([
             ".npmignore",
             "README.md",
             "LICENSE",
-            "package.json",
         ])
-        .pipe(gulp.dest("dist"));
+            .pipe(gulp.dest("dist"))
+            .on("end", resolve)
+            .on("error", reject);
+    });
+    // Fix main/types paths in dist/package.json so they are relative to dist/.
+    const pkg = await fsextra.readJson("package.json");
+    for (const field of ["main", "types"]) {
+        if (typeof pkg[field] === "string" && pkg[field].startsWith("dist/")) {
+            pkg[field] = pkg[field].slice("dist/".length);
+        }
+    }
+    await fsextra.writeJson(path.join("dist", "package.json"), pkg, { spaces: 4 });
 });
 
 /**

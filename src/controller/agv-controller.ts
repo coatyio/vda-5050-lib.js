@@ -33,6 +33,7 @@ import {
     Velocity,
     Visualization,
 } from "..";
+import * as V30 from "../common/vda-5050-types-3.0";
 
 /**
  * Represents context information needed to perform initializations on an AGV
@@ -1205,7 +1206,8 @@ export class AgvController extends AgvClient {
             if (this._currentState.velocity !== undefined) {
                 vis.velocity = this._currentState.velocity;
             }
-            await this.publish(Topic.Visualization, vis, { dropIfOffline: true });
+            const publishVis = this._isV3() ? this._transformVisualizationForV3(vis) : vis;
+            await this.publish(Topic.Visualization, publishVis, { dropIfOffline: true });
         } catch (error) {
             this.debug("Couldn't publish visualization: %s", error);
         }
@@ -1213,7 +1215,8 @@ export class AgvController extends AgvClient {
 
     private async _publishCurrentState() {
         this._resetPublishStateTimer();
-        const publishedState = await this.publish(Topic.State, this._currentState, { dropIfOffline: true });
+        const stateToPublish = this._isV3() ? this._transformStateForV3(this._currentState) : this._currentState;
+        const publishedState = await this.publish(Topic.State, stateToPublish, { dropIfOffline: true });
         if (publishedState !== undefined) {
             delete this._currentState.timestamp;
             this._cleanupInstantActionStates();
@@ -1254,6 +1257,102 @@ export class AgvController extends AgvClient {
 
     private _cloneState(state: Partial<Headerless<State>>): Partial<Headerless<State>> {
         return state === undefined ? {} : JSON.parse(JSON.stringify(state));
+    }
+
+    private _isV3(): boolean {
+        return this.clientOptions.vdaVersion === "3.0.0";
+    }
+
+    /**
+     * Transforms the internal V2.1 state shape to V3.0 state shape for publishing.
+     *
+     * Maps:
+     * - `batteryState` → `powerSupply` (batteryCharge → stateOfCharge, reach → range)
+     * - `safetyState.eStop` → `safetyState.activeEmergencyStop`
+     * - `agvPosition` → `mobileRobotPosition` (positionInitialized → localized)
+     * - adds `instantActionStates` (required in V3.0)
+     */
+    private _transformStateForV3(state: Headerless<State>): any {
+        const v3State: any = { ...state };
+
+        // Transform batteryState → powerSupply
+        if (state.batteryState) {
+            v3State.powerSupply = {
+                stateOfCharge: state.batteryState.batteryCharge,
+                charging: state.batteryState.charging,
+                batteryVoltage: state.batteryState.batteryVoltage,
+            } as V30.PowerSupply;
+            if (state.batteryState.reach !== undefined) {
+                v3State.powerSupply.range = state.batteryState.reach;
+            }
+            delete v3State.batteryState;
+        }
+
+        // Transform safetyState.eStop → safetyState.activeEmergencyStop
+        if (state.safetyState) {
+            const eStopMap: Record<string, V30.ActiveEmergencyStop> = {
+                [EStop.Autoack]: V30.ActiveEmergencyStop.None,
+                [EStop.Manual]: V30.ActiveEmergencyStop.Manual,
+                [EStop.Remote]: V30.ActiveEmergencyStop.Remote,
+                [EStop.None]: V30.ActiveEmergencyStop.None,
+            };
+            v3State.safetyState = {
+                activeEmergencyStop: eStopMap[state.safetyState.eStop] ?? V30.ActiveEmergencyStop.None,
+                fieldViolation: state.safetyState.fieldViolation,
+            } as V30.SafetyState;
+        }
+
+        // Transform agvPosition → mobileRobotPosition
+        if (state.agvPosition) {
+            v3State.mobileRobotPosition = {
+                x: state.agvPosition.x,
+                y: state.agvPosition.y,
+                theta: state.agvPosition.theta,
+                mapId: state.agvPosition.mapId,
+                localized: state.agvPosition.positionInitialized ?? true,
+            } as V30.MobileRobotPosition;
+            if (state.agvPosition.mapDescription !== undefined) {
+                v3State.mobileRobotPosition.mapDescription = state.agvPosition.mapDescription;
+            }
+            if (state.agvPosition.deviationRange !== undefined) {
+                v3State.mobileRobotPosition.deviationRange = state.agvPosition.deviationRange;
+            }
+            delete v3State.agvPosition;
+        }
+
+        // Add instantActionStates (required in V3.0, separate from actionStates)
+        if (!v3State.instantActionStates) {
+            v3State.instantActionStates = [];
+        }
+
+        return v3State;
+    }
+
+    /**
+     * Transforms the internal V2.1 visualization shape to V3.0 for publishing.
+     *
+     * Maps `agvPosition` → `mobileRobotPosition`.
+     */
+    private _transformVisualizationForV3(vis: Headerless<Visualization>): any {
+        const v3Vis: any = { ...vis };
+        if (vis.agvPosition) {
+            v3Vis.mobileRobotPosition = {
+                x: vis.agvPosition.x,
+                y: vis.agvPosition.y,
+                theta: vis.agvPosition.theta,
+                mapId: vis.agvPosition.mapId,
+                localized: vis.agvPosition.positionInitialized ?? true,
+            };
+            if (vis.agvPosition.mapDescription !== undefined) {
+                v3Vis.mobileRobotPosition.mapDescription = vis.agvPosition.mapDescription;
+            }
+            delete v3Vis.agvPosition;
+        }
+        // V3.0 requires referenceStateHeaderId
+        if (v3Vis.referenceStateHeaderId === undefined) {
+            v3Vis.referenceStateHeaderId = 0;
+        }
+        return v3Vis;
     }
 
     private _findErrorIndex(error: Error) {
@@ -1319,16 +1418,18 @@ export class AgvController extends AgvClient {
         // control can reschedule the order at a later time or on another AGV.
 
         if (this._currentState.batteryState.charging) {
+            const chargingRefKey = this._isV3() ? "powerSupply.charging" : "batteryState.charging";
             const error = this._createOrderError(order, ErrorType.Order, "order is not executable while charging",
-                { referenceKey: "batteryState.charging", referenceValue: "true" });
+                { referenceKey: chargingRefKey, referenceValue: "true" });
             this.debug("Order rejected as charging is in progress: %j", error);
             this._rejectOrder(error);
             return;
         }
 
         if (this._currentState.safetyState.eStop !== EStop.None) {
+            const eStopRefKey = this._isV3() ? "safetyState.activeEmergencyStop" : "safetyState.eStop";
             const error = this._createOrderError(order, ErrorType.Order, "order is not executable as emergency stop is active",
-                { referenceKey: "safetyState.eStop", referenceValue: this._currentState.safetyState.eStop });
+                { referenceKey: eStopRefKey, referenceValue: this._currentState.safetyState.eStop });
             this.debug("Order rejected as emergency stop is active: %j", error);
             this._rejectOrder(error);
             return;

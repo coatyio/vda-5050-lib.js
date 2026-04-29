@@ -970,8 +970,7 @@ export class MasterController extends MasterControlClient {
             currentChanges.paused = newDeltas.paused = state.paused;
             hasChanges = true;
         }
-        if (currentChanges.safetyState.eStop !== state.safetyState.eStop ||
-            currentChanges.safetyState.fieldViolation !== state.safetyState.fieldViolation) {
+        if (this._hasSafetyStateChanged(currentChanges.safetyState, state.safetyState)) {
             currentChanges.safetyState = newDeltas.safetyState = state.safetyState;
             hasChanges = true;
         }
@@ -979,6 +978,20 @@ export class MasterController extends MasterControlClient {
         if (hasChanges) {
             reportChanges(newDeltas);
         }
+    }
+
+    /**
+     * Compares safety state objects, handling both V2.1 (`eStop`) and V3.0
+     * (`activeEmergencyStop`) field names.
+     */
+    private _hasSafetyStateChanged(prev: any, next: any): boolean {
+        if (prev.fieldViolation !== next.fieldViolation) {
+            return true;
+        }
+        // Support both V2.1 (eStop) and V3.0 (activeEmergencyStop) field names
+        const prevEStop = prev.eStop ?? prev.activeEmergencyStop;
+        const nextEStop = next.eStop ?? next.activeEmergencyStop;
+        return prevEStop !== nextEStop;
     }
 
     /* Instant action processing */

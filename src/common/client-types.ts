@@ -1,6 +1,6 @@
 /*! Copyright (c) 2021 Siemens AG. Licensed under the MIT License. */
 
-import { Connection, Factsheet, Header, InstantActions, Order, State, Visualization } from "./vda-5050-types";
+import { Connection, Factsheet, Header, InstantActions, Order, State, Visualization } from "./vda-5050-types-2.1";
 import { Responses, ZoneSet } from "./vda-5050-types-3.0";
 
 /**
