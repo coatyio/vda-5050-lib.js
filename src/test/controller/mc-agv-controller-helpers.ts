@@ -155,6 +155,7 @@ export async function testOrder(
         }
 
         let processedInvocations = 0;
+        let hasResolved = false;
         let nodeTraversedIndex = -1;
         let edgeTraversedIndex = -1;
         let edgeTraversingCount = 0;
@@ -162,13 +163,20 @@ export async function testOrder(
         let triggeredOnActionInitializing = false;
         const headeredOrder = await mc.assignOrder(agvId, order, {
             onOrderProcessed: (withError, byCancelation, active, context) => {
+                if (hasResolved) {
+                    // The test has already resolved (e.g. a horizon order was later canceled
+                    // by a subsequent test). Ignore the re-invocation to avoid stale assertions.
+                    return;
+                }
                 if (failAfter !== undefined) {
                     ts.fail("onOrderProcessed should not be called due to failAfter timeout");
+                    hasResolved = true;
                     resolve();
                     return;
                 }
                 if (expectedChanges.discardedByMc) {
                     ts.fail("onOrderProcessed should not be called as order should be discarded by mc");
+                    hasResolved = true;
                     resolve();
                     return;
                 }
@@ -191,6 +199,7 @@ export async function testOrder(
                     ts.equal(withError, undefined);
                 }
 
+                hasResolved = true;
                 resolve();
             },
             onNodeTraversed: (node, nextEdge, nextNode, context) => {
