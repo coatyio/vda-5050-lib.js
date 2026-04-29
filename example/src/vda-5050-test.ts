@@ -157,10 +157,12 @@ async function trackVisualization(mc: MasterController) {
 async function processTopics(mc: MasterController) {
     for (const topic of CONFIG.topics) {
         try {
-            if ("instantActions" in topic) {
-                await processInstantActions(topic, mc);
-            } else {
+            // Orders always have an orderId; instant actions have either
+            // `instantActions` (v1.1) or `actions` (v2.0+) as their root key.
+            if ("orderId" in topic) {
                 await processOrder(topic, mc);
+            } else {
+                await processInstantActions(topic, mc);
             }
         } catch (error) {
             if (CONFIG.testOptions.breakOnError) {
@@ -239,7 +241,11 @@ function processInstantActions(instantActions: Headerless<InstantActions>, mc: M
                     if (actionState.actionStatus === ActionStatus.Finished || actionState.actionStatus === ActionStatus.Failed) {
                         actionsEndedCount++;
                     }
-                    if (actionsEndedCount === instantActions.instantActions.length) {
+                    // Support both v1.1 (`instantActions` key) and v2.0+ (`actions` key).
+                    const actionList = ("actions" in instantActions)
+                        ? (instantActions as any).actions
+                        : (instantActions as any).instantActions;
+                    if (actionsEndedCount === actionList.length) {
                         resolve();
                     }
                 },

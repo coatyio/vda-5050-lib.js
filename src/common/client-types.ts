@@ -1,6 +1,7 @@
 /*! Copyright (c) 2021 Siemens AG. Licensed under the MIT License. */
 
-import { Connection, Factsheet, Header, InstantActions, Order, State, Visualization } from "./vda-5050-types";
+import { Connection, Factsheet, Header, InstantActions, Order, State, Visualization } from "./vda-5050-types-2.1";
+import { Responses, ZoneSet } from "./vda-5050-types-3.0";
 
 /**
  * Get all optional keys in T (non-array types only).
@@ -109,6 +110,20 @@ export enum Topic {
      * Published by AGV. Subscribed by master control.
      */
     Factsheet = "factsheet",
+
+    /**
+     * Communication of zone set data. New in VDA 5050 V3.0.
+     *
+     * Published by AGV. Subscribed by master control.
+     */
+    ZoneSet = "zoneSet",
+
+    /**
+     * Response messages for instant actions. New in VDA 5050 V3.0.
+     *
+     * Published by AGV. Subscribed by master control.
+     */
+    Responses = "responses",
 }
 
 /**
@@ -142,6 +157,8 @@ export interface TopicObjectTypeMappings {
     [Topic.State]: State;
     [Topic.Visualization]: Visualization;
     [Topic.Factsheet]: Factsheet;
+    [Topic.ZoneSet]: ZoneSet;
+    [Topic.Responses]: Responses;
     [key: string]: ExtensionObject;
 }
 

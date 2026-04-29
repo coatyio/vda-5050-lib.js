@@ -1,7 +1,9 @@
 {
     "name": "vda-5050-lib",
-    "version": "1.6.0",
+    "version": "1.7.0",
     "description": "Universal VDA 5050 library for Node.js and browsers",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "homepage": "https://github.com/coatyio/vda-5050-lib.js",
     "repository": {
         "type": "git",
@@ -9,8 +11,16 @@
     },
     "readme": "README.md",
     "scripts": {
-        "build:schema": "vda-5050 schema -q -c .vda-5050-cli.schema.config.json",
-        "build:validator": "node -e \"require('./scripts/create-validators.js').createCoreValidators('1.1')\" && node -e \"require('./scripts/create-validators.js').createCoreValidators('2.0')\" && node -e \"require('./scripts/create-validators.js').createCoreValidators('2.1')\"",
+        "build:schema": "npm-run-all -s -c _build:schema1_1 _build:schema2_0 _build:schema2_1 _build:schema3_0",
+        "_build:schema1_1": "vda-5050 schema -q -c .vda-5050-cli.schema-1.1.config.json",
+        "_build:schema2_0": "vda-5050 schema -q -c .vda-5050-cli.schema-2.0.config.json",
+        "_build:schema2_1": "vda-5050 schema -q -c .vda-5050-cli.schema-2.1.config.json",
+        "_build:schema3_0": "vda-5050 schema -q -c .vda-5050-cli.schema-3.0.config.json",
+        "build:validator": "npm-run-all -s -c _build:validator1_1 _build:validator2_0 _build:validator2_1 _build:validator3_0",
+        "_build:validator1_1": "node -e \"require('./scripts/create-validators.js').createCoreValidators('1.1')\"",
+        "_build:validator2_0": "node -e \"require('./scripts/create-validators.js').createCoreValidators('2.0')\"",
+        "_build:validator2_1": "node -e \"require('./scripts/create-validators.js').createCoreValidators('2.1')\"",
+        "_build:validator3_0": "node -e \"require('./scripts/create-validators.js').createCoreValidators('3.0')\"",
         "build": "gulp build",
         "lint": "gulp lint",
         "lint:fix": "gulp lint:fix",
@@ -57,8 +67,8 @@
     "license": "MIT",
     "maintainers": [
         {
-            "name": "Hubertus Hohl",
-            "email": "hubertus.hohl@siemens.com"
+            "name": "Hermann Wuebbels",
+            "email": "hermann.wuebbels@siemens.com"
         },
         {
             "name": "Markus Sauer",
@@ -97,7 +107,7 @@
         "tslint": "^5.20.1",
         "typedoc": "^0.23.21",
         "typescript": "~4.9.3",
-        "vda-5050-cli": "^2.3.0"
+        "vda-5050-cli": "^2.4.0"
     },
     "engines": {
         "node": ">=11.0.0"

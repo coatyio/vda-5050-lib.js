@@ -2,6 +2,26 @@
 
 
 
+# [1.7.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.6.0...v1.7.0) (2026-04-29)
+
+VDA5050 V3.0 Support
+
+### Bug Fixes
+
+* re-invoke onOrderProcessed when isActive transitions after cancelOrder ([81826fe](https://github.com/coatyio/vda-5050-lib.js/commit/81826feaf6259d8a8fd0e143bf3d37df05752084))
+
+
+### Features
+
+* add optional clientId to MqttTransportOptions ([d5e7bf8](https://github.com/coatyio/vda-5050-lib.js/commit/d5e7bf8cea567627a034695fee589caa10f5b5f1))
+* add VDA 5050 v3.0 support ([816fe73](https://github.com/coatyio/vda-5050-lib.js/commit/816fe7391faf6b7a5979e524b523445d8e22c91b))
+
+
+### Features
+
+* add VDA5050 V3.0 support: new `Topic.ZoneSet` and `Topic.Responses` topics, extended `VdaVersion` type with `"3.0.0"`, V3.0 pre-compiled validators, V3.0 TypeScript types in `vda-5050-types-3.0`
+
+
 # [1.6.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.5.0...v1.6.0) (2025-03-06)
 
 State updates and error references 

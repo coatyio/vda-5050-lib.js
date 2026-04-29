@@ -722,8 +722,8 @@ export class MasterController extends MasterControlClient {
         // Check if order has been processed successfully or has been canceled
         // by instant action "cancelOrder".
         const result = this._isOrderProcessed(cache, state);
-        if (result !== false && !cache.isOrderProcessedHandlerInvoked) {
-            const isActive = result === undefined;
+        const isActive = result === undefined;
+        if (result !== false && cache.lastOrderProcessedIsActive !== isActive) {
             const byCancelation = this._isOrderCanceling(cache, state, [ActionStatus.Finished]);
             if (byCancelation) {
                 this.debug("onOrderProcessed by cancelation in state active=%s", isActive);
@@ -735,7 +735,7 @@ export class MasterController extends MasterControlClient {
             if (!isActive) {
                 this._removeOrderStateCache(cache, true);
             }
-            cache.isOrderProcessedHandlerInvoked = true;
+            cache.lastOrderProcessedIsActive = isActive;
             cache.eventHandler.onOrderProcessed(undefined, byCancelation, isActive, { order: cache.order, agvId: cache.agvId, state });
             return;
         } else {
@@ -750,7 +750,7 @@ export class MasterController extends MasterControlClient {
             agvId,
             order: order,
             eventHandler,
-            isOrderProcessedHandlerInvoked: false,
+            lastOrderProcessedIsActive: null,
             lastCache: this._getLastAssignedOrderStateCache(agvId),
             combinedOrder: {
                 edges: [...order.edges],
@@ -970,8 +970,7 @@ export class MasterController extends MasterControlClient {
             currentChanges.paused = newDeltas.paused = state.paused;
             hasChanges = true;
         }
-        if (currentChanges.safetyState.eStop !== state.safetyState.eStop ||
-            currentChanges.safetyState.fieldViolation !== state.safetyState.fieldViolation) {
+        if (this._hasSafetyStateChanged(currentChanges.safetyState, state.safetyState)) {
             currentChanges.safetyState = newDeltas.safetyState = state.safetyState;
             hasChanges = true;
         }
@@ -979,6 +978,20 @@ export class MasterController extends MasterControlClient {
         if (hasChanges) {
             reportChanges(newDeltas);
         }
+    }
+
+    /**
+     * Compares safety state objects, handling both V2.1 (`eStop`) and V3.0
+     * (`activeEmergencyStop`) field names.
+     */
+    private _hasSafetyStateChanged(prev: any, next: any): boolean {
+        if (prev.fieldViolation !== next.fieldViolation) {
+            return true;
+        }
+        // Support both V2.1 (eStop) and V3.0 (activeEmergencyStop) field names
+        const prevEStop = prev.eStop ?? prev.activeEmergencyStop;
+        const nextEStop = next.eStop ?? next.activeEmergencyStop;
+        return prevEStop !== nextEStop;
     }
 
     /* Instant action processing */
@@ -1068,8 +1081,10 @@ interface OrderStateCache {
     readonly eventHandler: OrderEventHandler;
     readonly order: Headerless<Order>;
 
-    // Indicates whether onOrderProcessed event handler has been invoked.
-    isOrderProcessedHandlerInvoked: boolean;
+    // Tracks the last isActive value passed to onOrderProcessed, or null if never invoked.
+    // Using a nullable value (instead of a boolean flag) allows re-invocation when isActive changes,
+    // e.g. when a cancelOrder instant action transitions isActive back to true after it was false.
+    lastOrderProcessedIsActive: boolean | null;
 
     // Latest order statze cache assigned for the given agvId or undefined (used
     // for handling stitching orders).

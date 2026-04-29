@@ -41,6 +41,16 @@ import {
     validateState as validateStateV2_1,
     validateVisualization as validateVisualizationV2_1,
 } from "./vda-5050-validators-2.1";
+import {
+    validateConnection as validateConnectionV3_0,
+    validateFactsheet as validateFactsheetV3_0,
+    validateInstantActions as validateInstantActionsV3_0,
+    validateOrder as validateOrderV3_0,
+    validateResponses as validateResponsesV3_0,
+    validateState as validateStateV3_0,
+    validateVisualization as validateVisualizationV3_0,
+    validateZoneSet as validateZoneSetV3_0,
+} from "./vda-5050-validators-3.0";
 /**
  * Create a new Version 4 UUID to be used as a unique identifier for nodes,
  * edges, actions, etc.
@@ -120,7 +130,7 @@ export interface ClientOptions {
 /**
  * Represents the supported VDA5050 specification versions.
  */
-export type VdaVersion = "1.1.0" | "2.0.0" | "2.1.0";
+export type VdaVersion = "1.1.0" | "2.0.0" | "2.1.0" | "3.0.0";
 
 /**
  * Defines MQTT transport options for a VDA 5050 client.
@@ -202,6 +212,20 @@ export interface MqttTransportOptions {
      * the connection is aborted.
      */
     connectTimeout?: number;
+
+    /**
+     * The MQTT client ID used to identify this client to the broker (optional).
+     *
+     * If not specified, a unique client ID is auto-generated. Providing an
+     * explicit client ID is useful when the broker applies security filters or
+     * access-control policies based on a specific, known client identity.
+     *
+     * @remarks
+     * The MQTT specification requires client IDs to be unique per connected
+     * client. Reusing the same ID across multiple simultaneous connections
+     * will cause the broker to disconnect the earlier session.
+     */
+    clientId?: string;
 
     /**
      * The username required by your MQTT broker (optional).
@@ -418,7 +442,7 @@ export abstract class Client {
         this._isStarted = false;
         this._isStopping = false;
         this._clientOptions = options;
-        this.clientId = `${uuidv4().replace(/-/g, "").substr(0, 23)}`;
+        this.clientId = options.transport.clientId ?? `${uuidv4().replace(/-/g, "").substr(0, 23)}`;
         this.debug = Debug(`vda-5050:${this.clientId.substr(0, 10)}`).extend(this.constructor.name);
         this._validateOptions(options);
         this._headerIds = new Map();
@@ -959,6 +983,11 @@ export abstract class Client {
                             throw new TypeError(`Invalid VDA 5050 Connection at ${validateConnectionV2_1.errors[0].keywordLocation}, ${validateConnectionV2_1.errors[0].instanceLocation}`);
                         }
                         break;
+                    case "3.0.0":
+                        if (!validateConnectionV3_0(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Connection at ${validateConnectionV3_0.errors[0].keywordLocation}, ${validateConnectionV3_0.errors[0].instanceLocation}`);
+                        }
+                        break;
                     default:
                         throw new TypeError(`Connection Topic not supported with VDA 5050 Version ${vdaVersion}`);
                 }
@@ -978,6 +1007,11 @@ export abstract class Client {
                     case "2.1.0":
                         if (!validateInstantActionsV2_1(object)) {
                             throw new TypeError(`Invalid VDA 5050 InstantActions at ${validateInstantActionsV2_1.errors[0].keywordLocation}, ${validateInstantActionsV2_1.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "3.0.0":
+                        if (!validateInstantActionsV3_0(object)) {
+                            throw new TypeError(`Invalid VDA 5050 InstantActions at ${validateInstantActionsV3_0.errors[0].keywordLocation}, ${validateInstantActionsV3_0.errors[0].instanceLocation}`);
                         }
                         break;
                     default:
@@ -1001,6 +1035,11 @@ export abstract class Client {
                             throw new TypeError(`Invalid VDA 5050 Order at ${validateOrderV2_1.errors[0].keywordLocation}, ${validateOrderV2_1.errors[0].instanceLocation}`);
                         }
                         break;
+                    case "3.0.0":
+                        if (!validateOrderV3_0(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Order at ${validateOrderV3_0.errors[0].keywordLocation}, ${validateOrderV3_0.errors[0].instanceLocation}`);
+                        }
+                        break;
                     default:
                         throw new TypeError(`Order Topic not supported with VDA 5050 Version ${vdaVersion}`);
                 }
@@ -1020,6 +1059,11 @@ export abstract class Client {
                     case "2.1.0":
                         if (!validateStateV2_1(object)) {
                             throw new TypeError(`Invalid VDA 5050 State at ${validateStateV2_1.errors[0].keywordLocation}, ${validateStateV2_1.errors[0].instanceLocation}`);
+                        }
+                        break;
+                    case "3.0.0":
+                        if (!validateStateV3_0(object)) {
+                            throw new TypeError(`Invalid VDA 5050 State at ${validateStateV3_0.errors[0].keywordLocation}, ${validateStateV3_0.errors[0].instanceLocation}`);
                         }
                         break;
                     default:
@@ -1043,6 +1087,11 @@ export abstract class Client {
                             throw new TypeError(`Invalid VDA 5050 Visualization at ${validateVisualizationV2_1.errors[0].keywordLocation}, ${validateVisualizationV2_1.errors[0].instanceLocation}`);
                         }
                         break;
+                    case "3.0.0":
+                        if (!validateVisualizationV3_0(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Visualization at ${validateVisualizationV3_0.errors[0].keywordLocation}, ${validateVisualizationV3_0.errors[0].instanceLocation}`);
+                        }
+                        break;
                     default:
                         throw new TypeError(`Visualization Topic not supported with VDA 5050 Version ${vdaVersion}`);
                 }
@@ -1059,8 +1108,23 @@ export abstract class Client {
                             throw new TypeError(`Invalid VDA 5050 Factsheet at ${validateFactsheetV2_1.errors[0].keywordLocation}, ${validateFactsheetV2_1.errors[0].instanceLocation}`);
                         }
                         break;
+                    case "3.0.0":
+                        if (!validateFactsheetV3_0(object)) {
+                            throw new TypeError(`Invalid VDA 5050 Factsheet at ${validateFactsheetV3_0.errors[0].keywordLocation}, ${validateFactsheetV3_0.errors[0].instanceLocation}`);
+                        }
+                        break;
                     default:
                         throw new TypeError(`Factsheet Topic not supported with VDA 5050 Version ${vdaVersion}`);
+                }
+                break;
+            case Topic.ZoneSet:
+                if (!validateZoneSetV3_0(object)) {
+                    throw new TypeError(`Invalid VDA 5050 ZoneSet at ${validateZoneSetV3_0.errors[0].keywordLocation}, ${validateZoneSetV3_0.errors[0].instanceLocation}`);
+                }
+                break;
+            case Topic.Responses:
+                if (!validateResponsesV3_0(object)) {
+                    throw new TypeError(`Invalid VDA 5050 Responses at ${validateResponsesV3_0.errors[0].keywordLocation}, ${validateResponsesV3_0.errors[0].instanceLocation}`);
                 }
                 break;
             default:
@@ -1303,7 +1367,7 @@ export abstract class Client {
     }
 
     private _isValidVdaVersion(version: string) {
-        return version === "1.1.0" || version === "1.1" || version === "2.0" || version === "2.0.0" || version === "2.1" || version === "2.1.0";
+        return version === "1.1.0" || version === "1.1" || version === "2.0" || version === "2.0.0" || version === "2.1" || version === "2.1.0" || version === "3.0" || version === "3.0.0";
     }
 
     private _validateTopic(topic: string, forSubscription: boolean) {
