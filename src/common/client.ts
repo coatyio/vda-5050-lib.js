@@ -214,6 +214,20 @@ export interface MqttTransportOptions {
     connectTimeout?: number;
 
     /**
+     * The MQTT client ID used to identify this client to the broker (optional).
+     *
+     * If not specified, a unique client ID is auto-generated. Providing an
+     * explicit client ID is useful when the broker applies security filters or
+     * access-control policies based on a specific, known client identity.
+     *
+     * @remarks
+     * The MQTT specification requires client IDs to be unique per connected
+     * client. Reusing the same ID across multiple simultaneous connections
+     * will cause the broker to disconnect the earlier session.
+     */
+    clientId?: string;
+
+    /**
      * The username required by your MQTT broker (optional).
      */
     username?: string;
@@ -428,7 +442,7 @@ export abstract class Client {
         this._isStarted = false;
         this._isStopping = false;
         this._clientOptions = options;
-        this.clientId = `${uuidv4().replace(/-/g, "").substr(0, 23)}`;
+        this.clientId = options.transport.clientId ?? `${uuidv4().replace(/-/g, "").substr(0, 23)}`;
         this.debug = Debug(`vda-5050:${this.clientId.substr(0, 10)}`).extend(this.constructor.name);
         this._validateOptions(options);
         this._headerIds = new Map();
