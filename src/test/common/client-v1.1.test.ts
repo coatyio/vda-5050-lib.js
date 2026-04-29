@@ -409,31 +409,46 @@ tap.test("Client", async t => {
     // scripts as these brokers cannot be stopped and restarted programmatically while testing.
     if (t.context.canStopAndRestartBrokerWhileTesting) {
         await t.test("pub-sub-unsub while offline", ts => new Promise(async (resolve, reject) => {
-            ts.teardown(() => client.stop());
-            await client.start();
-            const subIdOrder = await client.subscribe(Topic.Order, agvId, () => {
-                ts.fail("receive unexpected order message");
-                reject();
-            });
-            await stopBroker();
-            await new Promise(res => setTimeout(res, 500));
-            await client.unsubscribe(subIdOrder);
-            await client.subscribe(Topic.Visualization, agvId, () => {
-                ts.fail("receive unexpected visualization message");
-                reject();
-            });
-            await client.subscribe(Topic.Order, agvId, (object, subject, topic) => {
-                ts.comment("callback second order subscribe");
-                ts.equal(topic, Topic.Order);
-                ts.strictSame(subject, agvId);
-                ts.strictSame(object, order);
-                resolve();
-            });
-            const vis = await client.publish(Topic.Visualization, agvId, createHeaderlessObject(Topic.Visualization),
-                { dropIfOffline: true });
-            ts.equal(vis, undefined);
-            const order = await client.publish(Topic.Order, agvId, createHeaderlessObject(Topic.Order));
-            await startBroker();
+            // Use a dedicated client with a short heartbeat so that offline
+            // state is detected quickly after the broker is killed.
+            const offlineClient = new TestClient(testClientOptions(ts, { transport: { heartbeat: 1 } }));
+            ts.teardown(() => offlineClient.stop());
+            try {
+                await offlineClient.start();
+                const subIdOrder = await offlineClient.subscribe(Topic.Order, agvId, () => {
+                    ts.fail("receive unexpected order message");
+                    reject();
+                });
+                await stopBroker();
+                // Wait until the client actually detects it is offline instead
+                // of relying on a fixed timeout that may be too short.
+                await new Promise<void>(res => {
+                    offlineClient.registerConnectionStateChange(state => {
+                        if (state === "offline") {
+                            res();
+                        }
+                    });
+                });
+                await offlineClient.unsubscribe(subIdOrder);
+                await offlineClient.subscribe(Topic.Visualization, agvId, () => {
+                    ts.fail("receive unexpected visualization message");
+                    reject();
+                });
+                await offlineClient.subscribe(Topic.Order, agvId, (object, subject, topic) => {
+                    ts.comment("callback second order subscribe");
+                    ts.equal(topic, Topic.Order);
+                    ts.strictSame(subject, agvId);
+                    ts.strictSame(object, order);
+                    resolve();
+                });
+                const vis = await offlineClient.publish(Topic.Visualization, agvId, createHeaderlessObject(Topic.Visualization),
+                    { dropIfOffline: true });
+                ts.equal(vis, undefined);
+                const order = await offlineClient.publish(Topic.Order, agvId, createHeaderlessObject(Topic.Order));
+                await startBroker();
+            } catch (err) {
+                reject(err);
+            }
         }));
     }
 

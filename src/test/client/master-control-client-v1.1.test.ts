@@ -11,9 +11,9 @@ import { createAgvId, createHeaderlessObject } from "../test-objects";
 
 initTestContext(tap);
 
-tap.test("Master Control Client", async t => {
+tap.test("Master Control Client V1.1", async t => {
     const agvId = createAgvId("RobotCompany", "001");
-    const clientOptions = testClientOptions(t);
+    const clientOptions = testClientOptions(t, { vdaVersion: "1.1.0" });
     const client = new MasterControlClient(clientOptions);
 
     await t.test("validate subscription topic direction", async ts => {
