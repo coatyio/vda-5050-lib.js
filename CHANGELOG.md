@@ -2,6 +2,15 @@
 
 
 
+# [1.7.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.6.0...v1.7.0) (2026-04-28)
+
+VDA5050 V3.0 support
+
+### Features
+
+* add VDA5050 V3.0 support: new `Topic.ZoneSet` and `Topic.Responses` topics, extended `VdaVersion` type with `"3.0.0"`, V3.0 pre-compiled validators, V3.0 TypeScript types in `vda-5050-types-3.0`
+
+
 # [1.6.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.5.0...v1.6.0) (2025-03-06)
 
 State updates and error references 

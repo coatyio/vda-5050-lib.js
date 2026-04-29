@@ -69,7 +69,7 @@ function createValidators(schemaFiles, refSchemaFiles, moduleFile, moduleFormat)
     }
     for (const file of schemaFiles) {
         const schema = JSON.parse(fse.readFileSync(file));
-        const validate = validator(schema, { includeErrors: true, schemas: refSchemas, allowUnusedKeywords: true });
+        const validate = validator(schema, { includeErrors: true, schemas: refSchemas, allowUnusedKeywords: true, formats: { uint32: () => true } });
         const moduleFunc = `validate${schema.title[0].toUpperCase()}${schema.title.substring(1)}`;
         modules.push([moduleFunc, `const ${moduleFunc} = ${validate.toModule()}\n`]);
     }
