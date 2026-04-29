@@ -14,7 +14,7 @@
         "transport": {
             "brokerUrl": "mqtt://localhost:1883"
         },
-        "vdaVersion": "1.1.0"
+        "vdaVersion": "2.0.0"
     },
     "agv": {
         "manufacturer": "RobotCompany",
@@ -22,7 +22,7 @@
     },
     "topics": [
         {
-            "instantActions": [
+            "actions": [
                 {
                     "actionType": "initPosition",
                     "actionId": "IA-001",
