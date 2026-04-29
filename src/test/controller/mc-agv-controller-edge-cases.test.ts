@@ -290,6 +290,66 @@ initTestContext(tap);
         // sequential node/edge index tracking is incompatible with repeated nodeIds.
 
         /* ------------------------------------------------------------------ */
+        /* FR-12: cancelOrder re-fires onOrderProcessed when isActive changes  */
+        /* ------------------------------------------------------------------ */
+
+        const reInvokedTestName = "onOrderProcessed re-invoked when isActive transitions true->false via cancelOrder";
+        await t.test(reInvokedTestName, ts => new Promise(async resolve => {
+            // Assign an order whose base node is released but the second node is
+            // horizon (unreleased). After the AGV traverses the base node the order
+            // is "processed but still active" (isActive=true). A subsequent
+            // cancelOrder should then transition the order to isActive=false and
+            // onOrderProcessed must fire a second time with the updated state.
+            let processedInvocations = 0;
+
+            await mcController.assignOrder(agvId1, {
+                orderId: createUuid(),
+                orderUpdateId: 0,
+                nodes: [
+                    { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
+                    { nodeId: "n2", sequenceId: 2, released: false, nodePosition: { x: 10, y: 0, mapId: "local" }, actions: [] },
+                ],
+                edges: [
+                    { edgeId: "e12", sequenceId: 1, startNodeId: "n1", endNodeId: "n2", released: false, actions: [] },
+                ],
+            }, {
+                onOrderProcessed: async (withError, byCancelation, active, context) => {
+                    processedInvocations++;
+                    if (processedInvocations === 1) {
+                        // First invocation: order processed but still active (horizon)
+                        ts.equal(active, true, "first onOrderProcessed: order should be active (horizon)");
+                        ts.equal(byCancelation, false, "first onOrderProcessed: not by cancelation");
+                        ts.equal(withError, undefined, "first onOrderProcessed: no error");
+
+                        // Now cancel the active order so it transitions to isActive=false
+                        await mcController.initiateInstantActions(agvId1, {
+                            instantActions: [{
+                                actionId: createUuid(),
+                                actionType: "cancelOrder",
+                                blockingType: BlockingType.Hard,
+                            }],
+                        }, {
+                            onActionStateChanged: () => { /* handled via onOrderProcessed */ },
+                            onActionError: () => {
+                                ts.fail("cancelOrder should not be rejected");
+                                resolve();
+                            },
+                        });
+                    } else if (processedInvocations === 2) {
+                        // Second invocation: order finalized by cancelation (isActive=false)
+                        ts.equal(active, false, "second onOrderProcessed: order should be inactive");
+                        ts.equal(byCancelation, true, "second onOrderProcessed: should be by cancelation");
+                        ts.pass("onOrderProcessed re-invoked correctly after isActive transitioned true->false");
+                        resolve();
+                    } else {
+                        ts.fail("onOrderProcessed invoked more than twice");
+                        resolve();
+                    }
+                },
+            });
+        }));
+
+        /* ------------------------------------------------------------------ */
         /* FR-12: Cancel then immediately send new order                       */
         /* ------------------------------------------------------------------ */
 
