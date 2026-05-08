@@ -168,11 +168,7 @@ export class AgvClient extends Client {
      * connection state.
      */
     protected async onStarted() {
-        await this.publish(
-            Topic.Connection,
-            { connectionState: ConnectionState.Online },
-            { retainMessage: true },
-        );
+        await this.publishConnectionState(ConnectionState.Online);
     }
 
     /**
@@ -180,11 +176,14 @@ export class AgvClient extends Client {
      * for offline connection state.
      */
     protected async onStopping() {
-        await this.publish(
+        await this.publishConnectionState(ConnectionState.Offline);
+    }
+
+    protected publishConnectionState(connectionState: ConnectionState) {
+        return this.publish(
             Topic.Connection,
-            { connectionState: ConnectionState.Offline },
+            { connectionState: connectionState },
             { retainMessage: true },
         );
     }
-
 }
