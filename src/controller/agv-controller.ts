@@ -1363,6 +1363,19 @@ export class AgvController extends AgvClient {
             this._areErrorReferencesEqual(e.errorReferences, error.errorReferences));
     }
 
+    private _findErrorCount(error: Error): number {
+        this._instantActionsErroredPublishCount.forEach((count, e) => {
+            if (e.errorDescription === error.errorDescription &&
+                e.errorLevel === error.errorLevel &&
+                e.errorType === error.errorType &&
+                this._areErrorReferencesEqual(e.errorReferences, error.errorReferences)) {
+                return count;
+            }
+        },
+        );
+        return -1;
+    }
+
     private _areErrorReferencesEqual(refs1: ErrorReference[], refs2: ErrorReference[]) {
         if (refs1.length !== refs2.length) {
             return false;
@@ -1999,21 +2012,23 @@ export class AgvController extends AgvClient {
         // update or stitching order with the same orderId and orderSequenceId
         // as a previously rejected one.
         return this._currentState.errors.filter(e =>
-            this._instantActionsErroredPublishCount.has(e) ||
+            this._findErrorCount(e) !== -1 ||
             (shouldKeepOrderActionErrors && e.errorReferences && e.errorReferences.some(r => r.referenceKey === "actionId")));
     }
 
     private _cleanupInstantActionStates() {
         // Remove errors related to errored instant actions.
-        const errorsToRemove = new Set<Error>();
+        const errorsToRemove = new Set<number>();
         this._instantActionsErroredPublishCount.forEach((count, err, map) => {
-            if (!this._currentState.errors.includes(err)) {
+            const errIndex = this._findErrorIndex(err); // check if error is still in the state
+            if (errIndex === -1) {
+                map.delete(err);
                 return;
             }
             count++;
             if (count >= this.controllerOptions.finalInstantActionStateChangePublishCount) {
                 map.delete(err);
-                errorsToRemove.add(err);
+                errorsToRemove.add(errIndex);
             } else {
                 map.set(err, count);
             }
@@ -2037,7 +2052,7 @@ export class AgvController extends AgvClient {
 
         const newState: Partial<Headerless<State>> = {};
         if (errorsToRemove.size > 0) {
-            newState.errors = this._currentState.errors.filter(e => !errorsToRemove.has(e));
+            newState.errors = this._currentState.errors.filter((_, i) => !errorsToRemove.has(i));
         }
         if (actionIdsToRemove.size > 0) {
             newState.actionStates = this._currentState.actionStates.filter(s => !actionIdsToRemove.has(s.actionId));
