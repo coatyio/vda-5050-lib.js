@@ -1056,7 +1056,7 @@ export interface Edge {
      */
     orientation?: number;
     /**
-     * Enum {GLOBAL, TANGENTIAL}: GLOBAL: relative to the global project specific map coordinate
+     * Enum \{GLOBAL, TANGENTIAL\}: GLOBAL: relative to the global project specific map coordinate
      * system; TANGENTIAL: tangential to the edge. If not defined, the default value is
      * TANGENTIAL.
      */
@@ -1372,7 +1372,7 @@ export interface Responses {
 
 export interface Response {
     /**
-     * Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}. 'GRANTED': fleet control grants request.
+     * Enum \{'GRANTED','QUEUED','REVOKED','REJECTED'\}. 'GRANTED': fleet control grants request.
      * 'REVOKED': fleet control revokes previously granted request. 'REJECTED': fleet control
      * rejects a request. 'QUEUED': Acknowledge the mobile robot's request to the fleet control,
      * but no permission is given yet. Request was added to some sort of a queue.
@@ -1390,7 +1390,7 @@ export interface Response {
 }
 
 /**
- * Enum {'GRANTED','QUEUED','REVOKED','REJECTED'}. 'GRANTED': fleet control grants request.
+ * Enum \{'GRANTED','QUEUED','REVOKED','REJECTED'\}. 'GRANTED': fleet control grants request.
  * 'REVOKED': fleet control revokes previously granted request. 'REJECTED': fleet control
  * rejects a request. 'QUEUED': Acknowledge the mobile robot's request to the fleet control,
  * but no permission is given yet. Request was added to some sort of a queue.
