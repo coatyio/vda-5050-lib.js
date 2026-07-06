@@ -153,11 +153,17 @@ export class AgvClient extends Client {
      * interrupted unexpectedly.
      */
     protected getLastWillTopic(): { topic: Topic, subject: AgvId, object: Headerless<Connection>, retainMessage: boolean } {
+        // VDA 5050 v3.0 renamed "CONNECTIONBROKEN" to "CONNECTION_BROKEN" (with underscore).
+        // Use the correct string for the configured protocol version so the retained LWT
+        // passes validation on the master control side.
+        const connectionBrokenState = (this.getProtocolVersion() === "3.0.0"
+            ? "CONNECTION_BROKEN"
+            : ConnectionState.Connectionbroken) as ConnectionState;
         return {
             topic: Topic.Connection,
             subject: this.agvId,
             object: {
-                connectionState: ConnectionState.Connectionbroken,
+                connectionState: connectionBrokenState,
             },
             retainMessage: true,
         };
