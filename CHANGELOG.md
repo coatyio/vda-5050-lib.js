@@ -2,6 +2,27 @@
 
 
 
+## [1.7.2](https://github.com/coatyio/vda-5050-lib.js/compare/v1.7.0...v1.7.2) (2026-07-06)
+
+fix connectionTopic message ENUM
+
+### Bug Fixes
+
+* **agv-client:** use correct LWT connectionState for VDA 5050 v3.0 ([4dc3953](https://github.com/coatyio/vda-5050-lib.js/commit/4dc3953db9baa0d6ffb99deccc53b98f0f7f2ef1))
+* **docs:** escape curly braces in JSDoc to silence TypeDoc warnings ([e9a58ad](https://github.com/coatyio/vda-5050-lib.js/commit/e9a58adc019d1ff1b37ae34f623bdb73b152c4c9))
+
+
+
+## [1.7.1](https://github.com/coatyio/vda-5050-lib.js/compare/v1.7.0...v1.7.1) (2026-07-06)
+
+fix: connection msg v3.0
+
+### Bug Fixes
+
+* **agv-client:** use correct LWT connectionState for VDA 5050 v3.0 ([4dc3953](https://github.com/coatyio/vda-5050-lib.js/commit/4dc3953db9baa0d6ffb99deccc53b98f0f7f2ef1))
+
+
+
 # [1.7.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.6.0...v1.7.0) (2026-04-29)
 
 VDA5050 V3.0 Support
