@@ -670,6 +670,11 @@ export abstract class Client {
         return this._isStarted;
     }
 
+    /** Gets a communication topic using the configured MQTT topic format. */
+    protected getMqttTopic(topic: string, subject: AgvId): string {
+        return this._subscriptionManager.getMqttTopic(topic, subject);
+    }
+
     /**
      * Invoked after the client has successfully connected or reconnected.
      *

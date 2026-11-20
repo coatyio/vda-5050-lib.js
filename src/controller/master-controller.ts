@@ -284,7 +284,11 @@ export interface MasterControllerOptions {
  * non-supported or non-executable node or edge actions to report an error with
  * `errorType: "orderError"`, whereas order action errors reported for failed
  * actions must specify a different error type (e.g. `errorType:
- * "orderActionError"`) to make them distinguishable.
+ * "orderActionError"`) to make them distinguishable. An identified
+ * `validationError` on the order topic is also treated as an order rejection,
+ * unless the state identifies it as an error for an active order action.
+ * The topic of these order validation errors and action-specific errors may be
+ * the configured MQTT topic for the AGV or the VDA communication topic.
  *
  * @category Master Controller
  */
@@ -488,21 +492,35 @@ export class MasterController extends MasterControlClient {
                         orderId = errorRef.referenceValue;
                     }
                     if (errorRef.referenceKey === "orderUpdateId") {
-                        orderUpdateId = parseInt(errorRef.referenceValue, 10);
+                        const value = Number(errorRef.referenceValue);
+                        if (/^\d+$/.test(errorRef.referenceValue) && Number.isSafeInteger(value)) {
+                            orderUpdateId = value;
+                        } else {
+                            orderUpdateId = undefined;
+                            this.debug("Invalid orderUpdateId error reference %o", errorRef.referenceValue);
+                        }
                     }
                 }
             }
-            if (topic !== undefined && topic !== Topic.Order) {
+            const isOrderTopic = topic === Topic.Order ||
+                (error.errorType === ErrorType.OrderValidation && topic === this.getMqttTopic(Topic.Order, agvId));
+            if (topic !== undefined && !isOrderTopic) {
                 continue;
             }
-            if (hasActionIdRef && error.errorType !== ErrorType.Order) {
-                // Error is an order-related action error caused by a failed
-                // action (with ErrorType.OrderAction).
+            const isIdentifiedOrderValidation = isOrderTopic && error.errorType === ErrorType.OrderValidation &&
+                orderId !== undefined && orderUpdateId !== undefined;
+            const isActiveOrderAction = isIdentifiedOrderValidation &&
+                state.orderId === orderId && state.orderUpdateId === orderUpdateId &&
+                state.actionStates.some(actionState => error.errorReferences.some(r =>
+                    r.referenceKey === "actionId" && r.referenceValue === actionState.actionId));
+            if (hasActionIdRef && error.errorType !== ErrorType.Order && (!isIdentifiedOrderValidation || isActiveOrderAction)) {
+                // Action errors without an identified rejected order, or with
+                // a corresponding active action state, are not order rejections.
                 continue;
             }
             if (orderId !== undefined && orderUpdateId !== undefined) {
                 cache = this._getOrderStateCache(agvId, orderId, orderUpdateId);
-            } else if (topic === Topic.Order && error.errorType === ErrorType.OrderValidation) {
+            } else if (isOrderTopic && error.errorType === ErrorType.OrderValidation) {
                 // In case a validation error occurs where no orderId and
                 // orderUpdateId can be extracted from the invalid order object
                 // we cannot reliably determine the corresponding order assigned
@@ -545,7 +563,7 @@ export class MasterController extends MasterControlClient {
                     this._dispatchInstantActionState(actionState, actionStateCache, state);
                 } else {
                     // Try to find a rejection error for a single instant action with given actionId.
-                    const actionError = this._getActionError(state.errors, actionId, true);
+                    const actionError = this._getActionError(state.errors, actionId, true, agvId);
                     if (actionError) {
                         this._dispatchInstantActionError(actionError, actionStateCache, state);
                     } else {
@@ -672,7 +690,8 @@ export class MasterController extends MasterControlClient {
                     // @todo We assume that a failed action reports an associated error in the same
                     // State message. Otherwise, cleaning up the cache has to be postponed until the
                     // next State message is received (using a postponeCleanup flag).
-                    const error = actionStatus === ActionStatus.Failed ? this._getActionError(state.errors, actionId, false) : undefined;
+                    const error = actionStatus === ActionStatus.Failed ?
+                        this._getActionError(state.errors, actionId, false, cache.agvId) : undefined;
                     if (error) {
                         this.debug("onActionStateChanged %o with error %o for action %s on target %o for cache %j",
                             actionState, error, action, target, cache);
@@ -1008,7 +1027,7 @@ export class MasterController extends MasterControlClient {
             // State message. Otherwise, cleaning up the cache has to be postponed until the
             // next State message is received (using a postponeCleanup flag).
             const error = actionState.actionStatus === ActionStatus.Failed ?
-                this._getActionError(state.errors, cache.action.actionId, true) :
+                this._getActionError(state.errors, cache.action.actionId, true, cache.agvId) :
                 undefined;
             this.debug("onActionStateChanged for instant action state %o with error %o for cache %o with state %j",
                 actionState, error, cache, state);
@@ -1066,12 +1085,14 @@ export class MasterController extends MasterControlClient {
         }
     }
 
-    private _getActionError(errors: Error[], actionId: string, asInstantAction: boolean) {
+    private _getActionError(errors: Error[], actionId: string, asInstantAction: boolean, agvId: AgvId) {
+        const topic = asInstantAction ? Topic.InstantActions : Topic.Order;
+        const mqttTopic = this.getMqttTopic(topic, agvId);
         return errors.find(e => {
             const refs = e.errorReferences ?? [];
             return refs.some(r => r.referenceKey === "actionId" && r.referenceValue === actionId) &&
                 refs.some(r => r.referenceKey === "topic" &&
-                    r.referenceValue === (asInstantAction ? Topic.InstantActions : Topic.Order));
+                    (r.referenceValue === topic || r.referenceValue === mqttTopic));
         });
     }
 }
