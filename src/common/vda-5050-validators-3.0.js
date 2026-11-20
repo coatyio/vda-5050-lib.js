@@ -2375,6 +2375,14 @@ const ref0 = function validate(data) {
     validate.errors = [{ keywordLocation: "#/properties/headerId/type", instanceLocation: "#/headerId" }]
     return false
   }
+  if (!(0 <= data.headerId)) {
+    validate.errors = [{ keywordLocation: "#/properties/headerId/minimum", instanceLocation: "#/headerId" }]
+    return false
+  }
+  if (!(4294967295 >= data.headerId)) {
+    validate.errors = [{ keywordLocation: "#/properties/headerId/maximum", instanceLocation: "#/headerId" }]
+    return false
+  }
   if (!(typeof data.timestamp === "string")) {
     validate.errors = [{ keywordLocation: "#/properties/timestamp/type", instanceLocation: "#/timestamp" }]
     return false

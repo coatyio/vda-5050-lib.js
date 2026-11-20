@@ -2,6 +2,7 @@
 
 // tslint:disable: no-empty
 
+import * as net from "net";
 import * as tap from "tap";
 
 import { AgvId, Client, ClientPublishOptions, Connection, ConnectionState, Headerless, SubscriptionId, Topic, TopicObject } from "../..";
@@ -93,6 +94,20 @@ tap.test("Client", async t => {
         const opts = testClientOptions(ts, { transport: { brokerUrl: testClientOptions(ts).transport.brokerUrl + "0" } });
         const client1 = new TestClient(opts);
         ts.rejects(client1.start());
+    });
+
+    await t.test("connection closed before MQTT handshake", async ts => {
+        const server = net.createServer(socket => socket.destroy());
+        await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
+        ts.teardown(() => new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())));
+        const address = server.address();
+        if (!address || typeof address === "string") {
+            throw new Error("Expected TCP server address");
+        }
+        const opts = testClientOptions(ts, { transport: { brokerUrl: `mqtt://127.0.0.1:${address.port}` } });
+        const client1 = new TestClient(opts);
+        ts.teardown(() => client1.stop());
+        await ts.rejects(client1.start(), { message: "MQTT connection closed before connecting" });
     });
 
     await t.test("connect with websocket protocol on browser platform", async ts => {

@@ -9,17 +9,17 @@ documentation on GitHub Pages at
 API Documentation content is hosted in the `api` subfolder. It is generated
 automatically whenever a release is created.
 
-GitHub Pages has been configured to host the static website content from the
-`/docs` folder on the master branch. This means that each time, changes to docs
-subfolders are pushed on the master branch, GitHub Pages automatically
-regenerates the documentation website.
+The GitHub Actions Pages workflow builds the `/docs` folder and deploys the
+website when changes are pushed to the master branch. In the repository's
+**Settings > Pages**, set the build and deployment source to **GitHub Actions**
+before using this workflow. It can also be started manually from the Actions tab.
 
 ## Previewing the website locally
 
 If you'd like to preview the website locally (for example, in the process of
 proposing a change):
 
-* Install Ruby on your local machine (Jekyll is implemented in Ruby).
+* Install Ruby 3.3 and Bundler on your local machine (Jekyll is implemented in Ruby).
 * Clone down the website's repository (`git clone
   https://github.com/coatyio/vda-5050-lib.js.git`).
 * cd into the website's directory (`/docs`).
@@ -32,8 +32,8 @@ proposing a change):
 ## Upgrade gem dependencies
 
 To upgrade a gem dependency to a newer version (e.g. because of a security
-alert), add new gem version to `Gemfile` (e.g. `gem "nokogiri", ">= 1.13.9"`)
-and run `bundle update` on the dependency (e.g. `bundle update nokogiri`).
+alert), update its constraint in `Gemfile` if needed and run `bundle update`
+on the dependency (e.g. `bundle update jekyll`).
 
 To update all gem dependencies, run `bundle update`.
 

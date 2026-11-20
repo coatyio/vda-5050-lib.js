@@ -45,7 +45,7 @@ async function setup(
     let publisher: mqtt.MqttClient;
     t.teardown(async () => {
         if (publisher) {
-            await new Promise<void>(resolve => publisher.end(true, resolve));
+            await new Promise<void>((resolve, reject) => publisher.end(true, error => error ? reject(error) : resolve()));
         }
         await controller.stop();
     });
@@ -53,7 +53,7 @@ async function setup(
     await controller.start();
     publisher = mqtt.connect(brokerUrl);
     await new Promise<void>((resolve, reject) => {
-        publisher.once("connect", resolve);
+        publisher.once("connect", () => resolve());
         publisher.once("error", reject);
     });
 

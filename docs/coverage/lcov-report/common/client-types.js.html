@@ -108,51 +108,53 @@
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1609x</span>
-<span class="cline-any cline-yes">4975x</span>
-<span class="cline-any cline-yes">1582x</span>
+<span class="cline-any cline-yes">1686x</span>
+<span class="cline-any cline-yes">5206x</span>
+<span class="cline-any cline-yes">1659x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">44x</span>
+<span class="cline-any cline-yes">46x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">42x</span>
-<span class="cline-any cline-yes">42x</span>
+<span class="cline-any cline-yes">44x</span>
+<span class="cline-any cline-yes">44x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">"use strict";
 /*! Copyright (c) 2021 Siemens AG. Licensed under the MIT License. */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isPlainObject = exports.ErrorType = exports.isExtensionTopic = exports.Topic = void 0;
+exports.ErrorType = exports.Topic = void 0;
+exports.isExtensionTopic = isExtensionTopic;
+exports.isPlainObject = isPlainObject;
 var Topic;
 (function (Topic) {
     Topic["Order"] = "order";
@@ -163,7 +165,7 @@ var Topic;
     Topic["Factsheet"] = "factsheet";
     Topic["ZoneSet"] = "zoneSet";
     Topic["Responses"] = "responses";
-})(Topic = exports.Topic || (exports.Topic = {}));
+})(Topic || (exports.Topic = Topic = {}));
 function isExtensionTopic(topic) {
     for (const value in Topic) {
         if (Topic[value] === topic) {
@@ -172,7 +174,6 @@ function isExtensionTopic(topic) {
     }
     return true;
 }
-exports.isExtensionTopic = isExtensionTopic;
 var ErrorType;
 (function (ErrorType) {
     ErrorType["Order"] = "orderError";
@@ -183,7 +184,7 @@ var ErrorType;
     ErrorType["InstantAction"] = "instantActionError";
     ErrorType["InstantActionValidation"] = "validationError";
     ErrorType["InstantActionNoOrderToCancel"] = "noOrderToCancel";
-})(ErrorType = exports.ErrorType || (exports.ErrorType = {}));
+})(ErrorType || (exports.ErrorType = ErrorType = {}));
 function isPlainObject(value) {
     if (value === null || typeof value !== "object") {
         return false;
@@ -191,7 +192,6 @@ function isPlainObject(value) {
     const proto = Object.getPrototypeOf(value);
     return proto === null || proto === Object.prototype;
 }
-exports.isPlainObject = isPlainObject;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -199,7 +199,7 @@ exports.isPlainObject = isPlainObject;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-07-06T11:19:30.482Z
+                at 2026-11-20T14:26:32.238Z
             </div>
         <script src="../prettify.js"></script>
         <script>

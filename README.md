@@ -77,7 +77,7 @@ npm install vda-5050-lib
 ```
 
 This package uses ECMAScript version `ES2019` and module format `commonjs`. It
-runs in [Node.js](https://nodejs.org) v11 or newer and in modern browsers.
+runs in [Node.js](https://nodejs.org) v22.13 or newer and in modern browsers.
 
 ## Getting started
 

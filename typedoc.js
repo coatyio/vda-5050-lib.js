@@ -16,10 +16,6 @@ module.exports = {
     // Ignores protected variables and methods
     excludeProtected: false,
 
-    // Specifies the location to look for included documents.
-    // Use [[include:FILENAME]] in comments.
-    includes: "./",
-
     // Add the package version to the project name
     includeVersion: true,
 

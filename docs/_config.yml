@@ -29,6 +29,16 @@ highlighter: rouge
 theme: jekyll-theme-primer
 permalink: pretty
 plugins:
+  - jekyll-github-metadata
+  - jekyll-optional-front-matter
+  - jekyll-seo-tag
+
+defaults:
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: default
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

@@ -41,6 +41,18 @@ async function createCoreValidators(vdaVersion, moduleFormat) {
     }
 }
 
+// schemasafe only allows "format" on strings, so map VDA 5050 3.0 integer
+// "uint32" formats to an equivalent range.
+function readSchema(file) {
+    return JSON.parse(fse.readFileSync(file), (key, value) => {
+        if (value && value.type === "integer" && value.format === "uint32") {
+            const { format, ...rest } = value;
+            return { minimum: 0, maximum: 4294967295, ...rest };
+        }
+        return value;
+    });
+}
+
 /**
  * Create a standalone JS module including pre-compiled validation functions for
  * each of the specified schemas that can be used without additional runtime
@@ -65,11 +77,11 @@ function createValidators(schemaFiles, refSchemaFiles, moduleFile, moduleFormat)
     const refSchemas = [];
     const modules = [];
     for (const refFile of refSchemaFiles) {
-        refSchemas.push(JSON.parse(fse.readFileSync(refFile)));
+        refSchemas.push(readSchema(refFile));
     }
     for (const file of schemaFiles) {
-        const schema = JSON.parse(fse.readFileSync(file));
-        const validate = validator(schema, { includeErrors: true, schemas: refSchemas, allowUnusedKeywords: true, formats: { uint32: () => true } });
+        const schema = readSchema(file);
+        const validate = validator(schema, { includeErrors: true, schemas: refSchemas, allowUnusedKeywords: true });
         const moduleFunc = `validate${schema.title[0].toUpperCase()}${schema.title.substring(1)}`;
         modules.push([moduleFunc, `const ${moduleFunc} = ${validate.toModule()}\n`]);
     }

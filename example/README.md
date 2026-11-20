@@ -197,7 +197,7 @@ actions.
 ## Run tests natively
 
 Install the latest long-term-stable (LTS) version of
-[Node.js](https://nodejs.org) or at least version 14.20.0.
+[Node.js](https://nodejs.org) or at least version 22.13.0.
 
 From within the project root folder, install dependencies (requires an Internet
 connection) and build the project:

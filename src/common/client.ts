@@ -1,7 +1,7 @@
 /*! Copyright (c) 2021 Siemens AG. Licensed under the MIT License. */
 
 import Debug from "debug";
-import { Client as Mqtt, connect, IClientOptions, IClientPublishOptions, IClientSubscribeOptions, QoS } from "mqtt";
+import { connect, IClientOptions, IClientPublishOptions, IClientSubscribeOptions, MqttClient } from "mqtt";
 import { v4 as uuidv4 } from "uuid";
 
 import {
@@ -421,7 +421,7 @@ export abstract class Client {
      */
     public readonly debug: Debug.Debugger;
 
-    private _mqtt: Mqtt;
+    private _mqtt: MqttClient;
     private _isStarted: boolean;
     private _isStopping: boolean;
     private _connectionState: "online" | "offline" | "broken";
@@ -873,7 +873,7 @@ export abstract class Client {
                 return;
             }
 
-            const mqttOptions: IClientSubscribeOptions = { qos: 0 as QoS, rap: true, rh: 0 };
+            const mqttOptions: IClientSubscribeOptions = { qos: 0, rap: true, rh: 0 };
 
             if (!this._mqtt.connected) {
                 this.debug("Subscribe on MQTT topic %s with id %s while offline", mqttTopic, id);
@@ -1200,10 +1200,10 @@ export abstract class Client {
         return new Promise<void>((resolve, reject) => {
             this.debug("Connecting to %s", connectionUrl);
             const mqtt = this._mqtt = connect(connectionUrl, mqttOpts);
-            const onceFailureListener = error => {
+            const onceFailureListener = (error?: Error) => {
                 this._mqtt = undefined;
                 mqtt.end(true, () => {
-                    reject(error);
+                    reject(error ?? new Error("MQTT connection closed before connecting"));
                 });
             };
 
@@ -1416,7 +1416,7 @@ export abstract class Client {
     }
 
     private _withMqttProperties(pub: any) {
-        pub.qos = 0 as QoS;
+        pub.qos = 0;
         switch (this.clientOptions.transport.protocolVersion) {
             case "5.0":
                 pub.properties = {
