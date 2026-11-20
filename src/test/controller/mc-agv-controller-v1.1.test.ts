@@ -301,6 +301,63 @@ initTestContext(tap);
             });
         }));
 
+        await testOrder(t, "pause and resume a running order action",
+            mcController,
+            agvId1,
+            {
+                orderId: createUuid(),
+                orderUpdateId: 0,
+                nodes: [{
+                    nodeId: "n1",
+                    sequenceId: 0,
+                    released: true,
+                    actions: [createPickDropNoopAction("pick")],
+                }],
+                edges: [],
+            },
+            {
+                completes: true,
+                triggerOnActionInitializing: ts => {
+                    let pauseFinished = false;
+                    mcController.initiateInstantActions(agvId1, {
+                        instantActions: [{
+                            actionId: createUuid(),
+                            actionType: "startPause",
+                            blockingType: BlockingType.Hard,
+                        }],
+                    }, {
+                        onActionStateChanged: (actionState, withError, action, _agvId, state) => {
+                            if (actionState.actionStatus !== ActionStatus.Finished || pauseFinished) {
+                                return;
+                            }
+                            pauseFinished = true;
+                            ts.equal(withError, undefined);
+                            ts.equal(state.paused, true);
+
+                            setTimeout(() => {
+                                mcController.initiateInstantActions(agvId1, {
+                                    instantActions: [{
+                                        actionId: createUuid(),
+                                        actionType: "stopPause",
+                                        blockingType: BlockingType.Hard,
+                                    }],
+                                }, {
+                                    onActionStateChanged: (resumeState, resumeError, _resumeAction, _subject, resumedState) => {
+                                        if (resumeState.actionStatus === ActionStatus.Finished) {
+                                            ts.equal(resumeError, undefined);
+                                            ts.equal(resumedState.paused, false);
+                                        }
+                                    },
+                                    onActionError: () => ts.fail("stopPause should not fail"),
+                                });
+                            }, 100);
+                        },
+                        onActionError: () => ts.fail("startPause should not fail"),
+                    });
+                },
+            },
+        );
+
         await t.test("instant action orderExecutionTime", ts => new Promise(async resolve => {
             let actionStateInvocations = 0;
             const actions = await mcController.initiateInstantActions(agvId1, {
