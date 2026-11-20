@@ -28,7 +28,7 @@
         "test": "gulp build && tap",
         "test:detail": "gulp build && tap --reporter=tap",
         "test:coverage": "gulp build && npm-run-all -s -c _test:cov1 _test:cov2",
-        "_test:cov1": "tap --coverage --check-coverage --branches=30 --functions=30 --lines=25 --statements=25",
+        "_test:cov1": "tap --coverage --check-coverage --branches=80 --functions=89 --lines=87 --statements=87",
         "_test:cov2": "node dist/test/test-after-coverage.js",
         "_test:cov3": "opener coverage/lcov-report/index.html",
         "test:debug": "gulp build && cross-env DEBUG=\"vda-5050:*\" tap --reporter=tap",

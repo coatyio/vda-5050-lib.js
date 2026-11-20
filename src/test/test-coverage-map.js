@@ -14,7 +14,7 @@ module.exports = testFile => {
         "!dist/index.js",
 
         // Exclude auto-generated validation functions.
-        "!dist/common/vda-5050-validators.js",
+        "!dist/common/vda-5050-validators-*.js",
 
         // Exclude test utility functions from coverage.
         "!dist/test/**/*.js",

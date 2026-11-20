@@ -21,9 +21,11 @@ import {
     AgvControllerOptions,
     BlockingType,
     createUuid,
+    Error as VdaError,
     ErrorLevel,
     ErrorType,
     MasterController,
+    OperatingMode,
     VirtualAgvAdapter,
     VirtualAgvAdapterOptions,
 } from "../..";
@@ -63,6 +65,51 @@ initTestContext(tap);
         await t.test("start AGV Controller 2", () => agvController2.start());
         await t.test("start Master Controller", () => mcController.start());
         await t.test("start MC without validation", () => mcControllerNoValidation.start());
+
+        await t.test("AGV state update methods and error lifecycle", ts => {
+            const stateController = new AgvController(
+                createAgvId("RobotCompany", "E03"),
+                testClientOptions(ts),
+                agvControllerOptions1,
+                agvAdapterOptions1,
+            );
+
+            const initialState = stateController.currentState;
+            const paused = !initialState.paused;
+            const operatingMode = initialState.operatingMode === OperatingMode.Automatic
+                ? OperatingMode.Manual : OperatingMode.Automatic;
+            const safetyStatus = {
+                ...initialState.safetyState,
+                fieldViolation: !initialState.safetyState.fieldViolation,
+            };
+
+            stateController.updatePausedState(paused, false);
+            stateController.updateNewBaseRequest(!initialState.newBaseRequest, false);
+            stateController.updateSafetyStatus(safetyStatus, false);
+            stateController.updateOperatingMode(operatingMode, false);
+
+            ts.equal(stateController.currentState.paused, paused);
+            ts.equal(stateController.currentState.newBaseRequest, !initialState.newBaseRequest);
+            ts.equal(stateController.currentState.safetyState.fieldViolation, safetyStatus.fieldViolation);
+            ts.equal(stateController.currentState.operatingMode, operatingMode);
+
+            const error: VdaError = {
+                errorType: ErrorType.OrderNoRoute,
+                errorLevel: ErrorLevel.Warning,
+                errorDescription: "Coverage test error",
+                errorReferences: [],
+            };
+            stateController.updateErrors(error, "add", false);
+            stateController.updateErrors(error, "add", false);
+            ts.equal(stateController.currentState.errors.filter(e =>
+                e.errorDescription === error.errorDescription).length, 1);
+
+            stateController.updateErrors(error, "remove", false);
+            stateController.updateErrors(error, "remove", false);
+            ts.equal(stateController.currentState.errors.some(e =>
+                e.errorDescription === error.errorDescription), false);
+            ts.end();
+        });
 
         /* ------------------------------------------------------------------ */
         /* FR-10: Order with many nodes (large order)                          */
