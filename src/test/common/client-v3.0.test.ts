@@ -125,6 +125,7 @@ tap.test("Client V3.0 Validation", async t => {
             },
         };
         ts.resolves(client.publish(Topic.Visualization, agvId, visWithPosition as any));
+        ts.throws(() => client.publish(Topic.Visualization, agvId, { mobileRobotPosition: "invalid" } as any));
     });
 
     await t.test("validate v3.0 Factsheet topic object", async ts => {

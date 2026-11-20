@@ -113,6 +113,7 @@ tap.test("Client V2.0 Validation", async t => {
 
         // Visualization accepts empty/minimal objects
         ts.resolves(client.publish(Topic.Visualization, agvId, {} as any));
+        ts.throws(() => client.publish(Topic.Visualization, agvId, { agvPosition: "invalid" } as any));
     });
 
     await t.test("validate v2.0 Factsheet topic object", async ts => {
@@ -133,6 +134,7 @@ tap.test("Client V2.0 Validation", async t => {
                 navigationTypes: ["AUTONOMOUS"],
             },
         } as any));
+        ts.throws(() => client.publish(Topic.Factsheet, agvId, { typeSpecification: "invalid" } as any));
     });
 
     await t.test("validate v2.0 Factsheet not supported in v1.1", async ts => {

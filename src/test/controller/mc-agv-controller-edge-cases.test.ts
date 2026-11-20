@@ -123,6 +123,79 @@ initTestContext(tap);
             ts.end();
         });
 
+        await t.test("Master Controller reports edge-state deltas", ts => new Promise(async resolve => {
+            const initialState = agvController2.currentState;
+            const safetyStatus = {
+                ...initialState.safetyState,
+                fieldViolation: !initialState.safetyState.fieldViolation,
+            };
+            const observed = new Set<string>();
+            let updatesSent = false;
+            let orderProcessed = false;
+            let settled = false;
+            const timeout = setTimeout(() => {
+                ts.fail("edge-state deltas were not reported");
+                agvController2.updatePartialState(initialState, false);
+                resolve();
+            }, 5000);
+            const maybeResolve = () => {
+                if (!settled && orderProcessed && observed.size === 5) {
+                    settled = true;
+                    clearTimeout(timeout);
+                    agvController2.updatePartialState(initialState, false);
+                    resolve();
+                }
+            };
+
+            await mcController.assignOrder(agvId2, {
+                orderId: createUuid(),
+                orderUpdateId: 0,
+                nodes: [
+                    { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
+                    { nodeId: "n2", sequenceId: 2, released: true, nodePosition: { x: 100, y: 0, mapId: "local" }, actions: [] },
+                ],
+                edges: [
+                    { edgeId: "e12", sequenceId: 1, startNodeId: "n1", endNodeId: "n2", released: true, actions: [] },
+                ],
+            }, {
+                onOrderProcessed: (withError, byCancelation, active) => {
+                    ts.equal(withError, undefined);
+                    ts.equal(byCancelation, false);
+                    ts.equal(active, false);
+                    orderProcessed = true;
+                    maybeResolve();
+                },
+                onEdgeTraversing: (_edge, _startNode, _endNode, stateChanges) => {
+                    if (!updatesSent) {
+                        updatesSent = true;
+                        agvController2.updatePartialState({ distanceSinceLastNode: 12 }, true);
+                        agvController2.updateNewBaseRequest(true, true);
+                        agvController2.updateOperatingMode(OperatingMode.Semiautomatic, true);
+                        agvController2.updateSafetyStatus(safetyStatus, true);
+                        agvController2.updatePausedState(true, true);
+                        return;
+                    }
+                    if (stateChanges.distanceSinceLastNode === 12) {
+                        observed.add("distanceSinceLastNode");
+                    }
+                    if (stateChanges.newBaseRequest === true) {
+                        observed.add("newBaseRequest");
+                    }
+                    if (stateChanges.operatingMode === OperatingMode.Semiautomatic) {
+                        observed.add("operatingMode");
+                    }
+                    if (stateChanges.safetyState?.fieldViolation === safetyStatus.fieldViolation) {
+                        observed.add("safetyState");
+                    }
+                    if (stateChanges.paused === true) {
+                        observed.add("paused");
+                        agvController2.updatePausedState(false, true);
+                    }
+                    maybeResolve();
+                },
+            });
+        }));
+
         /* ------------------------------------------------------------------ */
         /* FR-10: Order with many nodes (large order)                          */
         /* ------------------------------------------------------------------ */

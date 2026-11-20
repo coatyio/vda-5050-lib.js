@@ -32,6 +32,7 @@ tap.test("Master Control Client V2.0", async t => {
         await client.start();
 
         ts.throws(() => client.publish(Topic.Connection, agvId, createHeaderlessObject(Topic.Connection)));
+        ts.throws(() => client.publish(Topic.Factsheet, agvId, createHeaderlessObject(Topic.Factsheet)));
         ts.throws(() => client.publish(Topic.State, agvId, createHeaderlessObject(Topic.State)));
         ts.throws(() => client.publish(Topic.Visualization, agvId, createHeaderlessObject(Topic.Visualization)));
         ts.resolves(client.publish(Topic.InstantActions, agvId, { actions: [] } as any));
