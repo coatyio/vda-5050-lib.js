@@ -371,6 +371,32 @@ initTestContext(tap);
             });
         }));
 
+        await t.test("instant action orderExecutionTime omits non-traversable orders", ts => new Promise(async resolve => {
+            const order = createHeaderlessOrder();
+            order.nodes[1].nodePosition = undefined;
+
+            const actions = await mcController.initiateInstantActions(agvId1, {
+                instantActions: [{
+                    actionId: createUuid(),
+                    actionType: "orderExecutionTime",
+                    blockingType: BlockingType.None,
+                    actionParameters: [{ key: "orders", value: [order] }],
+                }],
+            }, {
+                onActionStateChanged: (actionState, withError, action) => {
+                    ts.strictSame(action, actions.instantActions[0]);
+                    ts.equal(withError, undefined);
+                    ts.equal(actionState.actionStatus, ActionStatus.Finished);
+                    ts.equal(actionState.resultDescription, "");
+                    resolve();
+                },
+                onActionError: () => {
+                    ts.fail("orderExecutionTime should return an empty result for a non-traversable order");
+                    resolve();
+                },
+            });
+        }));
+
         await t.test("instant actions startCharging-stopCharging", ts => new Promise(async resolve => {
             let actionStateInvocations = 0;
             const actions = await mcController.initiateInstantActions(agvId1, {
@@ -597,6 +623,54 @@ initTestContext(tap);
             { referenceKey: "topic", referenceValue: Topic.Order },
             { referenceKey: "orderId", referenceValue: "o42" },
             { referenceKey: "orderUpdateId", referenceValue: "3" },
+        );
+
+        await testOrderError(t, "order invalid - released node after horizon",
+            ErrorType.OrderValidation,
+            mcControllerWithoutValidation,
+            agvId3,
+            {
+                orderId: "o42",
+                orderUpdateId: 31,
+                nodes: [
+                    { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
+                    { nodeId: "n2", sequenceId: 2, released: false, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
+                    { nodeId: "n3", sequenceId: 4, released: true, nodePosition: { x: 10, y: 0, mapId: "local" }, actions: [] },
+                ],
+                edges: [
+                    { edgeId: "e12", sequenceId: 1, startNodeId: "n1", endNodeId: "n2", released: false, actions: [] },
+                    { edgeId: "e23", sequenceId: 3, startNodeId: "n2", endNodeId: "n3", released: false, actions: [] },
+                ],
+            },
+            undefined,
+            undefined,
+            { referenceKey: "topic", referenceValue: Topic.Order },
+            { referenceKey: "orderId", referenceValue: "o42" },
+            { referenceKey: "orderUpdateId", referenceValue: "31" },
+        );
+
+        await testOrderError(t, "order invalid - released edge after horizon",
+            ErrorType.OrderValidation,
+            mcControllerWithoutValidation,
+            agvId3,
+            {
+                orderId: "o42",
+                orderUpdateId: 32,
+                nodes: [
+                    { nodeId: "n1", sequenceId: 0, released: true, actions: [] },
+                    { nodeId: "n2", sequenceId: 2, released: false, nodePosition: { x: 0, y: 0, mapId: "local" }, actions: [] },
+                    { nodeId: "n3", sequenceId: 4, released: false, nodePosition: { x: 10, y: 0, mapId: "local" }, actions: [] },
+                ],
+                edges: [
+                    { edgeId: "e12", sequenceId: 1, startNodeId: "n1", endNodeId: "n2", released: false, actions: [] },
+                    { edgeId: "e23", sequenceId: 3, startNodeId: "n2", endNodeId: "n3", released: true, actions: [] },
+                ],
+            },
+            undefined,
+            undefined,
+            { referenceKey: "topic", referenceValue: Topic.Order },
+            { referenceKey: "orderId", referenceValue: "o42" },
+            { referenceKey: "orderUpdateId", referenceValue: "32" },
         );
 
         await testOrderError(t, "order invalid - invalid number of edges",

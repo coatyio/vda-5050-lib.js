@@ -104,7 +104,19 @@ initTestContext(tap);
             ts.equal(stateController.currentState.errors.filter(e =>
                 e.errorDescription === error.errorDescription).length, 1);
 
+            const errorWithReference: VdaError = {
+                ...error,
+                errorReferences: [{ referenceKey: "nodeId", referenceValue: "n1" }],
+            };
+            stateController.updateErrors(errorWithReference, "add", false);
+            ts.equal(stateController.currentState.errors.filter(e =>
+                e.errorDescription === error.errorDescription).length, 2);
+
             stateController.updateErrors(error, "remove", false);
+            ts.equal(stateController.currentState.errors.some(e =>
+                e.errorDescription === error.errorDescription &&
+                e.errorReferences.some(reference => reference.referenceValue === "n1")), true);
+            stateController.updateErrors(errorWithReference, "remove", false);
             stateController.updateErrors(error, "remove", false);
             ts.equal(stateController.currentState.errors.some(e =>
                 e.errorDescription === error.errorDescription), false);
