@@ -1,6 +1,13 @@
 # Changelog
 
+# [1.8.0](https://github.com/coatyio/vda-5050-lib.js/compare/v1.7.2...v1.8.0) (2026-11-23)
 
+This release updates dependencies across the library and example, and fixes VDA 5050 v3.0 validator generation. Validator checks now enforce the uint32 range for headerId.
+Compatibility note: The minimum supported Node.js version is now 22.13.0. Upgrade Node.js before updating the library.
+
+### Bug Fixes
+
+* **controller:** correlate validation and MQTT topic errors ([8298c41](https://github.com/coatyio/vda-5050-lib.js/commit/8298c4194916165ecefe089d4d64a894dfacaa13))
 
 ## [1.7.2](https://github.com/coatyio/vda-5050-lib.js/compare/v1.7.0...v1.7.2) (2026-07-06)
 
